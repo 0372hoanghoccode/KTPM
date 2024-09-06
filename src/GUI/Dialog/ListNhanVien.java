@@ -71,7 +71,7 @@ public class ListNhanVien extends JDialog implements MouseListener {
                 "Vui lòng chọn nhân viên!:)", "Thông báo", JOptionPane.DEFAULT_OPTION);
                 } else{
                     dispose();
-                    new TaiKhoanDialog(guiTaiKhoan, guiTaiKhoan.owner, "Thêm nhân viên", true, "create", listnv.get(getRow()).getMNV());
+                    new TaiKhoanDialog(guiTaiKhoan, guiTaiKhoan.owner, "THÊM TÀI KHOẢN", true, "create", listnv.get(getRow()).getMNV());
                 }
             }
             
