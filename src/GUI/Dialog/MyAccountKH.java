@@ -121,7 +121,7 @@ public class MyAccountKH extends JDialog implements ActionListener {
         current_pwd.setText("********");
         current_pwd.setDisable();
         panel[3].add(current_pwd);
-        change = new JLabel("<html><p style = 'font-size : 11px;'>Thay đổi</p></html>" , JLabel.RIGHT);
+        change = new JLabel("<html><p style = 'font-size : 11px;'>Thay đổi mật khẩu</p></html>" , JLabel.RIGHT);
         change.setPreferredSize(new Dimension(25,25));
         change.setBorder(new EmptyBorder(0 , 0 , 30,20));
         change.addMouseListener(new MouseAdapter() {
