@@ -140,13 +140,12 @@ public class RegisterDialog extends JDialog implements ActionListener {
                 JOptionPane.showMessageDialog(this, "Email đã tồn tại", "Cảnh báo!", JOptionPane.WARNING_MESSAGE);
             else if (Validation.isEmpty(hoten.getText()))
                 JOptionPane.showMessageDialog(this, "Họ tên không được rỗng", "Cảnh báo!", JOptionPane.WARNING_MESSAGE);
-String phoneNumber = phone.getText();
+            String phoneNumber = phone.getText();
 
-// Kiểm tra số điện thoại không được rỗng
-if (Validation.isEmpty(phoneNumber)) {
-    JOptionPane.showMessageDialog(this, "Số điện thoại không được rỗng", "Cảnh báo!", JOptionPane.WARNING_MESSAGE);
-    
-}
+            // Kiểm tra số điện thoại không được rỗng
+             if (Validation.isEmpty(phoneNumber)) {
+                    JOptionPane.showMessageDialog(this, "Số điện thoại không được rỗng", "Cảnh báo!", JOptionPane.WARNING_MESSAGE);
+                }
 
 // Kiểm tra số điện thoại phải có đúng 10 ký tự số
 else if (phoneNumber.length() != 10 || !Validation.isNumber(phoneNumber)) {
