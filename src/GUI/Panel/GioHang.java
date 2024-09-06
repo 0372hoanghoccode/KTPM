@@ -214,62 +214,101 @@ public final class GioHang extends JPanel {
         // content_right.setBackground(Color.WHITE);
 
         content_right_top = new JPanel(new BorderLayout());
-        content_right_top.setPreferredSize(new Dimension(100, 335));
+        content_right_top.setPreferredSize(new Dimension(300, 450)); 
+        
         txtTenSp = new InputForm("Tên sản phẩm");
         txtTenSp.setEditable(false);
-        txtTenSp.setPreferredSize(new Dimension(100, 90));
+        txtTenSp.setPreferredSize(new Dimension(280, 20));
         txtMaSp = new InputForm("Mã sản phẩm");
         txtMaSp.setEditable(false);
+        txtMaSp.setPreferredSize(new Dimension(130, 20));
         txtMaISBN = new InputForm("Mã ISBN");
         txtMaISBN.setEditable(false);
+        txtMaISBN.setPreferredSize(new Dimension(130, 20));
         txtGiaXuat = new InputForm("Giá bán");
         txtGiaXuat.setEditable(false);
+        txtGiaXuat.setPreferredSize(new Dimension(130, 20));
         PlainDocument dongia = (PlainDocument) txtGiaXuat.getTxtForm().getDocument();
-        dongia.setDocumentFilter((new NumericDocumentFilter()));   //chỉ cho nhập số
+        dongia.setDocumentFilter(new NumericDocumentFilter()); // chỉ cho nhập số
         txtSoLuongSPxuat = new InputForm("Số lượng");
+        txtSoLuongSPxuat.setPreferredSize(new Dimension(130, 20));
         PlainDocument soluong = (PlainDocument) txtSoLuongSPxuat.getTxtForm().getDocument();
-        soluong.setDocumentFilter((new NumericDocumentFilter())); //chỉ cho nhập số
-        // txtMaGiamGia = new InputForm("Mã giảm giá");
+        soluong.setDocumentFilter(new NumericDocumentFilter()); // chỉ cho nhập số
         txtMaKM = new InputForm("Mã giảm giá");
+        txtMaKM.setPreferredSize(new Dimension(130, 20));
         txtGiaGiam = new InputForm("Giá giảm");
         txtGiaGiam.setText(" ");
         txtGiaGiam.setEditable(false);
+        txtGiaGiam.setPreferredSize(new Dimension(130, 20));
+        
+        // Xử lý sự kiện khi mã giảm giá thay đổi
         txtMaKM.addKeyListener(new KeyAdapter() {
             @Override
             public void keyReleased(KeyEvent e) {
                 String txt = txtMaKM.getText();
-                for(ChiTietMaKhuyenMaiDTO i : listctMKM) if(i.getMKM().equals(txt)) {
-                    double giaxuat = Integer.parseInt(txtGiaXuat.getText());
-                    double phantramgiam = (double) i.getPTG();
-                    int giagiam = (int) (giaxuat * (1 - phantramgiam/100));
-                    txtGiaGiam.setText(Integer.toString(giagiam));
+                for (ChiTietMaKhuyenMaiDTO i : listctMKM) {
+                    if (i.getMKM().equals(txt)) {
+                        double giaxuat = Integer.parseInt(txtGiaXuat.getText());
+                        double phantramgiam = i.getPTG();
+                        int giagiam = (int) (giaxuat * (1 - phantramgiam / 100));
+                        txtGiaGiam.setText(Integer.toString(giagiam));
+                    }
                 }
             }
         });
+        
+        // Tạo JPanel cho tất cả các thành phần
+        JPanel formPanel = new JPanel(new GridLayout(6, 2, 5, 5)); // 6 hàng, 2 cột
+        formPanel.setPreferredSize(new Dimension(300, 160)); 
 
-            
-        JPanel merge1 = new JPanel(new BorderLayout());
-        merge1.setPreferredSize(new Dimension(100, 50));
-        merge1.add(txtMaSp, BorderLayout.WEST);
-        merge1.add(txtMaISBN, BorderLayout.CENTER);
-
-        JPanel merge2 = new JPanel(new GridLayout(2,2));
-        merge2.setPreferredSize(new Dimension(100, 160));
-        merge2.add(txtGiaXuat);
-        merge2.add(txtSoLuongSPxuat);
-        merge2.add(txtMaKM);
-        merge2.add(txtGiaGiam);
-
-        content_right_top.add(txtTenSp, BorderLayout.NORTH);
-        content_right_top.add(merge1, BorderLayout.CENTER);
-        content_right_top.add(merge2, BorderLayout.SOUTH);
+        formPanel.add(txtTenSp);
+        formPanel.add(new JLabel()); 
+        formPanel.add(txtMaSp);
+        formPanel.add(txtMaISBN);
+        formPanel.add(txtGiaXuat);
+        formPanel.add(txtSoLuongSPxuat);
+        formPanel.add(txtMaKM);
+        formPanel.add(txtGiaGiam);
+        
+        content_right_top.add(formPanel, BorderLayout.CENTER);
+        
+        // tong tiền
+        JPanel pn_tongtien = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 5));
+        pn_tongtien.setOpaque(false);
+        JLabel lbltien = new JLabel("TỔNG TIỀN: ");
+        lbltien.setFont(new Font(FlatRobotoFont.FAMILY, Font.BOLD, 14));
+        lbltien.setForeground(new Color(255, 51, 51));
+        lbltongtien = new JLabel("0đ");
+        lbltongtien.setFont(new Font(FlatRobotoFont.FAMILY, Font.BOLD, 14));
+        pn_tongtien.add(lbltien);
+        pn_tongtien.add(lbltongtien);
+        
+        // nút đặt hàng
+        ButtonCustom btnDatHang = new ButtonCustom("Đặt hàng", "excel", 14);
+        btnDatHang.setPreferredSize(new Dimension(120, 30)); 
+        btnDatHang.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                eventBtnDatHang();
+            }
+        });
+        
+        JPanel bottomPanel = new JPanel(new BorderLayout());
+        bottomPanel.setPreferredSize(new Dimension(300, 70));
+        bottomPanel.setBorder(new EmptyBorder(10, 0, 0, 0));
+        bottomPanel.setOpaque(false);
+        bottomPanel.add(pn_tongtien, BorderLayout.NORTH);
+        bottomPanel.add(btnDatHang, BorderLayout.SOUTH);
+        
+        content_right_top.add(bottomPanel, BorderLayout.SOUTH);
+        
         content_right.add(content_right_top, BorderLayout.NORTH);
-
+        
         content_top.add(content_left);
         content_top.add(content_right);
         left_top.add(content_top, BorderLayout.CENTER);
-
-        //content_btn  -  4 nút ở left_top (South) 
+        
+        // content_btn - 4 nút ở left_top (South)
         content_btn = new JPanel();
         content_btn.setPreferredSize(new Dimension(0, 47));
         content_btn.setLayout(new GridLayout(1, 4, 5, 5));
@@ -278,23 +317,21 @@ public final class GioHang extends JPanel {
         btnAddSp = new ButtonCustom("Thêm sản phẩm", "success", 14);
         btnEditSP = new ButtonCustom("Sửa sản phẩm", "warning", 14);
         btnDelete = new ButtonCustom("Xoá sản phẩm", "danger", 14);
-
+        
         btnAddSp.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (checkInfo()) {
                     addCtGioHang();
-                    //thông báo dạng popup dùng của Notification trong Compoment của Gui
-                    Notification thongbaoNoi = new Notification(mainChinh,  Notification.Type.SUCCESS, Notification.Location.TOP_CENTER, "Thêm sản phẩm thành công!");
+                    // Thông báo dạng popup
+                    Notification thongbaoNoi = new Notification(mainChinh, Notification.Type.SUCCESS, Notification.Location.TOP_CENTER, "Thêm sản phẩm thành công!");
                     thongbaoNoi.showNotification();
                     loadDataTableChiTietGioHang(chitietgiohang);
                     actionbtn("update");
                 }
-
             }
-            
         });
-
+        
         btnEditSP.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -303,18 +340,18 @@ public final class GioHang extends JPanel {
                     JOptionPane.showMessageDialog(null, "Vui lòng chọn cấu hình cần chỉnh");
                 } else {
                     chitietgiohang.get(index).setSL(Integer.parseInt(txtSoLuongSPxuat.getText()));
-                    if(!txtGiaGiam.getText().equals(" ")) {
+                    if (!txtGiaGiam.getText().equals(" ")) {
                         chitietgiohang.get(index).setTIENGIO(Integer.parseInt(txtGiaGiam.getText()));
                         chitietgiohang.get(index).setMKM(txtMaKM.getText());
+                    } else {
+                        chitietgiohang.get(index).setTIENGIO(Integer.parseInt(txtGiaXuat.getText()));
                     }
-                    else
-                        chitietgiohang.get(index).setTIENGIO(Integer.parseInt(txtGiaXuat.getText())); 
                     giohangBUS.updateCT(chitietgiohang.get(index));
                     loadDataTableChiTietGioHang(chitietgiohang);
                 }
             }
         });
-
+        
         btnDelete.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -330,15 +367,14 @@ public final class GioHang extends JPanel {
                 }
             }
         });
-
+        
         btnEditSP.setEnabled(false);
         btnDelete.setEnabled(false);
         content_btn.add(btnAddSp);
         content_btn.add(btnEditSP);
         content_btn.add(btnDelete);
         left_top.add(content_btn, BorderLayout.SOUTH);
-
-        //left_bottom này là danh sách xuất ở left phía nam, chứa tablelistnhap
+        
         left_bottom = new JPanel();
         left_bottom.setOpaque(false);
         left_bottom.setPreferredSize(new Dimension(0, 250));
@@ -348,14 +384,16 @@ public final class GioHang extends JPanel {
         left_bottom.add(scrollTableGioHangNhap);
         left.add(left_top, BorderLayout.CENTER);
         left.add(left_bottom, BorderLayout.SOUTH);
+        
 
         // RIGHT 
+        //đoạn right này đã bị vứt đừng quan tâm nó
         right = new PanelBorderRadius();
-        right.setPreferredSize(new Dimension(320, 0));
+        right.setPreferredSize(new Dimension(0, 0));
         right.setBorder(new EmptyBorder(5, 5, 5, 5));
         right.setLayout(new BorderLayout());
 
-        JPanel right_top, right_center, right_bottom, pn_tongtien;
+        JPanel right_top, right_center, right_bottom;
         right_top = new JPanel(new GridLayout(2, 1, 0, 0));
         right_top.setPreferredSize(new Dimension(300, 180));
 
@@ -381,26 +419,6 @@ public final class GioHang extends JPanel {
         right_bottom.setPreferredSize(new Dimension(300, 100));
         right_bottom.setBorder(new EmptyBorder(10, 10, 10, 10));
         right_bottom.setOpaque(false);
-
-        pn_tongtien = new JPanel(new FlowLayout(1, 20, 0));
-        pn_tongtien.setOpaque(false);
-        JLabel lbltien = new JLabel("TỔNG TIỀN: ");
-        lbltien.setFont(new Font(FlatRobotoFont.FAMILY, 1, 18));
-        lbltongtien = new JLabel("0đ");
-        lbltongtien.setFont(new Font(FlatRobotoFont.FAMILY, 1, 18));
-        lbltien.setForeground(new Color(255, 51, 51));
-        pn_tongtien.add(lbltien);
-        pn_tongtien.add(lbltongtien);
-        right_bottom.add(pn_tongtien);
-
-        btnDatHang = new ButtonCustom("Đặt hàng", "excel", 14);
-        btnDatHang.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                eventBtnDatHang();
-            }
-        });;
-        right_bottom.add(btnDatHang);
 
         right.add(right_top, BorderLayout.NORTH);
         right.add(right_center, BorderLayout.CENTER);
