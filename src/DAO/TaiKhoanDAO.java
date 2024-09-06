@@ -110,6 +110,31 @@ public class TaiKhoanDAO implements DAOinterface<TaiKhoanDTO>{
         return tk;
     }
     
+    public TaiKhoanDTO selectBySDT(String sdt) {
+    TaiKhoanDTO tk = null;
+    try {
+        Connection con = JDBCUtil.getConnection();
+        String sql = "SELECT * FROM TAIKHOAN TK JOIN NHANVIEN NV ON TK.MNV = NV.MNV WHERE NV.SDT = ?";
+        PreparedStatement pst = con.prepareStatement(sql);
+        pst.setString(1, sdt);
+        ResultSet rs = pst.executeQuery();
+        while (rs.next()) {
+            int MNV = rs.getInt("MNV");
+            String TDN = rs.getString("TDN");
+            String MK = rs.getString("MK");
+            int TT = rs.getInt("TT");
+            int MNQ = rs.getInt("MNQ");
+            tk = new TaiKhoanDTO(MNV, TDN, MK, MNQ, TT);
+            return tk; // Trả về đối tượng đầu tiên tìm thấy
+        }
+        JDBCUtil.closeConnection(con);
+    } catch (Exception e) {
+        e.printStackTrace(); // In thông báo lỗi ra console hoặc ghi vào log
+    }
+    return tk; // Trả về null nếu không tìm thấy
+}
+
+    
     public void sendOpt(String email, String opt){
         try {
             Connection con = (Connection) JDBCUtil.getConnection();

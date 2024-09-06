@@ -134,7 +134,14 @@ public class RegisterDialog extends JDialog implements ActionListener {
             if(Validation.isEmpty(tnd.getText()) || tnd.getText().length() <= 3) {
                 JOptionPane.showMessageDialog(this, "Tên đăng nhập không được rỗng và dưới 3 kí tự", "Cảnh báo!", JOptionPane.WARNING_MESSAGE);
             }
-            else if(!tkBUS.checkTDN(tnd.getText())) JOptionPane.showMessageDialog(this, "Tên đăng nhập đã tồn tại", "Cảnh báo!", JOptionPane.WARNING_MESSAGE);
+            else if (!tkBUS.checkTDN(tnd.getText())) {
+    JOptionPane.showMessageDialog(this, "Tên đăng nhập đã tồn tại", "Cảnh báo!", JOptionPane.WARNING_MESSAGE);
+} else if (!tkBUS.checkSDT(phone.getText())) {
+    JOptionPane.showMessageDialog(this, "Số điện thoại đã tồn tại", "Cảnh báo!", JOptionPane.WARNING_MESSAGE);
+} else if (!tkBUS.checkEmail(email.getText())) {
+    JOptionPane.showMessageDialog(this, "Email đã tồn tại", "Cảnh báo!", JOptionPane.WARNING_MESSAGE);
+}
+
             else if(Validation.isEmpty(hoten.getText())) JOptionPane.showMessageDialog(this, "Họ tên không được rỗng", "Cảnh báo!", JOptionPane.WARNING_MESSAGE);
             else if(Validation.isEmpty(phone.getText()) || phone.getText().length() != 10 || !Validation.isNumber(phone.getText())) JOptionPane.showMessageDialog(this, "Số điện thoại không được rỗng và có 10 số", "Cảnh báo!", JOptionPane.WARNING_MESSAGE);
             else if(!Validation.isEmail(email.getText())) JOptionPane.showMessageDialog(this, "Email không được rỗng và đúng định dạng", "Cảnh báo!", JOptionPane.WARNING_MESSAGE);

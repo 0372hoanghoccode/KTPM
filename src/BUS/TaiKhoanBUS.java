@@ -84,6 +84,24 @@ public class TaiKhoanBUS {
         return true;
     }
     
+    
+    public boolean checkSDT(String sdt) {
+    TaiKhoanDTO tk = TaiKhoanDAO.getInstance().selectBySDT(sdt);
+    if (tk != null) return false; // Số điện thoại đã tồn tại trong TaiKhoanDAO
+    tk = TaiKhoanKHDAO.getInstance().selectBySDT(sdt);
+    if (tk != null) return false; // Số điện thoại đã tồn tại trong TaiKhoanKHDAO
+    return true; // Số điện thoại không tồn tại trong cả hai cơ sở dữ liệu
+}
+
+    public boolean checkEmail(String email) {
+    TaiKhoanDTO tk = TaiKhoanDAO.getInstance().selectByEmail(email);
+    if (tk != null) return false; // Email đã tồn tại trong TaiKhoanDAO
+    tk = TaiKhoanKHDAO.getInstance().selectByEmail(email);
+    if (tk != null) return false; // Email đã tồn tại trong TaiKhoanKHDAO
+    return true; // Email không tồn tại trong cả hai cơ sở dữ liệu
+}
+
+    
     public void deleteAcc(int manv){
         
     }
