@@ -25,7 +25,7 @@ public final class NhanVien extends JPanel {
     Main m;
     ArrayList<DTO.NhanVienDTO> listnv = nvBus.getAll();
 
-    Color BackgroundColor = new Color(193 ,237 ,220);
+    Color BackgroundColor = new Color(211, 211, 211);
     private DefaultTableModel tblModel;
 
     private void initComponent() {
@@ -87,7 +87,7 @@ public final class NhanVien extends JPanel {
         contentCenter.add(main, BorderLayout.CENTER);
 
         tableNhanVien = new JTable();
-        tableNhanVien.setBackground(new Color(0xA1D6E2));
+        tableNhanVien.setBackground(new Color(245, 250, 250));
         scrollTableSanPham = new JScrollPane();
         tableNhanVien = new JTable();
         tblModel = new DefaultTableModel();

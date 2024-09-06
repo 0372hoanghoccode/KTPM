@@ -36,7 +36,7 @@ public class PhanQuyen extends JPanel implements ActionListener {
     public NhomQuyenBUS nhomquyenBUS = new NhomQuyenBUS();
     public ArrayList<NhomQuyenDTO> listnhomquyen = nhomquyenBUS.getAll();
 
-    Color BackgroundColor = new Color(193 ,237 ,220);
+    Color BackgroundColor = new Color(211, 211, 211);
 
     private void initComponent() {
         this.setBackground(BackgroundColor);
@@ -82,7 +82,7 @@ public class PhanQuyen extends JPanel implements ActionListener {
         contentCenter.add(main, BorderLayout.CENTER);
 
         tblNhomQuyen = new JTable();
-        tblNhomQuyen.setBackground(new Color(0xA1D6E2));
+        tblNhomQuyen.setBackground(new Color(245, 250, 250));
         tblNhomQuyen.setDefaultEditor(Object.class, null);
         scrollTable = new JScrollPane();
         tblModel = new DefaultTableModel();

@@ -13,7 +13,7 @@ public class ThongKeDoanhThu extends JPanel {
     ThongKeDoanhThuTungNam thongketungnam;
     ThongKeDoanhThuTungThang thongkedoanhthutungthang;
     ThongKeDoanhThuTuNgayDenNgay thongkedoanhthutungaydenngay;
-    Color BackgroundColor = new Color(240, 247, 250);
+    Color BackgroundColor = new Color(211, 211, 211);
     ThongKeBUS thongkeBUS;
 
     public ThongKeDoanhThu(ThongKeBUS thongkeBUS) {
@@ -31,7 +31,7 @@ public class ThongKeDoanhThu extends JPanel {
         thongkedoanhthutungaydenngay = new ThongKeDoanhThuTuNgayDenNgay(thongkeBUS);
 
         tabbedPane = new JTabbedPane();
-        tabbedPane.setBackground(new Color(0xA1D6E2));
+        tabbedPane.setBackground(new Color(245, 250, 250));
         tabbedPane.setOpaque(false);
         tabbedPane.addTab("Thống kê theo năm", thongketungnam);
         tabbedPane.addTab("Thống kê từng tháng trong năm", thongkedoanhthutungthang);

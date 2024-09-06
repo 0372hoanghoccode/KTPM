@@ -57,7 +57,7 @@ public final class TaoPhieuNhap extends JPanel implements ItemListener, ActionLi
     JLabel  lbltongtien;
 
     Main m;
-    Color BackgroundColor = new Color(193 ,237 ,220);
+    Color BackgroundColor = new Color(211, 211, 211);
 
     SanPhamBUS spBUS = new SanPhamBUS();
     NhaCungCapBUS nccBus = new NhaCungCapBUS();
@@ -91,7 +91,7 @@ public final class TaoPhieuNhap extends JPanel implements ItemListener, ActionLi
         
         //Phieu Nhap
         tablePhieuNhap = new JTable();
-        tablePhieuNhap.setBackground(new Color(0xA1D6E2));
+        tablePhieuNhap.setBackground(new Color(245, 250, 250));
         scrollTablePhieuNhap = new JScrollPane();
         tblModel = new DefaultTableModel();
         String[] header = new String[]{"STT", "Mã SP", "Tên sản phẩm", "Đơn giá", "Số lượng"};

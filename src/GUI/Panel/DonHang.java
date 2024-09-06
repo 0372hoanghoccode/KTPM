@@ -52,7 +52,7 @@ public final class DonHang extends JPanel implements ActionListener, KeyListener
     MainKH m;
     TaiKhoanDTO tk;
 
-    Color BackgroundColor = new Color(193 ,237 ,220);
+    Color BackgroundColor = new Color(211, 211, 211);
 
     ArrayList<PhieuXuatDTO> listPhieuXuat;
 
@@ -110,7 +110,7 @@ public final class DonHang extends JPanel implements ActionListener, KeyListener
         contentCenter.add(main, BorderLayout.CENTER);
 
         tableDonHang = new JTable();
-        tableDonHang.setBackground(new Color(0xA1D6E2));
+        tableDonHang.setBackground(new Color(245, 250, 250));
         scrollTableDonHang = new JScrollPane();
         tblModel = new DefaultTableModel();
         String[] header = new String[]{"STT", "Mã phiếu xuất", "Khách hàng", "Nhân viên", "Thời gian", "Tổng tiền", "Trạng thái"};

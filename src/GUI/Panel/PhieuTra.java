@@ -62,7 +62,7 @@ public final class PhieuTra extends JPanel implements ActionListener, KeyListene
     NhanVienBUS nvBUS = new NhanVienBUS();
     ArrayList<PhieuTraDTO> listPhieu;
 
-    Color BackgroundColor = new Color(193 ,237 ,220);
+    Color BackgroundColor = new Color(211, 211, 211);
 
     public PhieuTra(Main m, NhanVienDTO nv) {
         this.m = m;
@@ -100,7 +100,7 @@ public final class PhieuTra extends JPanel implements ActionListener, KeyListene
         this.setOpaque(true);
 
         tablePhieuTra = new JTable();
-        tablePhieuTra.setBackground(new Color(0xA1D6E2));
+        tablePhieuTra.setBackground(new Color(245, 250, 250));
         scrollTablePhieuTra = new JScrollPane();
         tblModel = new DefaultTableModel();
         String[] header = new String[]{"STT", "Mã phiếu trả", "Khách hàng", "Nhân viên tạo", "Thời gian", "Tổng tiền"};

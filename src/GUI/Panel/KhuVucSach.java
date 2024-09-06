@@ -50,7 +50,7 @@ public class KhuVucSach extends JPanel implements ActionListener, ItemListener {
     MainFunction mainFunction;
     IntegratedSearch search;
     JFrame owner = (JFrame) SwingUtilities.getWindowAncestor(this);
-    Color BackgroundColor = new Color(193 ,237 ,220);
+    Color BackgroundColor = new Color(211,211,211);
     DefaultTableModel tblModel;
     Main m;
     public KhuVucSachBUS kvkBUS = new KhuVucSachBUS();
@@ -63,7 +63,7 @@ public class KhuVucSach extends JPanel implements ActionListener, ItemListener {
         scrollTableSanPham = new JScrollPane();
         tableKhuvuc = new JTable();
         tblModel = new DefaultTableModel();
-        tableKhuvuc.setBackground(new Color(0xA1D6E2));
+        tableKhuvuc.setBackground(new Color(245, 250, 250)); 
         String[] header = new String[]{"Mã khu vực", "Tên khu vực", "Ghi chú"};
         tblModel.setColumnIdentifiers(header);
         tableKhuvuc.setModel(tblModel);

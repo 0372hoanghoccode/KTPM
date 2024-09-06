@@ -57,7 +57,7 @@ public final class TaoMaKhuyenMai extends JPanel implements ItemListener, Action
     JTextField txtTimKiem;
 
     Main m;
-    Color BackgroundColor = new Color(193 ,237 ,220);
+    Color BackgroundColor = new Color(211, 211, 211);
 
     SanPhamBUS spBUS = new SanPhamBUS();
     NhaCungCapBUS nccBus = new NhaCungCapBUS();
@@ -85,7 +85,7 @@ public final class TaoMaKhuyenMai extends JPanel implements ItemListener, Action
         
         //Phieu Nhap
         tableMKM = new JTable();
-        tableMKM.setBackground(new Color(0xA1D6E2));
+        tableMKM.setBackground(new Color(245, 250, 250));
         scrollTablePhieuNhap = new JScrollPane();
         tblModel = new DefaultTableModel();
         String[] header = new String[]{"STT", "Mã SP", "Tên sản phẩm", "Phần trăm giảm"};

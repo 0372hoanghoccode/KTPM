@@ -104,7 +104,7 @@ public class ThongKeTongQuan extends JPanel {
         jp_center.add(pnlChart, BorderLayout.CENTER);
 
         tableThongKe = new JTable();
-        tableThongKe.setBackground(new Color(0xA1D6E2));
+        tableThongKe.setBackground(new Color(245, 250, 250));
         scrollTableThongKe = new JScrollPane();
         tblModel = new DefaultTableModel();
         String[] header = new String[]{"Ngày", "Vốn", "Doanh thu", "Lợi nhuận"};

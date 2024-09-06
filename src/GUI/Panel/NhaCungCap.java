@@ -43,7 +43,7 @@ public final class NhaCungCap extends JPanel implements ActionListener, ItemList
     MainFunction mainFunction;
     IntegratedSearch search;
     JFrame owner = (JFrame) SwingUtilities.getWindowAncestor(this);
-    Color BackgroundColor = new Color(193 ,237 ,220);
+    Color BackgroundColor = new Color(211, 211, 211);
     DefaultTableModel tblModel;
     Main m;
     public NhaCungCapBUS nccBUS = new NhaCungCapBUS();
@@ -52,7 +52,7 @@ public final class NhaCungCap extends JPanel implements ActionListener, ItemList
     private void initComponent() {
         //Set model table
         tableNhaCungCap = new JTable();
-        tableNhaCungCap.setBackground(new Color(0xA1D6E2));
+        tableNhaCungCap.setBackground(new Color(245, 250, 250));
         scrollTableSanPham = new JScrollPane();
         tblModel = new DefaultTableModel();
         String[] header = new String[]{"Mã NCC", "Tên nhà cung cấp", "Địa chỉ", "Email", "Số điện thoại"};

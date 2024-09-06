@@ -40,7 +40,7 @@ public class MaKhuyenMai extends JPanel implements ActionListener, ItemListener 
     MainFunction mainFunction;
     IntegratedSearch search;
     JFrame owner = (JFrame) SwingUtilities.getWindowAncestor(this);
-    Color BackgroundColor = new Color(193 ,237 ,220);
+    Color BackgroundColor = new Color(211, 211, 211);
     DefaultTableModel tblModel;
     public MaKhuyenMaiBUS mkmBUS = new MaKhuyenMaiBUS();
     public SanPhamBUS spBUS = new SanPhamBUS();
@@ -55,7 +55,7 @@ public class MaKhuyenMai extends JPanel implements ActionListener, ItemListener 
 
     private void initComponent() {
         tableMKM = new JTable();
-        tableMKM.setBackground(new Color(0xA1D6E2));
+        tableMKM.setBackground(new Color(245, 250, 250));
         scrollTableSanPham = new JScrollPane();
         tblModel = new DefaultTableModel();
         String[] header = new String[]{"Mã khuyến mãi", "Thời gian bắt đầu", "Thời gian kết thúc"};

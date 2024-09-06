@@ -58,7 +58,7 @@ public final class PhieuXuat extends JPanel implements ActionListener, KeyListen
     TaoPhieuXuat taoPhieuXuat;
     TaiKhoanDTO tk;
 
-    Color BackgroundColor = new Color(193 ,237 ,220);
+    Color BackgroundColor = new Color(211, 211, 211);
 
     ArrayList<PhieuXuatDTO> listPhieuXuat;
 
@@ -117,7 +117,7 @@ public final class PhieuXuat extends JPanel implements ActionListener, KeyListen
         contentCenter.add(main, BorderLayout.CENTER);
 
         tablePhieuXuat = new JTable();
-        tablePhieuXuat.setBackground(new Color(0xA1D6E2));
+        tablePhieuXuat.setBackground(new Color(245, 250, 250));
         scrollTablePhieuXuat = new JScrollPane();
         tblModel = new DefaultTableModel();
         String[] header = new String[]{"STT", "Mã phiếu xuất", "Khách hàng", "Nhân viên", "Thời gian", "Tổng tiền", "Trạng thái"};

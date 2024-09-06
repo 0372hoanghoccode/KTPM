@@ -55,7 +55,7 @@ public class PhieuKiemKe extends JPanel implements ActionListener, PropertyChang
     Main m;
     NhanVienDTO nv;
 
-    Color BackgroundColor = new Color(240, 247, 250);
+    Color BackgroundColor = new Color(211, 211, 211);
     private PanelBorderRadius box;
     
     SelectForm cbxNhaCungCap, cbxNhanVien;

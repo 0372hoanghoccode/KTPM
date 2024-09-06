@@ -54,7 +54,7 @@ public final class GioHang extends JPanel {
     ButtonCustom btnAddSp, btnEditSP, btnDelete, btnDatHang;
     InputForm txtTenSp, txtMaSp, txtMaISBN, txtSoLuongSPxuat, txtMaGiamGia, txtGiaGiam, txtMaKM;
     JTextField txtTimKiem;
-    Color BackgroundColor = new Color(193 ,237 ,220);
+    Color BackgroundColor = new Color(211, 211, 211);
     
     int sum; //do ctpxuất ko có sẵn tính tiền 
     int maphieu;
@@ -138,7 +138,7 @@ public final class GioHang extends JPanel {
 
         // Table sản phẩm
         tableSanPham = new JTable();
-        tableSanPham.setBackground(new Color(0xA1D6E2));
+        tableSanPham.setBackground(new Color(245, 250, 250));
         scrollTableSanPham = new JScrollPane();
         tblModelSP = new DefaultTableModel();
         String[] headerSP = new String[]{"Mã SP", "Tên sản phẩm", "Số lượng tồn"};

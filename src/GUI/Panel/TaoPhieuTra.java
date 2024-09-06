@@ -58,7 +58,7 @@ public final class TaoPhieuTra extends JPanel implements ItemListener, ActionLis
     JLabel  lbltongtien;
 
     Main m;
-    Color BackgroundColor = new Color(193 ,237 ,220);
+    Color BackgroundColor = new Color(211, 211, 211);
 
     SanPhamBUS spBUS = new SanPhamBUS();
     KhachHangBUS khBus = new KhachHangBUS();
@@ -87,7 +87,7 @@ public final class TaoPhieuTra extends JPanel implements ItemListener, ActionLis
         
         //Phieu Tra
         tablePhieuTra = new JTable();
-        tablePhieuTra.setBackground(new Color(0xA1D6E2));
+        tablePhieuTra.setBackground(new Color(245, 250, 250));
         scrollTablePhieuTra = new JScrollPane();
         tblModel = new DefaultTableModel();
         String[] header = new String[]{"STT", "Mã SP", "Tên sản phẩm", "Đơn giá", "Số lượng"};

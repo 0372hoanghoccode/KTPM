@@ -99,7 +99,7 @@ public class ThongKeNhaCungCap extends JPanel implements ActionListener, KeyList
         nhapxuat_center.setLayout(boxly);
 
         tblKH = new JTable();
-        tblKH.setBackground(new Color(0xA1D6E2));
+        tblKH.setBackground(new Color(245, 250, 250));
         scrollTblTonKho = new JScrollPane();
         tblModel = new DefaultTableModel();
         String[] header = new String[]{"STT", "Mã nhà cung cấp", "Tên nhà cung cấp", "Số lượng nhập", "Tổng số tiền"};

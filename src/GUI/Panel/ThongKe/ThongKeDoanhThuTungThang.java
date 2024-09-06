@@ -76,7 +76,7 @@ public final class ThongKeDoanhThuTungThang extends JPanel implements ActionList
         chart.addLegend("Lợi nhuận", new Color(189, 135, 245));
         pnlChart.add(chart);
         tableThongKe = new JTable();
-        tableThongKe.setBackground(new Color(0xA1D6E2));
+        tableThongKe.setBackground(new Color(245, 250, 250));
         scrollTableThongKe = new JScrollPane();
         tblModel = new DefaultTableModel();
         String[] header = new String[]{"Tháng", "Chi phí", "Doanh thu", "Lợi nhuận"};

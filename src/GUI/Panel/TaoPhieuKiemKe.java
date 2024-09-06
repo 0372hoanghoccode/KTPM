@@ -43,7 +43,7 @@ public final class TaoPhieuKiemKe extends JPanel implements ItemListener, Action
     JLabel labelImei, lbltongtien;
     public JTextArea textAreaImei;
     Main m;
-    Color BackgroundColor = new Color(193 ,237 ,220);
+    Color BackgroundColor = new Color(211, 211, 211);
     JFrame owner = (JFrame) SwingUtilities.getWindowAncestor(this);
 
     SanPhamBUS spBUS = new SanPhamBUS();
@@ -93,7 +93,7 @@ public final class TaoPhieuKiemKe extends JPanel implements ItemListener, Action
 
         // Phiếu nhập
         tablePhieuKiemKe = new JTable();
-        tablePhieuKiemKe.setBackground(new Color(0xA1D6E2));
+        tablePhieuKiemKe.setBackground(new Color(245, 250, 250));
         scrollTablePhieuKK = new JScrollPane();
         tblModel = new DefaultTableModel();
         String[] header = new String[]{"STT", "Mã SP", "Tên sản phẩm", "Trạng thái"};

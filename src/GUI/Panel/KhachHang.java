@@ -48,7 +48,7 @@ public class KhachHang extends JPanel implements ActionListener, ItemListener {
     public ArrayList<KhachHangDTO> listkh = khachhangBUS.getAll();
     KhachHangDTO kh = new KhachHangDTO();
     Main m;
-    Color BackgroundColor = new Color(193 ,237 ,220);
+    Color BackgroundColor = new Color(211, 211, 211);
 
     private void initComponent() {
         this.setBackground(BackgroundColor);
@@ -56,7 +56,7 @@ public class KhachHang extends JPanel implements ActionListener, ItemListener {
         this.setOpaque(true);
 
         tableKhachHang = new JTable();
-        tableKhachHang.setBackground(new Color(0xA1D6E2));
+        tableKhachHang.setBackground(new Color(245, 250, 250));
         scrollTableKhachHang = new JScrollPane();
         tblModel = new DefaultTableModel();
         String[] header = new String[]{"Mã khách hàng", "Tên khách hàng", "Địa chỉ", "Số điện thoại", "Ngày tham gia"};

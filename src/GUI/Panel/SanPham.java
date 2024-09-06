@@ -39,14 +39,14 @@ public final class SanPham extends JPanel implements ActionListener {
     
     public ArrayList<DTO.SanPhamDTO> listSP = spBUS.getAll();
 
-    Color BackgroundColor = new Color(193 ,237 ,220);
+    Color BackgroundColor = new Color(211,211,211);
 
     private void initComponent() {
         this.setBackground(BackgroundColor);
         this.setLayout(new BorderLayout(0, 0));
         this.setOpaque(true);
         tableSanPham = new JTable();
-        tableSanPham.setBackground(new Color(0xA1D6E2));
+        tableSanPham.setBackground(new Color(245, 250, 250));  
         scrollTableSanPham = new JScrollPane();
         tblModel = new DefaultTableModel();
         String[] header = new String[]{"Mã SP", "Tên sản phẩm", "Số lượng tồn", "Tên tác giả", "Danh mục", "Năm xuất bản", "Nhà xuất bản", "Khu vực sách"};
