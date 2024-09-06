@@ -18,13 +18,13 @@ public class HeaderTitle extends JPanel{
     
     public void initComponent(String title) {
         this.setLayout(new BorderLayout());
-        this.setBackground(new Color(22, 122, 198));
+        this.setBackground(new Color(255, 165, 0));
         this.setPreferredSize(new Dimension(400, 60));
         
         
         lblTitle = new JLabel();
         lblTitle.setFont(new Font(FlatRobotoFont.FAMILY, 1, 18));
-        lblTitle.setForeground(new Color(255, 255, 255));
+        lblTitle.setForeground(new Color(0,0,0));
         lblTitle.setHorizontalAlignment(JLabel.CENTER);
         lblTitle.setText(title);
         lblTitle.setPreferredSize(new Dimension(400, 50));

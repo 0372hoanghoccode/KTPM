@@ -74,7 +74,7 @@ public class ListKhachHangTK extends JDialog implements MouseListener {
                 "Vui lòng chọn khách hàng!:)", "Thông báo", JOptionPane.DEFAULT_OPTION);
                 } else{
                     dispose();
-                    new TaiKhoanKHDialog(taikhoan, taikhoan.owner, "Thêm nhân viên", true, "create", listKh.get(getRow()).getMaKH());
+                    new TaiKhoanKHDialog(taikhoan, taikhoan.owner, "THÊM TÀI KHOẢN", true, "create", listKh.get(getRow()).getMaKH());
                 }
             }
             
