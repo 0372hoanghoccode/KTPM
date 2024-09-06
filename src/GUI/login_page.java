@@ -44,7 +44,7 @@ public class login_page extends JFrame implements KeyListener{
 
 
         this.setTitle("Đăng nhập" );
-        this.setSize(new Dimension(900 , 500));
+        this.setSize(new Dimension(900 , 450));
         this.setResizable(false);
         this.setLocationRelativeTo(null);
         this.addWindowListener(new WindowAdapter() {
@@ -74,7 +74,7 @@ public class login_page extends JFrame implements KeyListener{
         GridBagConstraints gbc = new GridBagConstraints();
         lb1 = new JLabel("ĐĂNG NHẬP VÀO HỆ THỐNG");
         lb1.setFont(new Font("Tahoma", Font.BOLD , 20));
-        lb1.setForeground(Color.BLACK); // Set text color
+        lb1.setForeground(Color.ORANGE); // Set text color
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.gridwidth = 2; // Span across two columns
@@ -84,20 +84,22 @@ public class login_page extends JFrame implements KeyListener{
         
         JPanel paneldn = new JPanel();
         paneldn.setBackground(Color.BLACK);
-        paneldn.setPreferredSize(new Dimension(400, 200));
+        paneldn.setPreferredSize(new Dimension(400, 150));
         paneldn.setLayout(new GridLayout(2, 1));
     
         txtUsername = new InputForm(" Tên đăng nhập");
-        // txtUsername.setPreferredSize(new Dimension(400, 200)); // Adjust dimensions
-        txtUsername.setBorder(BorderFactory.createLineBorder(Color.GRAY)); // Add borde
+        txtUsername.setPreferredSize(new Dimension(300, 40));
+         // Adjust dimensions
+        // txtUsername.setBorder(BorderFactory.createLineBorder(Color.GRAY)); // Add borde
         // gbc.gridx++;
         // gbc.fill = GridBagConstraints.HORIZONTAL;
         paneldn.add(txtUsername);
 
         // login_nhap.add(txtUsername);
         txtPassword = new InputForm(" Mật khẩu", "password");
-        txtPassword.setPreferredSize(new Dimension(300, 40)); // Adjust dimensions
-        txtPassword.setBorder(BorderFactory.createLineBorder(Color.GRAY)); // Add border
+        txtPassword.setPreferredSize(new Dimension(300, 40));
+         // Adjust dimensions
+        // txtPassword.setBorder(BorderFactory.createLineBorder(Color.GRAY)); // Add border
         gbc.gridy++;
         gbc.gridx = 0;
         paneldn.add(txtPassword);
@@ -108,7 +110,7 @@ public class login_page extends JFrame implements KeyListener{
         
         login_nhap.add(paneldn);
 
-        lb2 = new JLabel("<html><u><i style='font-size: 12px;'>Quên mật khẩu ?</i></u></html>", JLabel.LEFT);
+        lb2 = new JLabel("<html><u><i style='font-size: 10px;'>Quên mật khẩu ?</i></u></html>", JLabel.LEFT);
         lb2.setPreferredSize(new Dimension(200,50));
         lb2.setForeground(Color.BLACK); // Set text color
         lb2.addMouseListener(new MouseAdapter() {
@@ -128,13 +130,13 @@ public class login_page extends JFrame implements KeyListener{
 
         login_nhap.add(lb2);
 
-        lb3 = new JLabel("<html><u><i style='font-size: 12px;'>Đăng kí tài khoản ?</i></u></html>", JLabel.RIGHT);
+        lb3 = new JLabel("<html><u><i style='font-size: 10px;'>Đăng kí tài khoản ?</i></u></html>", JLabel.RIGHT);
         lb3.setPreferredSize(new Dimension(200,50));
         lb3.setForeground(Color.BLACK); // Set text color
         lb3.addMouseListener(new MouseAdapter() {
             @Override   
             public void mouseEntered(MouseEvent e) {
-                lb3.setForeground(Color.GREEN);
+                lb3.setForeground(Color.ORANGE);
             }
             @Override
             public void mouseClicked(MouseEvent evt) {
@@ -148,11 +150,11 @@ public class login_page extends JFrame implements KeyListener{
 
         JPanel buttonPanel = new JPanel(); 
         buttonPanel.setBackground(Color.WHITE);   
-        bt = new JButton("Đăng nhập");
+        bt = new JButton("ĐĂNG NHẬP");
         bt.setPreferredSize(new Dimension(300, 40));
         bt.setLayout(new FlowLayout(1, 0, 15));
-        bt.setBackground(Color.BLACK);
-        bt.setFont(new Font("Tahoma", Font.BOLD, 16)); // Adjust font and size
+        bt.setBackground(Color.ORANGE);
+        bt.setFont(new Font("Tahoma", Font.BOLD, 20)); // Adjust font and size
         bt.setForeground(Color.WHITE);
         buttonPanel.add(bt);
         
@@ -170,7 +172,7 @@ public class login_page extends JFrame implements KeyListener{
             }
             
             public void mouseExited(MouseEvent e) {
-                bt.setBackground(Color.BLACK);
+                bt.setBackground(Color.ORANGE);
             }
         });
 
@@ -245,7 +247,7 @@ public class login_page extends JFrame implements KeyListener{
         bo.setBackground(Color.white);
         this.add(bo, BorderLayout.WEST);
 
-        lb_img_1 = new JLabel(new ImageIcon("./src/img/1.png"));
+        lb_img_1 = new JLabel(new ImageIcon("./src/img/2.png"));
         bo.add(lb_img_1);
     }
     

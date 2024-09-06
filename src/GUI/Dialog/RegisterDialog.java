@@ -57,19 +57,19 @@ public class RegisterDialog extends JDialog implements ActionListener {
     }
 
     public void initComponent() {
-        this.setSize(400, 600);
+        this.setSize(400, 700);
         this.setLayout(new BorderLayout(0, 0));
         this.setBackground(Color.WHITE);
         this.setResizable(false);
         top = new JPanel();
-        top.setBackground(new Color(0x279C40));
+        top.setBackground(new Color(0xFEA837));
         top.setLayout(new FlowLayout(0, 0, 0));
         title = new HeaderTitle("ĐĂNG KÍ TÀI KHOẢN KHÁCH HÀNG");
-        title.setColor("279C40");
+        title.setColor("FEA837");
         top.add(title);
         this.add(top, BorderLayout.NORTH);
 
-        center = new JPanel(new GridLayout(4,1));
+        center = new JPanel(new GridLayout(6,1));
         center.setBorder(new EmptyBorder(20, 10,20, 10));
         center.setBackground(Color.WHITE);
         String opt[] = {"Tên đăng nhập", "Họ tên", "Số điện thoại", "Email", "Mật khẩu", "Xác nhận mật khẩu"};
@@ -116,7 +116,7 @@ public class RegisterDialog extends JDialog implements ActionListener {
         this.add(center, BorderLayout.CENTER);
 
         bottom = new JPanel(new GridLayout(1,1));
-        bottom.setBackground(new Color(0x66F284));
+        bottom.setBackground(new Color(0xFEA837));
 
         save = new ButtonCustom("Đăng kí", "register", 15);
         save.addActionListener(this);
