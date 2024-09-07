@@ -153,10 +153,28 @@ public class KhachHangDialog extends JDialog implements MouseListener {
             JOptionPane.showMessageDialog(this, "Tên khách hàng không được rỗng", "Cảnh báo !", JOptionPane.WARNING_MESSAGE);
             return false;
          }
-         else if (Validation.isEmpty(sdtKH.getText()) || !Validation.isNumber(sdtKH.getText()) && sdtKH.getText().length()!=10) {
-            JOptionPane.showMessageDialog(this, "Số điện thoại không được rỗng và phải là 10 ký tự số", "Cảnh báo !", JOptionPane.WARNING_MESSAGE);
-            return false;
-         }
+         String sdt = sdtKH.getText();
+
+// Kiểm tra số điện thoại không được rỗng
+if (Validation.isEmpty(sdt)) {
+    JOptionPane.showMessageDialog(this, "Số điện thoại không được rỗng", "Cảnh báo !", JOptionPane.WARNING_MESSAGE);
+    return false;
+}
+
+// Kiểm tra số điện thoại phải là 10 ký tự số
+if (!Validation.isNumber(sdt) || sdt.length() != 10) {
+    JOptionPane.showMessageDialog(this, "Số điện thoại phải là 10 ký tự số", "Cảnh báo !", JOptionPane.WARNING_MESSAGE);
+    return false;
+}
+
+// Kiểm tra số điện thoại phải bắt đầu bằng số 0
+if (!sdt.startsWith("0")) {
+    JOptionPane.showMessageDialog(this, "Số điện thoại phải bắt đầu bằng số 0", "Cảnh báo !", JOptionPane.WARNING_MESSAGE);
+    return false;
+}
+
+// Nếu tất cả các kiểm tra đều thành công, tiếp tục xử lý
+
         else  if (Validation.isEmpty(diachiKH.getText())) {
             JOptionPane.showMessageDialog(this, "Địa chỉ không được rỗng", "Cảnh báo !", JOptionPane.WARNING_MESSAGE);
             return false;

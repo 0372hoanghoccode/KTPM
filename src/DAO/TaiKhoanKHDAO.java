@@ -109,6 +109,32 @@ public class TaiKhoanKHDAO implements DAOinterface<TaiKhoanDTO>{
         }
         return tk;
     }
+    public TaiKhoanDTO selectBySDT(String sdt) {
+    TaiKhoanDTO tk = null;
+    try {
+        Connection con = JDBCUtil.getConnection();
+        // Sử dụng bí danh khác nhau cho các bảng
+        String sql = "SELECT * FROM TAIKHOANKH TK JOIN KHACHHANG KH ON TK.MKH = KH.MKH WHERE KH.SDT = ?";
+        PreparedStatement pst = con.prepareStatement(sql);
+        pst.setString(1, sdt);
+        ResultSet rs = pst.executeQuery();
+        while (rs.next()) {
+            int MKH = rs.getInt("MKH");
+            String TDN = rs.getString("TDN");
+            String MK = rs.getString("MK");
+            int TT = rs.getInt("TT");
+            int MNQ = rs.getInt("MNQ");
+            tk = new TaiKhoanDTO(MKH, TDN, MK, MNQ, TT);
+            return tk;
+        }
+        JDBCUtil.closeConnection(con);
+    } catch (Exception e) {
+        e.printStackTrace(); // In thông báo lỗi ra console hoặc ghi vào log
+    }
+    return tk;
+}
+
+
     
     public void sendOpt(String email, String opt){
         try {
@@ -228,6 +254,9 @@ public class TaiKhoanKHDAO implements DAOinterface<TaiKhoanDTO>{
         }
         return result;
     }
+    
+    
+    
     
     @Override
     public int getAutoIncrement() {

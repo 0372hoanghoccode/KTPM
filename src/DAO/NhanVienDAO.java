@@ -202,6 +202,34 @@ public class NhanVienDAO implements DAOinterface<NhanVienDTO>{
         return result;
     }
     
+        public NhanVienDTO selectBySdt(String t) {
+        NhanVienDTO result = null;
+        try {
+            Connection con = (Connection) JDBCUtil.getConnection();
+            String sql = "SELECT * FROM NHANVIEN WHERE SDT = ?";
+            PreparedStatement pst = (PreparedStatement) con.prepareStatement(sql);
+            pst.setString(1, t);
+            ResultSet rs = (ResultSet) pst.executeQuery();
+            while(rs.next()){
+                int MNV = rs.getInt("MNV");
+                String HOTEN = rs.getString("HOTEN");
+                int GIOITINH = rs.getInt("GIOITINH");
+                Date NGAYSINH = rs.getDate("NGAYSINH");
+                       String EMAIL = rs.getString("EMAIL");
+             
+                int TT = rs.getInt("TT");
+            String SDT = rs.getString("SDT");
+                result = new NhanVienDTO(MNV,HOTEN,GIOITINH,NGAYSINH,SDT,TT,EMAIL);
+            }
+            JDBCUtil.closeConnection(con);
+        } catch (Exception e) {
+        }
+        return result;
+    }
+    
+    
+    
+    
     @Override
     public int getAutoIncrement() {
         int result = -1;
