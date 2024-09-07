@@ -97,23 +97,44 @@ public final class KhuVucSachDialog extends JDialog implements ActionListener {
           return true;
     }
     @Override
-    public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == btnThem && Validation()) {
-            int makhuvuc = KhuVucSachDAO.getInstance().getAutoIncrement();
-            String tenkhuvuc = this.tenkhuvuc.getText();
-            String ghichu = this.ghichu.getText();
-            jpkvk.kvkBUS.add(new KhuVucSachDTO(makhuvuc, tenkhuvuc, ghichu));
-            jpkvk.loadDataTable(jpkvk.listKVK);
-            dispose();
-        } else if (e.getSource() == btnHuyBo) {
-            dispose();
-        } else if (e.getSource() == btnCapNhat && Validation()) {
-            String tenkhuvuc = this.tenkhuvuc.getText();
-            String ghichu = this.ghichu.getText();
-            jpkvk.kvkBUS.update(new KhuVucSachDTO(kvk.getMakhuvuc(), tenkhuvuc, ghichu));
-            jpkvk.loadDataTable(jpkvk.listKVK);
-            dispose();
-        }
+ public void actionPerformed(ActionEvent e) {
+    if (e.getSource() == btnThem && Validation()) {
+        int makhuvuc = KhuVucSachDAO.getInstance().getAutoIncrement();
+        System.out.println("Adding new khu vuc: " + makhuvuc);
+        String tenkhuvuc1 = this.tenkhuvuc.getText();
+        String ghichu1 = this.ghichu.getText();
+        KhuVucSachDTO newKhuVuc = new KhuVucSachDTO(makhuvuc, tenkhuvuc1, ghichu1);
+
+        // Adding new khu vuc
+        jpkvk.kvkBUS.add(newKhuVuc);
+        System.out.println("New khu vuc added: " + newKhuVuc);
+
+        // Reload data table
+        jpkvk.loadDataTable(jpkvk.listKVK);
+        System.out.println("Data table reloaded.");
+
+        // Close the window
+        dispose();
+    } else if (e.getSource() == btnHuyBo) {
+        System.out.println("Operation cancelled.");
+        dispose();
+    } else if (e.getSource() == btnCapNhat && Validation()) {
+        String tenkhuvuc1 = this.tenkhuvuc.getText();
+        String ghichu1 = this.ghichu.getText();
+        KhuVucSachDTO updatedKhuVuc = new KhuVucSachDTO(kvk.getMakhuvuc(), tenkhuvuc1, ghichu1);
+
+        // Update khu vuc
+        jpkvk.kvkBUS.update(updatedKhuVuc);
+        System.out.println("Khu vuc updated: " + updatedKhuVuc);
+
+        // Reload data table
+        jpkvk.loadDataTable(jpkvk.listKVK);
+        System.out.println("Data table reloaded.");
+
+        // Close the window
+        dispose();
     }
+}
+
 
 }
