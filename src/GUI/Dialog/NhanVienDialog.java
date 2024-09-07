@@ -139,7 +139,9 @@ public class NhanVienDialog extends JDialog {
             public void actionPerformed(ActionEvent e) {
                 try {
                     if (ValidationInput()) {
-                        if(checkEmail(email.getText())){
+                        if(checkEmail(email.getText()) ){
+                            if(checkSdt(sdt.getText())){
+                                
                         try {
                             int txt_gender = -1;
                             if (male.isSelected()) {
@@ -164,6 +166,7 @@ public class NhanVienDialog extends JDialog {
                             Logger.getLogger(NhanVienDialog.class.getName()).log(Level.SEVERE, null, ex);
                         }
                     }
+                        }
                     }
                 } catch (ParseException ex) {
                     Logger.getLogger(NhanVienDialog.class.getName()).log(Level.SEVERE, null, ex);
@@ -175,7 +178,9 @@ public class NhanVienDialog extends JDialog {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
-                    if (ValidationInput()) {
+                      if(checkEmail(email.getText())  ){
+                          if (checkSdt(sdt.getText())){
+                    if (ValidationInput()==true) {
                         try {
                             int txt_gender = -1;
                             if (male.isSelected()) {
@@ -185,6 +190,7 @@ public class NhanVienDialog extends JDialog {
                                 System.out.println("Nữ");
                                 txt_gender = 0;
                             }
+                            System.out.println("hello");
                             String txtName = name.getText();
                             String txtSdt = sdt.getText();
                             String txtEmail = email.getText();
@@ -200,6 +206,8 @@ public class NhanVienDialog extends JDialog {
                             Logger.getLogger(NhanVienDialog.class.getName()).log(Level.SEVERE, null, ex);
                         }
                     }
+                      }
+                      }
                 } catch (ParseException ex) {
                     Logger.getLogger(NhanVienDialog.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -209,8 +217,10 @@ public class NhanVienDialog extends JDialog {
         switch (type) {
             case "create" ->
                 bottom.add(btnAdd);
-            case "update" ->
+            case "update" ->{
                 bottom.add(btnEdit);
+                System.out.print("Nút sửa đã được nhấn");
+            }
             case "detail" -> {
                 name.setDisable();
                 sdt.setDisable();
@@ -233,30 +243,45 @@ public class NhanVienDialog extends JDialog {
 
     }
 
-    boolean ValidationInput() throws ParseException {
-        if (Validation.isEmpty(name.getText())) {
-            JOptionPane.showMessageDialog(this, "Tên nhân viên không được rỗng", "Cảnh báo !", JOptionPane.WARNING_MESSAGE);
-            return false;
-        } else if(name.getText().length()<6){
-            JOptionPane.showMessageDialog(this, "Tên nhân viên ít nhất 6 kí tự!");
-            return false;
-        }else if (Validation.isEmpty(email.getText()) || !Validation.isEmail(email.getText())) {
-            JOptionPane.showMessageDialog(this, "Email không được rỗng và phải đúng cú pháp", "Cảnh báo !", JOptionPane.WARNING_MESSAGE);
-            return false;
-        }
-        else if (Validation.isEmpty(sdt.getText()) && !Validation.isNumber(sdt.getText()) && sdt.getText().length() != 10) {
-            JOptionPane.showMessageDialog(this, "Số điện thoại không được rỗng và phải là 10 ký tự số", "Cảnh báo !", JOptionPane.WARNING_MESSAGE);
-            return false;
-        } else if(jcBd.getDate()==null){
-            JOptionPane.showMessageDialog(this, "Vui lòng chọn ngày sinh!");
-            return false;
-        } else if(!male.isSelected() && !female.isSelected()){
-            JOptionPane.showMessageDialog(this, "Vui lòng chọn giới tính!");
-            return false;
-        }
-        
-        return true;
+   boolean ValidationInput() throws ParseException {
+    // Kiểm tra tên nhân viên không được rỗng và có ít nhất 6 ký tự
+    if (Validation.isEmpty(name.getText())) {
+        JOptionPane.showMessageDialog(this, "Tên nhân viên không được rỗng", "Cảnh báo !", JOptionPane.WARNING_MESSAGE);
+        return false;
+    } else if (name.getText().length() < 6) {
+        JOptionPane.showMessageDialog(this, "Tên nhân viên ít nhất 6 kí tự", "Cảnh báo !", JOptionPane.WARNING_MESSAGE);
+        return false;
     }
+
+    // Kiểm tra email không được rỗng và phải đúng cú pháp
+    if (Validation.isEmpty(email.getText()) || !Validation.isEmail(email.getText())) {
+        JOptionPane.showMessageDialog(this, "Email không được rỗng và phải đúng cú pháp", "Cảnh báo !", JOptionPane.WARNING_MESSAGE);
+        return false;
+    }
+
+    // Kiểm tra số điện thoại không được rỗng, phải là 10 ký tự số và bắt đầu bằng số 0
+    String phoneNumber = sdt.getText();
+    if (Validation.isEmpty(phoneNumber) || !Validation.isNumber(phoneNumber) || phoneNumber.length() != 10 || !phoneNumber.startsWith("0")) {
+        JOptionPane.showMessageDialog(this, "Số điện thoại không được rỗng, phải là 10 ký tự số và bắt đầu bằng số 0", "Cảnh báo !", JOptionPane.WARNING_MESSAGE);
+        return false;
+    }
+
+    // Kiểm tra ngày sinh không được null
+    if (jcBd.getDate() == null) {
+        JOptionPane.showMessageDialog(this, "Vui lòng chọn ngày sinh!", "Cảnh báo !", JOptionPane.WARNING_MESSAGE);
+        return false;
+    }
+
+    // Kiểm tra giới tính đã được chọn
+    if (!male.isSelected() && !female.isSelected()) {
+        JOptionPane.showMessageDialog(this, "Vui lòng chọn giới tính!", "Cảnh báo !", JOptionPane.WARNING_MESSAGE);
+        return false;
+    }
+
+    // Nếu tất cả các kiểm tra đều thành công, trả về true
+    return true;
+}
+
     
     public boolean checkEmail(String email){
         if(!(NhanVienDAO.getInstance().selectByEmail(email)==null)){
@@ -265,4 +290,13 @@ public class NhanVienDialog extends JDialog {
         }
         return true;
     }
+    public boolean checkSdt(String phoneNumber) {
+    // Kiểm tra số điện thoại trong cơ sở dữ liệu
+    if (!(NhanVienDAO.getInstance().selectBySdt(phoneNumber) == null)) {
+        JOptionPane.showMessageDialog(this, "Số điện thoại này đã được sử dụng trong hệ thống!", "Cảnh báo!", JOptionPane.WARNING_MESSAGE);
+        return false;
+    }
+    return true;
+}
+
 }

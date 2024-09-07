@@ -18,13 +18,13 @@ public class TrangChu extends JPanel {
         {"Tính <br><br>bảo <br><br>mật", "secure_100px.svg", "<html>Thông tin cá nhân và thông tin liên quan đến sách mượn thường <br><br>được bảo mật và chỉ được truy cập bởi người dùng hoặc những <br><br>người được ủy quyền.</html>"},
         {"Tính <br><br>hiệu <br><br>quả", "effective_100px.svg", "<html>Nhờ vào tính năng đặc biệt của mã ISBN giúp xác định được thông <br><br>tin về từng cuốn sách một cách nhanh chóng và chính xác, giúp <br><br>cho việc quản lý sách được thực hiện một cách hiệu quả hơn.</html>"},
     };
-    Color MainColor = new Color(193,237,220);
+    Color MainColor = new Color(255, 255, 255);
     Color FontColor = new Color(96, 125, 139);
-    Color BackgroundColor = new Color(0x4F6457);
-    Color HowerFontColor = new Color(225, 230, 232);
+    Color BackgroundColor = new Color(0xFFFFFF);
+    Color HowerFontColor = new Color(225, 232, 232);
 
     private void initComponent() {
-        this.setBackground(new Color(24, 24, 24));
+        this.setBackground(new Color(225, 232, 232));
         this.setBounds(0, 200, 300, 1200);
         this.setLayout(new BorderLayout(0, 0));
         this.setOpaque(true);
@@ -35,7 +35,7 @@ public class TrangChu extends JPanel {
         top.setLayout(new FlowLayout(1, 0, 10));
 
         JLabel slogan = new JLabel();
-        slogan.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/slogan.png")));
+        slogan.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/slogan3.png")));
         
         top.add(slogan);
 

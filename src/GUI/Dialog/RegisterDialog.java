@@ -127,19 +127,46 @@ public class RegisterDialog extends JDialog implements ActionListener {
     }
 
     @Override
-    public void actionPerformed(ActionEvent e) {
-        if(e.getSource() == save) {
-            
+     public void actionPerformed(ActionEvent e) {
+        if (e.getSource() == save) {
             TaiKhoanBUS tkBUS = new TaiKhoanBUS();
-            if(Validation.isEmpty(tnd.getText()) || tnd.getText().length() <= 3) {
+            if (Validation.isEmpty(tnd.getText()) || tnd.getText().length() <= 3)
                 JOptionPane.showMessageDialog(this, "Tên đăng nhập không được rỗng và dưới 3 kí tự", "Cảnh báo!", JOptionPane.WARNING_MESSAGE);
-            }
-            else if(!tkBUS.checkTDN(tnd.getText())) JOptionPane.showMessageDialog(this, "Tên đăng nhập đã tồn tại", "Cảnh báo!", JOptionPane.WARNING_MESSAGE);
-            else if(Validation.isEmpty(hoten.getText())) JOptionPane.showMessageDialog(this, "Họ tên không được rỗng", "Cảnh báo!", JOptionPane.WARNING_MESSAGE);
-            else if(Validation.isEmpty(phone.getText()) || phone.getText().length() != 10 || !Validation.isNumber(phone.getText())) JOptionPane.showMessageDialog(this, "Số điện thoại không được rỗng và có 10 số", "Cảnh báo!", JOptionPane.WARNING_MESSAGE);
-            else if(!Validation.isEmail(email.getText())) JOptionPane.showMessageDialog(this, "Email không được rỗng và đúng định dạng", "Cảnh báo!", JOptionPane.WARNING_MESSAGE);
-            else if(Validation.isEmpty(password.getPass()) || password.getPass().length() < 6) JOptionPane.showMessageDialog(this, "Mật khẩu không được rỗng và nhiều hơn 6 kí tự", "Cảnh báo!", JOptionPane.WARNING_MESSAGE);
-            else if(!password.getPass().equals(confirm.getPass())) JOptionPane.showMessageDialog(this, "Mật khẩu không trùng nhau", "Cảnh báo!", JOptionPane.WARNING_MESSAGE);
+            else if (!tkBUS.checkTDN(tnd.getText()))
+                JOptionPane.showMessageDialog(this, "Tên đăng nhập đã tồn tại", "Cảnh báo!", JOptionPane.WARNING_MESSAGE);
+            else if (!tkBUS.checkSDT(phone.getText()))
+                JOptionPane.showMessageDialog(this, "Số điện thoại đã tồn tại", "Cảnh báo!", JOptionPane.WARNING_MESSAGE);
+            else if (!tkBUS.checkEmail(email.getText()))
+                JOptionPane.showMessageDialog(this, "Email đã tồn tại", "Cảnh báo!", JOptionPane.WARNING_MESSAGE);
+            else if (Validation.isEmpty(hoten.getText()))
+                JOptionPane.showMessageDialog(this, "Họ tên không được rỗng", "Cảnh báo!", JOptionPane.WARNING_MESSAGE);
+            String phoneNumber = phone.getText();
+
+            // Kiểm tra số điện thoại không được rỗng
+             if (Validation.isEmpty(phoneNumber)) {
+                    JOptionPane.showMessageDialog(this, "Số điện thoại không được rỗng", "Cảnh báo!", JOptionPane.WARNING_MESSAGE);
+                }
+
+// Kiểm tra số điện thoại phải có đúng 10 ký tự số
+else if (phoneNumber.length() != 10 || !Validation.isNumber(phoneNumber)) {
+    JOptionPane.showMessageDialog(this, "Số điện thoại phải có 10 ký tự số", "Cảnh báo!", JOptionPane.WARNING_MESSAGE);
+  
+}
+
+// Kiểm tra số điện thoại phải bắt đầu bằng số 0
+else if (!phoneNumber.startsWith("0")) {
+    JOptionPane.showMessageDialog(this, "Số điện thoại phải bắt đầu bằng số 0", "Cảnh báo!", JOptionPane.WARNING_MESSAGE);
+    
+}
+
+// Nếu tất cả các kiểm tra đều thành công, tiếp tục xử lý
+
+            else if (!Validation.isEmail(email.getText()))
+                JOptionPane.showMessageDialog(this, "Email không được rỗng và đúng định dạng", "Cảnh báo!", JOptionPane.WARNING_MESSAGE);
+            else if (Validation.isEmpty(password.getPass()) || password.getPass().length() < 6)
+                JOptionPane.showMessageDialog(this, "Mật khẩu không được rỗng và nhiều hơn 6 kí tự", "Cảnh báo!", JOptionPane.WARNING_MESSAGE);
+            else if (!password.getPass().equals(confirm.getPass()))
+                JOptionPane.showMessageDialog(this, "Mật khẩu không trùng nhau", "Cảnh báo!", JOptionPane.WARNING_MESSAGE);
             else {
                 KhachHangBUS khBUS = new KhachHangBUS();
                 String TDN = tnd.getText();
@@ -160,7 +187,11 @@ public class RegisterDialog extends JDialog implements ActionListener {
                 } catch (UnsupportedLookAndFeelException e1) {
                     e1.printStackTrace();
                 }
-                menuTaskbar.resetChange();
+//                if (menuTaskbar != null) {
+//                    menuTaskbar.resetChange();
+//                } else {
+//                    System.err.println("menuTaskbar is not initialized");
+//                }
             }
         }
     }
