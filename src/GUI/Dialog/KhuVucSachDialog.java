@@ -98,10 +98,19 @@ public final class KhuVucSachDialog extends JDialog implements ActionListener {
     }
     @Override
  public void actionPerformed(ActionEvent e) {
+    KhuVucSachDAO dao = KhuVucSachDAO.getInstance();
+    
     if (e.getSource() == btnThem && Validation()) {
-        int makhuvuc = KhuVucSachDAO.getInstance().getAutoIncrement();
-        System.out.println("Adding new khu vuc: " + makhuvuc);
         String tenkhuvuc1 = this.tenkhuvuc.getText();
+        
+        // Check for duplicate name
+        if (dao.doesNameExist(tenkhuvuc1)) {
+            JOptionPane.showMessageDialog(this, "Tên khu vực đã tồn tại. Vui lòng chọn tên khác.");
+            return;
+        }
+        
+        int makhuvuc = dao.getAutoIncrement();
+        System.out.println("Adding new khu vuc: " + makhuvuc);
         String ghichu1 = this.ghichu.getText();
         KhuVucSachDTO newKhuVuc = new KhuVucSachDTO(makhuvuc, tenkhuvuc1, ghichu1);
 
@@ -120,6 +129,13 @@ public final class KhuVucSachDialog extends JDialog implements ActionListener {
         dispose();
     } else if (e.getSource() == btnCapNhat && Validation()) {
         String tenkhuvuc1 = this.tenkhuvuc.getText();
+        
+        // Check for duplicate name, but skip if it's the same as the current one
+        if (dao.doesNameExist(tenkhuvuc1) && !tenkhuvuc1.equals(kvk.getTenkhuvuc())) {
+            JOptionPane.showMessageDialog(this, "Tên khu vực đã tồn tại. Vui lòng chọn tên khác.");
+            return;
+        }
+        
         String ghichu1 = this.ghichu.getText();
         KhuVucSachDTO updatedKhuVuc = new KhuVucSachDTO(kvk.getMakhuvuc(), tenkhuvuc1, ghichu1);
 
@@ -135,6 +151,7 @@ public final class KhuVucSachDialog extends JDialog implements ActionListener {
         dispose();
     }
 }
+
 
 
 }
