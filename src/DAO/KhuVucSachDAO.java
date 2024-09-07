@@ -131,5 +131,21 @@ public class KhuVucSachDAO implements DAOinterface<KhuVucSachDTO> {
         }
         return result;
     }
-
+ public boolean doesNameExist(String tenkhuvuc) {
+        // Replace with actual database query to check for existence
+        String query = "SELECT COUNT(*) FROM KhuVucSach WHERE TEN = ?";
+        try ( 
+                Connection con = (Connection) JDBCUtil.getConnection();
+             PreparedStatement ps = con.prepareStatement(query)) {
+            ps.setString(1, tenkhuvuc);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+    
 }
