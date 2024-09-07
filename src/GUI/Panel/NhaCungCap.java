@@ -57,7 +57,7 @@ public final class NhaCungCap extends JPanel implements ActionListener, ItemList
         tblModel = new DefaultTableModel();
         String[] header = new String[]{"Mã NCC", "Tên nhà cung cấp", "Địa chỉ", "Email", "Số điện thoại"};
         tblModel.setColumnIdentifiers(header);
-        tableNhaCungCap.setModel(tblModel);
+        tableNhaCungCap.setModel(tblModel); 
         tableNhaCungCap.setFocusable(false);
         scrollTableSanPham.setViewportView(tableNhaCungCap);
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
