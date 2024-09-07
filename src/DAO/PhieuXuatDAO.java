@@ -293,5 +293,4 @@ public class PhieuXuatDAO implements DAOinterface<PhieuXuatDTO> {
         }
         return result;
     }
-
-}
+} 

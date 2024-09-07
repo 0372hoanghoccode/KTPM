@@ -3,15 +3,47 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/ASUS%20Vivobook/Documents/GitHub/KTPM/src/GUI/Component/itemTaskbar.java</file>
-            <file>file:/C:/Users/ASUS%20Vivobook/Documents/GitHub/KTPM/src/GUI/login_page.java</file>
-            <file>file:/C:/Users/ASUS%20Vivobook/Documents/GitHub/KTPM/src/BUS/NhanVienBUS.java</file>
-            <file>file:/C:/Users/ASUS%20Vivobook/Documents/GitHub/KTPM/src/GUI/Panel/NhanVien.java</file>
-            <file>file:/C:/Users/ASUS%20Vivobook/Documents/GitHub/KTPM/src/GUI/Component/MenuTaskbarKH.java</file>
-            <file>file:/C:/Users/ASUS%20Vivobook/Documents/GitHub/KTPM/src/GUI/Dialog/NhanVienDialog.java</file>
-            <file>file:/C:/Users/ASUS%20Vivobook/Documents/GitHub/KTPM/src/GUI/Dialog/ListNhanVien.java</file>
-            <file>file:/C:/Users/ASUS%20Vivobook/Documents/GitHub/KTPM/src/GUI/Main.java</file>
-            <file>file:/C:/Users/ASUS%20Vivobook/Documents/GitHub/KTPM/src/GUI/Component/MenuTaskbar.java</file>
+            <file>file:/C:/Users/Admin/Desktop/KTPM/KTPM/src/GUI/Component/NumericDocumentFilter.java</file>
+            <file>file:/C:/Users/Admin/Desktop/KTPM/KTPM/src/GUI/Component/MenuTaskbarKH.java</file>
+            <file>file:/C:/Users/Admin/Desktop/KTPM/KTPM/src/GUI/Component/MenuTaskbar.java</file>
+            <file>file:/C:/Users/Admin/Desktop/KTPM/KTPM/src/icon/export_32px.svg</file>
+            <file>file:/C:/Users/Admin/Desktop/KTPM/KTPM/src/icon/custom_ql.svg</file>
+            <file>file:/C:/Users/Admin/Desktop/KTPM/KTPM/src/GUI/Component/GraphicsUtilitiesNotification.java</file>
+            <file>file:/C:/Users/Admin/Desktop/KTPM/KTPM/src/BUS/PhieuXuatBUS.java</file>
+            <file>file:/C:/Users/Admin/Desktop/KTPM/KTPM/src/DAO/DanhMucChucNangDAO.java</file>
+            <file>file:/C:/Users/Admin/Desktop/KTPM/KTPM/src/DAO/NhaCungCapDAO.java</file>
+            <file>file:/C:/Users/Admin/Desktop/KTPM/KTPM/src/img/trai.png</file>
+            <file>file:/C:/Users/Admin/Desktop/KTPM/KTPM/src/GUI/Main.java</file>
+            <file>file:/C:/Users/Admin/Desktop/KTPM/KTPM/src/icon/edit.svg</file>
+            <file>file:/C:/Users/Admin/Desktop/KTPM/KTPM/src/GUI/Dialog/ChiTietPhieuDialog.java</file>
+            <file>file:/C:/Users/Admin/Desktop/KTPM/KTPM/src/GUI/Component/Notification.java</file>
+            <file>file:/C:/Users/Admin/Desktop/KTPM/KTPM/src/icon/cancel.svg</file>
+            <file>file:/C:/Users/Admin/Desktop/KTPM/KTPM/src/img/gai.png</file>
+            <file>file:/C:/Users/Admin/Desktop/KTPM/KTPM/src/GUI/Component/NavigationBar.java</file>
+            <file>file:/C:/Users/Admin/Desktop/KTPM/KTPM/src/DAO/SanPhamDAO.java</file>
+            <file>file:/C:/Users/Admin/Desktop/KTPM/KTPM/src/GUI/Component/InputDate.java</file>
+            <file>file:/C:/Users/Admin/Desktop/KTPM/KTPM/src/GUI/Dialog/ChiTietPhieuKiemKeDialog.java</file>
+            <file>file:/C:/Users/Admin/Desktop/KTPM/KTPM/src/GUI/Component/IntegratedSearch.java</file>
+            <file>file:/C:/Users/Admin/Desktop/KTPM/KTPM/src/GUI/Component/itemTaskbar.java</file>
+            <file>file:/C:/Users/Admin/Desktop/KTPM/KTPM/src/DAO/TaiKhoanDAO.java</file>
+            <file>file:/C:/Users/Admin/Desktop/KTPM/KTPM/src/GUI/Component/MainFunction.java</file>
+            <file>file:/C:/Users/Admin/Desktop/KTPM/KTPM/src/DAO/PhieuXuatDAO.java</file>
+            <file>file:/C:/Users/Admin/Desktop/KTPM/KTPM/src/GUI/Panel/TaoPhieuKiemKe.java</file>
+            <file>file:/C:/Users/Admin/Desktop/KTPM/KTPM/src/GUI/Panel/SanPham.java</file>
+            <file>file:/C:/Users/Admin/Desktop/KTPM/KTPM/src/GUI/MainKH.java</file>
+            <file>file:/C:/Users/Admin/Desktop/KTPM/KTPM/src/DAO/PhieuTraDAO.java</file>
+            <file>file:/C:/Users/Admin/Desktop/KTPM/KTPM/src/img/nguyen.svg</file>
+            <file>file:/C:/Users/Admin/Desktop/KTPM/KTPM/src/GUI/Dialog/RegisterDialog.java</file>
+            <file>file:/C:/Users/Admin/Desktop/KTPM/KTPM/src/GUI/Component/TableSorter.java</file>
+            <file>file:/C:/Users/Admin/Desktop/KTPM/KTPM/src/img/slogan2.jpeg</file>
+            <file>file:/C:/Users/Admin/Desktop/KTPM/KTPM/src/DAO/DAOinterface.java</file>
+            <file>file:/C:/Users/Admin/Desktop/KTPM/KTPM/src/icon/add.svg</file>
+            <file>file:/C:/Users/Admin/Desktop/KTPM/KTPM/src/GUI/Component/HeaderTitle.java</file>
+            <file>file:/C:/Users/Admin/Desktop/KTPM/KTPM/src/GUI/login_page.java</file>
+            <file>file:/C:/Users/Admin/Desktop/KTPM/KTPM/src/GUI/Panel/PhieuXuat.java</file>
+            <file>file:/C:/Users/Admin/Desktop/KTPM/KTPM/src/icon/book_statistical.svg</file>
+            <file>file:/C:/Users/Admin/Desktop/KTPM/KTPM/src/GUI/Component/InputForm.java</file>
+            <file>file:/C:/Users/Admin/Desktop/KTPM/KTPM/src/GUI/Panel/GioHang.java</file>
         </group>
     </open-files>
 </project-private>
