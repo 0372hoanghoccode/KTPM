@@ -14,13 +14,13 @@ public class TrangChu extends JPanel {
     JPanel info[];
     JLabel title, subTit, infoDetail[], objDetail[], objDetail1[], infoIcon[];
         String[][] getSt = {
-        {"Tính <br><br>tiện <br><br>lợi", "convenient_100px.svg", "<html>Có tính năng tìm kiếm nhanh chóng giúp người dùng dễ dàng<br><br> tìm sách theo tiêu chí cụ thể như tiêu đề, tác giả thể loại hoặc <br><br>theo mã ISBN sẽ đảm bảo tính chính xác và độ tin cậy cao hơn .</html>"},
-        {"Tính <br><br>bảo <br><br>mật", "secure_100px.svg", "<html>Thông tin cá nhân và thông tin liên quan đến sách mượn thường <br><br>được bảo mật và chỉ được truy cập bởi người dùng hoặc những <br><br>người được ủy quyền.</html>"},
-        {"Tính <br><br>hiệu <br><br>quả", "effective_100px.svg", "<html>Nhờ vào tính năng đặc biệt của mã ISBN giúp xác định được thông <br><br>tin về từng cuốn sách một cách nhanh chóng và chính xác, giúp <br><br>cho việc quản lý sách được thực hiện một cách hiệu quả hơn.</html>"},
+        {"", "convenient_100px.svg", "<html>Có tính năng tìm kiếm nhanh chóng giúp người dùng dễ dàng<br><br> tìm sách theo tiêu chí cụ thể như tiêu đề, tác giả thể loại hoặc <br><br>theo mã ISBN sẽ đảm bảo tính chính xác và độ tin cậy cao hơn .</html>"},
+        {"", "secure_100px.svg", "<html>Thông tin cá nhân và thông tin liên quan đến sách mượn thường <br><br>được bảo mật và chỉ được truy cập bởi người dùng hoặc những <br><br>người được ủy quyền.</html>"},
+        {"", "effective_100px.svg", "<html>Nhờ vào tính năng đặc biệt của mã ISBN giúp xác định được thông <br><br>tin về từng cuốn sách một cách nhanh chóng và chính xác, giúp <br><br>cho việc quản lý sách được thực hiện một cách hiệu quả hơn.</html>"},
     };
-    Color MainColor = new Color(255, 255, 255);
+    Color MainColor = new Color(0x55BEC0);
     Color FontColor = new Color(96, 125, 139);
-    Color BackgroundColor = new Color(0xFFFFFF);
+    Color BackgroundColor = new Color(0x55BEC0);
     Color HowerFontColor = new Color(225, 232, 232);
 
     private void initComponent() {
@@ -35,7 +35,7 @@ public class TrangChu extends JPanel {
         top.setLayout(new FlowLayout(1, 0, 10));
 
         JLabel slogan = new JLabel();
-        slogan.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/slogan3.png")));
+        slogan.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/slogan4.png")));
         
         top.add(slogan);
 
