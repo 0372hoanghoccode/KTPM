@@ -264,9 +264,12 @@ public final class PhieuXuat extends JPanel implements ActionListener, KeyListen
                 khachHangBUS.getTenKhachHang(listphieuxuat.get(i).getMKH()),
                 nvBUS.getNameById(listphieuxuat.get(i).getMNV()),
                 Formater.FormatTime(listphieuxuat.get(i).getTG()),
-                Formater.FormatVND(listphieuxuat.get(i).getTIEN()), trangthaiString});
+                Formater.FormatVND(listphieuxuat.get(i).getTIEN()),
+                trangthaiString
+            });
         }
     }
+
 
     public int getRow() {
         return tablePhieuXuat.getSelectedRow();

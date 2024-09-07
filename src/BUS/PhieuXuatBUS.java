@@ -51,9 +51,10 @@ public class PhieuXuatBUS {
     }
 
     public void update(PhieuXuatDTO px) {
-        phieuXuatDAO.update(px);
-        chiTietPhieuXuatDAO.updateSL(px.getMP()+"");
-    }
+    phieuXuatDAO.update(px);  
+    chiTietPhieuXuatDAO.updateSL(px.getMP() + ""); 
+}
+
 
     public void insert(PhieuXuatDTO px, ArrayList<ChiTietPhieuDTO> ct) {
         phieuXuatDAO.insert(px); //ghi phieu xuat vao sql

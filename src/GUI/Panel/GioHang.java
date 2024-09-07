@@ -428,6 +428,7 @@ public final class GioHang extends JPanel {
         contentCenter.add(right, BorderLayout.EAST);
         // actionbtn("add");
     }
+    //end rright phần bị bỏ
 
     public void actionbtn(String type) {
         boolean val_1 = type.equals("add");

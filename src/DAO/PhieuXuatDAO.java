@@ -45,23 +45,25 @@ public class PhieuXuatDAO implements DAOinterface<PhieuXuatDTO> {
 
     @Override
     public int update(PhieuXuatDTO t) {
-        int result = 0 ;
-        try {
-            Connection con = (Connection) JDBCUtil.getConnection();
-            String sql = "UPDATE `PHIEUXUAT` SET `MNV`=?, `MKH`=?, `TIEN`=?, `TG`=?, `TT`=? WHERE `MPX`=?";
-            PreparedStatement pst = (PreparedStatement) con.prepareStatement(sql);
-            pst.setInt(1, t.getMNV());
-            pst.setInt(2, t.getMKH());
-            pst.setInt(3, (int) t.getTIEN());
-            pst.setTimestamp(4, t.getTG());
-            pst.setInt(5, t.getTT());
-            result = pst.executeUpdate();
-            JDBCUtil.closeConnection(con);
-        } catch (SQLException ex) {
-            Logger.getLogger(PhieuXuatDAO.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return result;
+    int result = 0;
+    try {
+        Connection con = (Connection) JDBCUtil.getConnection();
+        String sql = "UPDATE `PHIEUXUAT` SET `MNV`=?, `MKH`=?, `TIEN`=?, `TG`=?, `TT`=? WHERE `MPX`=?";
+        PreparedStatement pst = (PreparedStatement) con.prepareStatement(sql);
+        pst.setInt(1, t.getMNV());
+        pst.setInt(2, t.getMKH());
+        pst.setInt(3, (int) t.getTIEN());
+        pst.setTimestamp(4, t.getTG());
+        pst.setInt(5, t.getTT());
+        pst.setInt(6, t.getMP());  // Thêm cập nhật MPX
+        result = pst.executeUpdate();
+        JDBCUtil.closeConnection(con);
+    } catch (SQLException ex) {
+        Logger.getLogger(PhieuXuatDAO.class.getName()).log(Level.SEVERE, null, ex);
     }
+    return result;
+}
+
 
     @Override
     public int delete(String t) {
