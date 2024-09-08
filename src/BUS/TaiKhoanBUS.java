@@ -13,47 +13,48 @@ public class TaiKhoanBUS {
     private NhomQuyenDAO nhomQuyenDAO = NhomQuyenDAO.getInstance();
     
     public TaiKhoanBUS(){
-        this.listTaiKhoan  = TaiKhoanDAO.getInstance().selectAll();
+        this.listTaiKhoan = TaiKhoanDAO.getInstance().selectAll();
+        this.listTaikhoanKH = new ArrayList<>();
     }
     
     public ArrayList<TaiKhoanDTO> getTaiKhoanAll(){
-        this.listTaiKhoan  = TaiKhoanDAO.getInstance().selectAll();
+        this.listTaiKhoan = TaiKhoanDAO.getInstance().selectAll();
         return listTaiKhoan;
     }
 
     public ArrayList<TaiKhoanDTO> getTaiKhoanAllKH(){
         this.listTaikhoanKH = TaiKhoanKHDAO.getInstance().selectAll();
-        return listTaikhoanKH ;
+        return listTaikhoanKH;
     }
     
     public TaiKhoanDTO getTaiKhoan(int index){
-        return listTaiKhoan.get(index);
-    }
-    public int getTaiKhoanByMaNV(int manv){
-        int i = 0;
-        int vitri = -1;
-        while (i < this.listTaiKhoan.size() && vitri == -1) {
-            if (listTaiKhoan.get(i).getMNV()== manv) {
-                vitri = i;
-            } else {
-                i++;
-            }
+        if (index >= 0 && index < listTaiKhoan.size()) {
+            return listTaiKhoan.get(index);
         }
-        return vitri;
+        return null; 
     }
 
-    public int getTaiKhoanByMaKH(int manv){
-        int i = 0;
-        int vitri = -1;
-        while (i < this.listTaikhoanKH.size() && vitri == -1) {
-            if (listTaikhoanKH.get(i).getMNV()== manv) {
-                vitri = i;
-            } else {
-                i++;
+    public int getTaiKhoanByMaNV(int manv) {
+        for (int i = 0; i < this.listTaiKhoan.size(); i++) {
+            if (listTaiKhoan.get(i).getMNV() == manv) {
+                return i;
             }
         }
-        return vitri;
+        return -1;
     }
+
+    public int getTaiKhoanByMaKH(int manv) {
+        if (this.listTaikhoanKH == null) {
+            getTaiKhoanAllKH();
+        }
+        for (int i = 0; i < this.listTaikhoanKH.size(); i++) {
+            if (listTaikhoanKH.get(i).getMNV() == manv) {
+                return i;
+            }
+        }
+        return -1; 
+    }
+
     
     public NhomQuyenDTO getNhomQuyenDTO(int manhom){
         return nhomQuyenDAO.selectById(manhom+"");

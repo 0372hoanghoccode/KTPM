@@ -77,7 +77,7 @@ public class TaiKhoanKHDAO implements DAOinterface<TaiKhoanDTO>{
             Connection con = (Connection) JDBCUtil.getConnection();
             String sql = "UPDATE TAIKHOANKH KH JOIN KHACHHANG KH ON KH.MKH = NV.MKH SET `MK` = ? WHERE `EMAIL` = ?";
             PreparedStatement pst = (PreparedStatement) con.prepareStatement(sql);
-            pst.setString(1, BCrypt.hashpw(password, BCrypt.gensalt(12)));
+            pst.setString(1, password);
             pst.setString(2, email);
             pst.executeUpdate();
             JDBCUtil.closeConnection(con);

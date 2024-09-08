@@ -183,33 +183,76 @@ public class MyAccountKH extends JDialog implements ActionListener {
             }
         }
         if(e.getSource() == save) {
-            if(check)  {
-                            TaiKhoanDTO tkdto = tkbus.getTaiKhoan(tkbus.getTaiKhoanByMaKH(kh.getMaKH()));
-                            if (Validation.isEmpty(current_pass.getPass())) {
-                                JOptionPane.showMessageDialog(this, "Mật khẩu hiện tại không được rỗng", "Cảnh báo!", JOptionPane.WARNING_MESSAGE);
-                            } else if (Validation.isEmpty(new_pass.getPass())||new_pass.getPass().length()<6) {
-                                JOptionPane.showMessageDialog(this, "Mật khẩu mới không được rỗng và có ít nhất 6 ký tự", "Cảnh báo!", JOptionPane.WARNING_MESSAGE);
-                            } else if (Validation.isEmpty(confirm_pass.getPass())) {
-                                JOptionPane.showMessageDialog(this, "Mật khẩu nhập lại không được rỗng", "Cảnh báo!", JOptionPane.WARNING_MESSAGE);
-                                return;
-                            } else if (!new_pass.getPass().equals(confirm_pass.getPass()) ) {
-                                JOptionPane.showMessageDialog(this, "Mật khẩu nhập lại không khớp với mật khẩu mới", "Cảnh báo!", JOptionPane.WARNING_MESSAGE);
-                                return;
-                            } else {
-                                if (BCrypt.checkpw(current_pass.getPass(), tkdto.getMK())) {
-                                    String pass = BCrypt.hashpw(confirm_pass.getPass(), BCrypt.gensalt(12));
-                                    TaiKhoanKHDAO.getInstance().updatePass(kh.getEMAIL(), pass);
-                                    JOptionPane.showMessageDialog(this, "Cập nhật thành công");
-                                    current_pass.setPass("");
-                                    new_pass.setPass("");
-                                    confirm_pass.setPass("");
-                                    center.removeAll();
-                                    center_1();
-                                } else {
-                                    JOptionPane.showMessageDialog(this, "Mật khẩu hiện tại không đúng", "Cảnh báo!", JOptionPane.WARNING_MESSAGE);
-                                }
-                            }
-                    }
+            if (check) {
+    // Lấy thông tin tài khoản từ hệ thống
+    int index = tkbus.getTaiKhoanByMaKH(kh.getMaKH());
+    if (index == -1) {
+        JOptionPane.showMessageDialog(this, "Không tìm thấy tài khoản với mã KH: " + kh.getMaKH(), "Cảnh báo!", JOptionPane.WARNING_MESSAGE);
+        return;
+    }
+
+    TaiKhoanDTO tkdto = tkbus.getTaiKhoan(index);
+
+    // Kiểm tra tkdto và mật khẩu của nó
+    if (tkdto == null) {
+        JOptionPane.showMessageDialog(this, "Thông tin người dùng không hợp lệ", "Cảnh báo!", JOptionPane.WARNING_MESSAGE);
+        return;
+    }
+
+    String storedPasswordHash = tkdto.getMK();
+    if (storedPasswordHash == null) {
+        JOptionPane.showMessageDialog(this, "Mật khẩu không hợp lệ", "Cảnh báo!", JOptionPane.WARNING_MESSAGE);
+        return;
+    }
+
+    // Kiểm tra mật khẩu hiện tại
+    String currentPassword = current_pass.getPass();
+    if (Validation.isEmpty(currentPassword)) {
+        JOptionPane.showMessageDialog(this, "Mật khẩu hiện tại không được rỗng", "Cảnh báo!", JOptionPane.WARNING_MESSAGE);
+        return;
+    }
+
+    // Kiểm tra mật khẩu mới
+    if (Validation.isEmpty(new_pass.getPass()) || new_pass.getPass().length() < 6) {
+        JOptionPane.showMessageDialog(this, "Mật khẩu mới không được rỗng và có ít nhất 6 ký tự", "Cảnh báo!", JOptionPane.WARNING_MESSAGE);
+        return;
+    }
+
+    // Kiểm tra mật khẩu xác nhận
+    if (Validation.isEmpty(confirm_pass.getPass())) {
+        JOptionPane.showMessageDialog(this, "Mật khẩu nhập lại không được rỗng", "Cảnh báo!", JOptionPane.WARNING_MESSAGE);
+        return;
+    }
+
+    // Kiểm tra khớp mật khẩu mới và xác nhận
+    if (!new_pass.getPass().equals(confirm_pass.getPass())) {
+        JOptionPane.showMessageDialog(this, "Mật khẩu nhập lại không khớp với mật khẩu mới", "Cảnh báo!", JOptionPane.WARNING_MESSAGE);
+        return;
+    }
+
+    // Kiểm tra mật khẩu hiện tại với mật khẩu đã lưu
+    if (BCrypt.checkpw(currentPassword, storedPasswordHash)) {
+        // Mã hóa mật khẩu mới và cập nhật vào cơ sở dữ liệu
+        String newHashedPassword = BCrypt.hashpw(new_pass.getPass(), BCrypt.gensalt(12));
+        TaiKhoanKHDAO.getInstance().updatePass(kh.getEMAIL(), newHashedPassword);
+
+        // Hiển thị thông báo thành công
+        JOptionPane.showMessageDialog(this, "Cập nhật thành công");
+
+        // Xóa các trường nhập mật khẩu
+        current_pass.setPass("");
+        new_pass.setPass("");
+        confirm_pass.setPass("");
+
+        // Cập nhật giao diện người dùng
+        center.removeAll();
+        center_1();
+    } else {
+        // Mật khẩu hiện tại không đúng
+        JOptionPane.showMessageDialog(this, "Mật khẩu hiện tại không đúng", "Cảnh báo!", JOptionPane.WARNING_MESSAGE);
+    }
+}
+
             else if (!check) {
                 String text_phone = phone.getText(); 
                 String text_email = EMAIL.getText(); 
