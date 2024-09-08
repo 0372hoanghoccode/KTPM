@@ -127,72 +127,99 @@ public class RegisterDialog extends JDialog implements ActionListener {
     }
 
     @Override
-     public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == save) {
-            TaiKhoanBUS tkBUS = new TaiKhoanBUS();
-            if (Validation.isEmpty(tnd.getText()) || tnd.getText().length() <= 3)
-                JOptionPane.showMessageDialog(this, "Tên đăng nhập không được rỗng và dưới 3 kí tự", "Cảnh báo!", JOptionPane.WARNING_MESSAGE);
-            else if (!tkBUS.checkTDN(tnd.getText()))
-                JOptionPane.showMessageDialog(this, "Tên đăng nhập đã tồn tại", "Cảnh báo!", JOptionPane.WARNING_MESSAGE);
-            else if (!tkBUS.checkSDT(phone.getText()))
-                JOptionPane.showMessageDialog(this, "Số điện thoại đã tồn tại", "Cảnh báo!", JOptionPane.WARNING_MESSAGE);
-            else if (!tkBUS.checkEmail(email.getText()))
-                JOptionPane.showMessageDialog(this, "Email đã tồn tại", "Cảnh báo!", JOptionPane.WARNING_MESSAGE);
-            else if (Validation.isEmpty(hoten.getText()))
-                JOptionPane.showMessageDialog(this, "Họ tên không được rỗng", "Cảnh báo!", JOptionPane.WARNING_MESSAGE);
-            String phoneNumber = phone.getText();
+ 
+public void actionPerformed(ActionEvent e) {
+    if (e.getSource() == save) {
+        TaiKhoanBUS tkBUS = new TaiKhoanBUS();
+        KhachHangBUS khBUS = new KhachHangBUS();
 
-            // Kiểm tra số điện thoại không được rỗng
-             if (Validation.isEmpty(phoneNumber)) {
-                    JOptionPane.showMessageDialog(this, "Số điện thoại không được rỗng", "Cảnh báo!", JOptionPane.WARNING_MESSAGE);
-                }
+        String tdn = tnd.getText().trim();
+        // Lấy dữ liệu từ các trường nhập liệu
+        String HOTEN = hoten.getText().trim();
+        String phoneNumber = phone.getText().trim();
+        String emailAddress = email.getText().trim();
+        String passwordText = password.getPass().trim();
+        String confirmPasswordText = confirm.getPass().trim();
 
-// Kiểm tra số điện thoại phải có đúng 10 ký tự số
-else if (phoneNumber.length() != 10 || !Validation.isNumber(phoneNumber)) {
-    JOptionPane.showMessageDialog(this, "Số điện thoại phải có 10 ký tự số", "Cảnh báo!", JOptionPane.WARNING_MESSAGE);
-  
-}
+        // Kiểm tra tên đăng nhập
+        if (Validation.isEmpty(tdn) || tdn.length() <= 3) {
+            JOptionPane.showMessageDialog(this, "Tên đăng nhập không được rỗng và phải dài hơn 3 ký tự", "Cảnh báo!", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
 
-// Kiểm tra số điện thoại phải bắt đầu bằng số 0
-else if (!phoneNumber.startsWith("0")) {
-    JOptionPane.showMessageDialog(this, "Số điện thoại phải bắt đầu bằng số 0", "Cảnh báo!", JOptionPane.WARNING_MESSAGE);
-    
-}
+        // Kiểm tra sự tồn tại của tên đăng nhập
+        if (!tkBUS.checkTDN(tdn)) {
+            JOptionPane.showMessageDialog(this, "Tên đăng nhập đã tồn tại", "Cảnh báo!", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
 
-// Nếu tất cả các kiểm tra đều thành công, tiếp tục xử lý
+        // Kiểm tra sự tồn tại của số điện thoại
+        if (!tkBUS.checkSDT(phoneNumber)) {
+            JOptionPane.showMessageDialog(this, "Số điện thoại đã tồn tại", "Cảnh báo!", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
 
-            else if (!Validation.isEmail(email.getText()))
-                JOptionPane.showMessageDialog(this, "Email không được rỗng và đúng định dạng", "Cảnh báo!", JOptionPane.WARNING_MESSAGE);
-            else if (Validation.isEmpty(password.getPass()) || password.getPass().length() < 6)
-                JOptionPane.showMessageDialog(this, "Mật khẩu không được rỗng và nhiều hơn 6 kí tự", "Cảnh báo!", JOptionPane.WARNING_MESSAGE);
-            else if (!password.getPass().equals(confirm.getPass()))
-                JOptionPane.showMessageDialog(this, "Mật khẩu không trùng nhau", "Cảnh báo!", JOptionPane.WARNING_MESSAGE);
-            else {
-                KhachHangBUS khBUS = new KhachHangBUS();
-                String TDN = tnd.getText();
-                String HOTEN = hoten.getText();
-                String SDT = phone.getText();
-                String EMAIL = email.getText();
-                String PASSWORD = password.getPass();
-                KhachHangDTO kh = new KhachHangDTO(khBUS.getMKHMAX() + 1, HOTEN, SDT, null, EMAIL);
-                TaiKhoanDTO tk = new TaiKhoanDTO(khBUS.getMKHMAX() + 1, TDN, PASSWORD, 4, 1);
-                khBUS.add(kh);
-                tkBUS.addAccKH(tk);
-                this.dispose();
-                tmp.dispose();
-                MainKH main;
-                try {
-                    main = new MainKH(tk);
-                    main.setVisible(true);
-                } catch (UnsupportedLookAndFeelException e1) {
-                    e1.printStackTrace();
-                }
-//                if (menuTaskbar != null) {
-//                    menuTaskbar.resetChange();
-//                } else {
-//                    System.err.println("menuTaskbar is not initialized");
-//                }
-            }
+        // Kiểm tra sự tồn tại của email
+        if (!tkBUS.checkEmail(emailAddress)) {
+            JOptionPane.showMessageDialog(this, "Email đã tồn tại", "Cảnh báo!", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        // Kiểm tra họ tên
+        if (Validation.isEmpty(HOTEN)) {
+            JOptionPane.showMessageDialog(this, "Họ tên không được rỗng", "Cảnh báo!", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        // Kiểm tra số điện thoại
+        if (Validation.isEmpty(phoneNumber)) {
+            JOptionPane.showMessageDialog(this, "Số điện thoại không được rỗng", "Cảnh báo!", JOptionPane.WARNING_MESSAGE);
+            return;
+        } else if (phoneNumber.length() != 10 || !Validation.isNumber(phoneNumber)) {
+            JOptionPane.showMessageDialog(this, "Số điện thoại phải có 10 ký tự số", "Cảnh báo!", JOptionPane.WARNING_MESSAGE);
+            return;
+        } else if (!phoneNumber.startsWith("0")) {
+            JOptionPane.showMessageDialog(this, "Số điện thoại phải bắt đầu bằng số 0", "Cảnh báo!", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        // Kiểm tra email
+        if (!Validation.isEmail(emailAddress)) {
+            JOptionPane.showMessageDialog(this, "Email không đúng định dạng", "Cảnh báo!", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        // Kiểm tra mật khẩu
+        if (Validation.isEmpty(passwordText) || passwordText.length() < 6) {
+            JOptionPane.showMessageDialog(this, "Mật khẩu không được rỗng và phải nhiều hơn 6 ký tự", "Cảnh báo!", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        // Kiểm tra sự trùng khớp của mật khẩu
+        if (!passwordText.equals(confirmPasswordText)) {
+            JOptionPane.showMessageDialog(this, "Mật khẩu không trùng nhau", "Cảnh báo!", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        // Nếu tất cả các kiểm tra đều thành công, tiếp tục xử lý
+        int newId = khBUS.getMKHMAX() + 1;
+        KhachHangDTO kh = new KhachHangDTO(newId, HOTEN, phoneNumber, null, emailAddress);
+        TaiKhoanDTO tk = new TaiKhoanDTO(newId, tdn, passwordText, 4, 1);
+
+        // Thêm khách hàng và tài khoản vào hệ thống
+        khBUS.add(kh);
+        tkBUS.addAccKH(tk);
+
+        // Đóng cửa sổ hiện tại và mở cửa sổ mới
+        this.dispose();
+        tmp.dispose();
+        try {
+            MainKH main = new MainKH(tk);
+            main.setVisible(true);
+        } catch (UnsupportedLookAndFeelException e1) {
+            e1.printStackTrace();
         }
     }
+}
+
 }

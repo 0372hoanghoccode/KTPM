@@ -92,12 +92,11 @@ public class TaiKhoanKHDAO implements DAOinterface<TaiKhoanDTO>{
     }
 }
 
-    
     public TaiKhoanDTO selectByEmail(String t) {
         TaiKhoanDTO tk = null;
         try {
             Connection con = JDBCUtil.getConnection();
-            String sql = "SELECT * FROM TAIKHOANKH KH JOIN KHACHHANG KH ON KH.MKH = NV.MKH WHERE NV.EMAIL = ?";
+            String sql = "SELECT * FROM TAIKHOANKH TK JOIN KHACHHANG KH ON TK.MKH = KH.MKH WHERE KH.EMAIL = ?";
             PreparedStatement pst = con.prepareStatement(sql);
             pst.setString(1,t);
             ResultSet rs = pst.executeQuery();
