@@ -11,9 +11,9 @@ import java.util.Date;
 
 public class PhieuKiemKeBUS {
     
-    private PhieuKiemKeDAO phieuKiemKeDAO = PhieuKiemKeDAO.getInstance();
-    private ChiTietKiemKeDAO chiTietKiemKeDAO = ChiTietKiemKeDAO.getInstance();
-    private NhanVienBUS nvBUS = new NhanVienBUS();
+    private final PhieuKiemKeDAO phieuKiemKeDAO = PhieuKiemKeDAO.getInstance();
+    private final ChiTietKiemKeDAO chiTietKiemKeDAO = ChiTietKiemKeDAO.getInstance();
+    private final NhanVienBUS nvBUS = new NhanVienBUS();
     private ArrayList<PhieuKiemKeDTO> danhSachPhieu;
     
     public PhieuKiemKeBUS(){
@@ -108,7 +108,7 @@ public class PhieuKiemKeBUS {
         boolean check = phieuKiemKeDAO.insert(phieu) != 0;
         if (check) {
             check = chiTietKiemKeDAO.insert(ctPhieu) != 0;
-        }
+         }
         return check;
     }
 }

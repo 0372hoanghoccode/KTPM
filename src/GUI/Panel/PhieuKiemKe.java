@@ -228,6 +228,7 @@ public class PhieuKiemKe extends JPanel implements ActionListener, PropertyChang
         
     public void loadDataTalbe(ArrayList<PhieuKiemKeDTO> listphieuxuat) {
         tblModel.setRowCount(0);
+     
         int size = listphieuxuat.size();
         for (int i = 0; i < size; i++) {
             tblModel.addRow(new Object[]{

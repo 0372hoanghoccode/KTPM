@@ -30,7 +30,7 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 
 public final class TaoPhieuKiemKe extends JPanel implements ItemListener, ActionListener {
-
+    int x ; 
     PanelBorderRadius right, left;
     JPanel pnlBorder1, pnlBorder2, pnlBorder3, pnlBorder4, contentCenter, left_top, main, content_right_bottom, content_btn;
     JTable tablePhieuKiemKe, tableSanPham;
@@ -57,6 +57,7 @@ public final class TaoPhieuKiemKe extends JPanel implements ItemListener, Action
     int maphieukiemke;
     int rowPhieuSelect = -1;
     private JTextArea jTextAreaGhiChu;
+    String hihi;
 
     public TaoPhieuKiemKe(NhanVienDTO nv, String type, Main m) {
         this.nhanVien = nv;
@@ -278,7 +279,10 @@ public final class TaoPhieuKiemKe extends JPanel implements ItemListener, Action
         right_top.setPreferredSize(new Dimension(300, 360));
         right_top.setOpaque(false);
         txtMaphieu = new InputForm("Mã phiếu");
-        txtMaphieu.setText("PKK" + phieuKiemKeBUS.getAutoIncrement());
+        x = phieuKiemKeBUS.getAutoIncrement() ; 
+        System.out.print(x);
+        txtMaphieu.setText("PKK" + x );
+        hihi = "PKK" + x ; 
         txtMaphieu.setEditable(false);
         txtNhanVien = new InputForm("Nhân viên");
         txtNhanVien.setText(nhanVien.getHOTEN());
@@ -435,28 +439,54 @@ public final class TaoPhieuKiemKe extends JPanel implements ItemListener, Action
             danhSachKiemke.get(rowPhieuSelect).setTRANGTHAISP(1);
             loadDataTableChiTietPhieu(danhSachKiemke);
         } else if (source == btnXacNhan) {
-            eventBtnNhapHang();
+            System.out.print(x);
+            eventBtnNhapHang(x);
+            
         } 
     }
 
-    public void eventBtnNhapHang() {
-        if (danhSachKiemke.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Chưa có sản phẩm nào trong phiếu !", "Cảnh báo !", JOptionPane.ERROR_MESSAGE);
-        } else {
-            int input = JOptionPane.showConfirmDialog(null, "Bạn có chắc chắn muốn tạo phiếu kiểm kê !", "Xác nhận tạo phiếu", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
-            if (input == 0) {
-                long now = System.currentTimeMillis();
-                Timestamp currenTime = new Timestamp(now);
-                PhieuKiemKeDTO pkk = new PhieuKiemKeDTO(maphieukiemke, nhanVien.getMNV(), currenTime);
-                boolean result = phieuKiemKeBUS.add(pkk, danhSachKiemke);
-                if (result) {
-                    JOptionPane.showMessageDialog(this, "Kiểm kê hàng thành công !");
-                    PhieuNhap pnlPhieu = new PhieuNhap(m, nhanVien);
-                    m.setPanel(pnlPhieu);
-                } else {
-                    JOptionPane.showMessageDialog(this, "Kiểm kê hàng không thành công !", "Cảnh báo !", JOptionPane.ERROR_MESSAGE);
-                }
+public void eventBtnNhapHang(int x) {
+    if (danhSachKiemke.isEmpty()) {
+        JOptionPane.showMessageDialog(this, "Chưa có sản phẩm nào trong phiếu !", "Cảnh báo !", JOptionPane.ERROR_MESSAGE);
+    } else {
+        int input = JOptionPane.showConfirmDialog(null, "Bạn có chắc chắn muốn tạo phiếu kiểm kê !", "Xác nhận tạo phiếu", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
+        if (input == 0) {
+            // Gán mã sản phẩm cho tất cả các chi tiết kiểm kê
+            for (ChiTietKiemKeDTO item : danhSachKiemke) {
+                item.setMP(x); // Chuyển đổi chuỗi thành số nguyên và gán
+            }
+
+            // Hiển thị danh sách kiểm kê
+//            StringBuilder danhSachBuilder = new StringBuilder();
+//            danhSachBuilder.append("Danh sách kiểm kê:\n\n");
+//
+//            for (ChiTietKiemKeDTO item : danhSachKiemke) {
+//                danhSachBuilder.append("Mã phiếu: ").append(item.getMP()).append("\n");
+//                danhSachBuilder.append("Mã sản phẩm: ").append(item.getMSP()).append("\n");
+//                danhSachBuilder.append("Trạng thái sản phẩm: ").append(item.getTRANGTHAISP()).append("\n");
+//                danhSachBuilder.append("Ghi chú: ").append(item.getGHICHU()).append("\n");
+//                danhSachBuilder.append("----------------------------\n");
+//            }
+//
+//            JOptionPane.showMessageDialog(this, danhSachBuilder.toString(), "Danh Sách Kiểm Kê", JOptionPane.INFORMATION_MESSAGE);
+
+            // Tạo phiếu kiểm kê
+            long now = System.currentTimeMillis();
+            Timestamp currenTime = new Timestamp(now);
+            PhieuKiemKeDTO pkk = new PhieuKiemKeDTO(maphieukiemke, nhanVien.getMNV(), currenTime);
+            boolean result = phieuKiemKeBUS.add(pkk, danhSachKiemke);
+            if (result) {
+                JOptionPane.showMessageDialog(this, "Kiểm kê hàng thành công !");
+                PhieuKiemKe pnlPhieu = new PhieuKiemKe(m, nhanVien);
+                m.setPanel(pnlPhieu);
+             
+            } else {
+                JOptionPane.showMessageDialog(this, "Kiểm kê hàng không thành công !", "Cảnh báo !", JOptionPane.ERROR_MESSAGE);
             }
         }
     }
+}
+
+
+
 }

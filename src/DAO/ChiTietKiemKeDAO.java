@@ -17,25 +17,42 @@ public class ChiTietKiemKeDAO implements ChiTietInterface<ChiTietKiemKeDTO>{
     }
 
     @Override
-    public int insert(ArrayList<ChiTietKiemKeDTO> t) {
-        int result = 0;
-        for (int i = 0; i < t.size(); i++) {
-            try {
-                Connection con = (Connection) JDBCUtil.getConnection();
-                String sql = "INSERT INTO `CTPHIEUKIEMKE`(`MPKK`, `MSP`, `TRANGTHAISP`, `GHICHU`) VALUES (?,?,?,?)";
-                PreparedStatement pst = (PreparedStatement) con.prepareStatement(sql);
-                pst.setInt(1,t.get(i).getMP()); 
-                pst.setInt(2, t.get(i).getMSP());
-                pst.setInt(3, t.get(i).getTRANGTHAISP());
-                pst.setString(4, t.get(i).getGHICHU());
-                result = pst.executeUpdate();
-                JDBCUtil.closeConnection(con);
-            } catch (SQLException ex) {
-                Logger.getLogger(ChiTietPhieuNhapDAO.class.getName()).log(Level.SEVERE, null, ex);
-            }
+public int insert(ArrayList<ChiTietKiemKeDTO> t) {
+    int result = 0;
+    Connection con = null;
+    PreparedStatement pst = null;
+    
+    try {
+        con = JDBCUtil.getConnection(); // Mở kết nối trước vòng lặp
+
+        String sql = "INSERT INTO CTPHIEUKIEMKE (MPKK, MSP, TRANGTHAISP, GHICHU) VALUES (?, ?, ?, ?)";
+        pst = con.prepareStatement(sql);
+
+        for (ChiTietKiemKeDTO dto : t) {
+            pst.setInt(1, dto.getMP());
+            pst.setInt(2, dto.getMSP());
+            pst.setInt(3, dto.getTRANGTHAISP());
+            pst.setString(4, dto.getGHICHU());
+            
+            result += pst.executeUpdate(); // Cộng dồn số lượng bản ghi đã chèn
         }
-        return result;
+        
+    } catch (SQLException ex) {
+        Logger.getLogger(ChiTietPhieuNhapDAO.class.getName()).log(Level.SEVERE, null, ex);
+        // Có thể xử lý thêm lỗi ở đây
+    } finally {
+        // Đảm bảo đóng tài nguyên trong khối finally
+        try {
+            if (pst != null) pst.close();
+            if (con != null) JDBCUtil.closeConnection(con);
+        } catch (SQLException e) {
+            Logger.getLogger(ChiTietPhieuNhapDAO.class.getName()).log(Level.SEVERE, null, e);
+        }
     }
+    
+    return result; // Trả về tổng số bản ghi đã chèn thành công
+}
+
 
     @Override
     public int delete(String maphieu) {
