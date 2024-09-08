@@ -72,19 +72,26 @@ public class TaiKhoanKHDAO implements DAOinterface<TaiKhoanDTO>{
 }
     
     
-    public void updatePass(String email, String password){
-        try {
-            Connection con = (Connection) JDBCUtil.getConnection();
-            String sql = "UPDATE TAIKHOANKH KH JOIN KHACHHANG KH ON KH.MKH = NV.MKH SET `MK` = ? WHERE `EMAIL` = ?";
-            PreparedStatement pst = (PreparedStatement) con.prepareStatement(sql);
-            pst.setString(1, password);
-            pst.setString(2, email);
-            pst.executeUpdate();
-            JDBCUtil.closeConnection(con);
-        } catch (SQLException ex) {
-            Logger.getLogger(TaiKhoanDAO.class.getName()).log(Level.SEVERE, null, ex);
-        }
+ public void updatePass(String email, String password) {
+    String sql = "UPDATE TAIKHOANKH tk " +
+                 "JOIN KHACHHANG kh ON tk.MKH = kh.MKH " +
+                 "SET tk.MK = ? " +
+                 "WHERE kh.EMAIL = ?";
+    
+    try (Connection con = JDBCUtil.getConnection();
+         PreparedStatement pst = con.prepareStatement(sql)) {
+
+        // Đặt giá trị cho các tham số trong câu lệnh SQL
+        pst.setString(1, password);
+        pst.setString(2, email);
+        
+        // Thực thi câu lệnh SQL
+        pst.executeUpdate();
+    } catch (SQLException ex) {
+        Logger.getLogger(TaiKhoanDAO.class.getName()).log(Level.SEVERE, "Error updating password", ex);
     }
+}
+
     
     public TaiKhoanDTO selectByEmail(String t) {
         TaiKhoanDTO tk = null;
@@ -186,25 +193,50 @@ public class TaiKhoanKHDAO implements DAOinterface<TaiKhoanDTO>{
     }
 
     @Override
+//    public ArrayList<TaiKhoanDTO> selectAll() {
+//        ArrayList<TaiKhoanDTO> result = new ArrayList<TaiKhoanDTO>();
+//        try {
+//            Connection con = (Connection) JDBCUtil.getConnection();
+//            String sql = "SELECT * FROM TAIKHOANKH WHERE TT = '0' OR TT = '1' OR TT = '2'";
+//            PreparedStatement pst = (PreparedStatement) con.prepareStatement(sql);
+//            ResultSet rs = (ResultSet) pst.executeQuery();
+//            while(rs.next()){
+//                int MKH = rs.getInt("MKH");
+//                String TDN = rs.getString("TDN");
+//                String MK = rs.getString("MK");
+//                int MNQ = rs.getInt("MNQ");
+//                int TT = rs.getInt("TT");
+//                TaiKhoanDTO tk = new TaiKhoanDTO(MKH, TDN, MK, MNQ, TT);
+//                result.add(tk);
+//            }
+//            JDBCUtil.closeConnection(con);
+//        } catch (Exception e) {
+//        }
+//        return result;
+//    }
     public ArrayList<TaiKhoanDTO> selectAll() {
-        ArrayList<TaiKhoanDTO> result = new ArrayList<TaiKhoanDTO>();
-        try {
-            Connection con = (Connection) JDBCUtil.getConnection();
-            String sql = "SELECT * FROM TAIKHOANKH WHERE TT = '0' OR TT = '1' OR TT = '2'";
-            PreparedStatement pst = (PreparedStatement) con.prepareStatement(sql);
-            ResultSet rs = (ResultSet) pst.executeQuery();
-            while(rs.next()){
+        System.out.print("Lấy data từ cơ sở dữ liệu nè");
+        ArrayList<TaiKhoanDTO> result = new ArrayList<>();
+        String sql = "SELECT * FROM TAIKHOANKH WHERE TT = '0' OR TT = '1' OR TT = '2'";
+
+        try (Connection con = JDBCUtil.getConnection();
+             PreparedStatement pst = con.prepareStatement(sql);
+             ResultSet rs = pst.executeQuery()) {
+
+            while (rs.next()) {
                 int MKH = rs.getInt("MKH");
                 String TDN = rs.getString("TDN");
                 String MK = rs.getString("MK");
                 int MNQ = rs.getInt("MNQ");
                 int TT = rs.getInt("TT");
+
                 TaiKhoanDTO tk = new TaiKhoanDTO(MKH, TDN, MK, MNQ, TT);
                 result.add(tk);
             }
-            JDBCUtil.closeConnection(con);
         } catch (Exception e) {
+          //  LOGGER.log(Level.SEVERE, "Error retrieving accounts", e);
         }
+
         return result;
     }
 
@@ -227,7 +259,7 @@ public class TaiKhoanKHDAO implements DAOinterface<TaiKhoanDTO>{
                 result = tk;
             }
             JDBCUtil.closeConnection(con);
-        } catch (Exception e) {
+        } catch (SQLException e) {
         }
         return result;
     }

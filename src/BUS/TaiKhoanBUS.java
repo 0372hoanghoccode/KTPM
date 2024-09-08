@@ -28,12 +28,23 @@ public class TaiKhoanBUS {
     }
     
     public TaiKhoanDTO getTaiKhoan(int index){
+        System.out.print("Vị trí trong dây" + index);
+        System.out.print("Số lượng " + listTaiKhoan.size());
         if (index >= 0 && index < listTaiKhoan.size()) {
             return listTaiKhoan.get(index);
         }
         return null; 
     }
 
+       public TaiKhoanDTO getTaiKhoanKH(int index){
+        System.out.print("Vị trí trong dây" + index);
+        System.out.print("Số lượng " + listTaikhoanKH.size());
+        if (index >= 0 && index < listTaikhoanKH.size()) {
+            return listTaikhoanKH.get(index);
+        }
+        return null; 
+    }
+    
     public int getTaiKhoanByMaNV(int manv) {
         for (int i = 0; i < this.listTaiKhoan.size(); i++) {
             if (listTaiKhoan.get(i).getMNV() == manv) {
@@ -43,17 +54,45 @@ public class TaiKhoanBUS {
         return -1;
     }
 
-    public int getTaiKhoanByMaKH(int manv) {
-        if (this.listTaikhoanKH == null) {
-            getTaiKhoanAllKH();
+public int getTaiKhoanByMaKH(int manv) {
+    // Tải tất cả tài khoản khách hàng nếu danh sách chưa được tải
+   // if (this.listTaikhoanKH == null) {
+        getTaiKhoanAllKH();
+    //}
+
+    // In danh sách tài khoản khách hàng để kiểm tra
+
+    System.out.println("Danh sách tài khoản khách hàng:");
+    if (this.listTaikhoanKH != null) {
+        for (TaiKhoanDTO tk : this.listTaikhoanKH) {
+            System.out.println("Mã KH: " + tk.getMNV() + ", TDN: " + tk.getTDN() + ", MK: " + tk.getMK() + ", MNQ: " + tk.getMNQ() + ", TT: " + tk.getTT());
+            
         }
-        for (int i = 0; i < this.listTaikhoanKH.size(); i++) {
-            if (listTaikhoanKH.get(i).getMNV() == manv) {
-                return i;
-            }
-        }
-        return -1; 
+    } else {
+        System.out.println("Danh sách tài khoản khách hàng là null");
     }
+    System.out.print(manv);
+    // Duyệt qua danh sách tài khoản khách hàng để tìm mã nhân viên
+    for (int i = 0; i < this.listTaikhoanKH.size(); i++) {
+        if (listTaikhoanKH.get(i).getMNV() == manv) {
+            return i; // Trả về chỉ số của tài khoản khách hàng
+        }
+    }
+//    int i =  0 ;
+//    for (TaiKhoanDTO tk : this.listTaikhoanKH){
+//        if(tk.getMNV() == manv){
+//            System.out.print(i);
+//            return i ; 
+//        }
+//        else 
+//                i++;
+//    }
+
+    // Nếu không tìm thấy, trả về -1
+    return -1;
+}
+
+
 
     
     public NhomQuyenDTO getNhomQuyenDTO(int manhom){

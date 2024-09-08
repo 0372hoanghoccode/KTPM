@@ -185,13 +185,15 @@ public class MyAccountKH extends JDialog implements ActionListener {
         if(e.getSource() == save) {
             if (check) {
     // Lấy thông tin tài khoản từ hệ thống
+    System.out.print("KH.getMKH là gì ba ? " + kh.getMaKH());
     int index = tkbus.getTaiKhoanByMaKH(kh.getMaKH());
+    System.out.print("Vị trí tìm kiếm được : " + index);
     if (index == -1) {
         JOptionPane.showMessageDialog(this, "Không tìm thấy tài khoản với mã KH: " + kh.getMaKH(), "Cảnh báo!", JOptionPane.WARNING_MESSAGE);
         return;
     }
 
-    TaiKhoanDTO tkdto = tkbus.getTaiKhoan(index);
+    TaiKhoanDTO tkdto = tkbus.getTaiKhoanKH(index);
 
     // Kiểm tra tkdto và mật khẩu của nó
     if (tkdto == null) {
