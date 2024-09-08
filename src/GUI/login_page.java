@@ -17,6 +17,7 @@ import com.formdev.flatlaf.fonts.roboto.FlatRobotoFont;
 import DAO.TaiKhoanDAO;
 import DAO.TaiKhoanKHDAO;
 import DTO.TaiKhoanDTO;
+import java.util.ArrayList;
 
 
 public class login_page extends JFrame implements KeyListener{
@@ -179,42 +180,51 @@ public class login_page extends JFrame implements KeyListener{
         login_nhap.add(buttonPanel); 
         this.add(login_nhap , BorderLayout.EAST);
     }
-        public void checkLogin() throws UnsupportedLookAndFeelException {
-        String usernameCheck = txtUsername.getText();
-        String passwordCheck = txtPassword.getPass();
-        if (usernameCheck.equals("") || passwordCheck.equals("")) {
-            JOptionPane.showMessageDialog(this, "Vui lòng nhập thông tin đầy đủ", "Cảnh báo!", JOptionPane.WARNING_MESSAGE);
-        } else {
-            TaiKhoanDTO tk = TaiKhoanDAO.getInstance().selectByUser(usernameCheck);
-            if (tk == null) {
-                    TaiKhoanDTO tkkh = TaiKhoanKHDAO.getInstance().selectByUser(usernameCheck);
-                if (tkkh == null) {
-                    JOptionPane.showMessageDialog(this, "Tài khoản của bạn không tồn tại trên hệ thống", "Cảnh báo!", JOptionPane.WARNING_MESSAGE);
-                } else {
-                    if (tkkh.getTT() == 0) {
-                        JOptionPane.showMessageDialog(this, "Tài khoản của bạn đang bị khóa", "Cảnh báo!", JOptionPane.WARNING_MESSAGE);
-                    } else {
-                        if (BCrypt.checkpw(passwordCheck, tkkh.getMK())) {
-                            try {
-                                this.dispose();
-                                MainKH main = new MainKH(tkkh);
-                                main.setVisible(true);
-                            } catch (UnsupportedLookAndFeelException ex) {
-                                Logger.getLogger(login_page.class.getName()).log(Level.SEVERE, null, ex);
-                            }
-                        } else {
-                            JOptionPane.showMessageDialog(this, "Mật khẩu không khớp", "Cảnh báo!", JOptionPane.WARNING_MESSAGE);
-                        }
-                    }
-                }
+    
+    public void printAllAccounts() {
+    // Lấy danh sách tất cả tài khoản nhân viên
+    ArrayList<TaiKhoanDTO> danhSachTaiKhoan = TaiKhoanDAO.getInstance().selectAll();
+
+    // Xây dựng thông báo
+    StringBuilder info = new StringBuilder();
+    info.append("Danh sách tài khoản nhân viên:\n\n");
+
+    for (TaiKhoanDTO tk : danhSachTaiKhoan) {
+        info.append("Mã nhân viên: ").append(tk.getMNV()).append("\n");
+        info.append("Tên tài khoản: ").append(tk.getTDN()).append("\n");
+        info.append("Mật khẩu chưa mã hóa: ").append(tk.getMK()).append("\n");
+        info.append("----------------------------\n");
+    }
+
+    // Hiển thị thông tin
+    JOptionPane.showMessageDialog(null, info.toString(), "Danh Sách Tài Khoản", JOptionPane.INFORMATION_MESSAGE);
+}
+
+public void checkLogin() throws UnsupportedLookAndFeelException {
+    String usernameCheck = txtUsername.getText();
+    String passwordCheck = txtPassword.getPass();
+    //printAllAccounts();
+
+    if (usernameCheck.equals("") || passwordCheck.equals("")) {
+        JOptionPane.showMessageDialog(this, "Vui lòng nhập thông tin đầy đủ", "Cảnh báo!", JOptionPane.WARNING_MESSAGE);
+    } else {
+        TaiKhoanDTO tk = TaiKhoanDAO.getInstance().selectByUser(usernameCheck);
+        if (tk == null) {
+           // System.out.print("hello");
+            TaiKhoanDTO tkkh = TaiKhoanKHDAO.getInstance().selectByUser(usernameCheck);
+            if (tkkh == null) {
+                JOptionPane.showMessageDialog(this, "Tài khoản của bạn không tồn tại trên hệ thống", "Cảnh báo!", JOptionPane.WARNING_MESSAGE);
             } else {
-                if (tk.getTT() == 0) {
+                if (tkkh.getTT() == 0) {
                     JOptionPane.showMessageDialog(this, "Tài khoản của bạn đang bị khóa", "Cảnh báo!", JOptionPane.WARNING_MESSAGE);
                 } else {
-                    if (BCrypt.checkpw(passwordCheck, tk.getMK())) {
+                    // In thông tin nhân viên dù mật khẩu không khớp
+
+
+                    if (BCrypt.checkpw(passwordCheck, tkkh.getMK())) {
                         try {
                             this.dispose();
-                            Main main = new Main(tk);
+                            MainKH main = new MainKH(tkkh);
                             main.setVisible(true);
                         } catch (UnsupportedLookAndFeelException ex) {
                             Logger.getLogger(login_page.class.getName()).log(Level.SEVERE, null, ex);
@@ -224,8 +234,34 @@ public class login_page extends JFrame implements KeyListener{
                     }
                 }
             }
+        } else {
+            if (tk.getTT() == 0) {
+                JOptionPane.showMessageDialog(this, "Tài khoản của bạn đang bị khóa", "Cảnh báo!", JOptionPane.WARNING_MESSAGE);
+            } else {
+                // In thông tin nhân viên dù mật khẩu không khớp
+//                StringBuilder info = new StringBuilder();
+//                info.append("Mã nhân viên: ").append(tk.getMNV()).append("\n");
+//                info.append("Tên tài khoản: ").append(tk.getTDN()).append("\n");
+//                info.append("Mật khẩu chưa mã hóa: ").append(tk.getMK()).append("\n");
+//                JOptionPane.showMessageDialog(this, info.toString(), "Thông tin nhân viên", JOptionPane.INFORMATION_MESSAGE);
+
+                if (BCrypt.checkpw(passwordCheck, tk.getMK())) {
+                    try {
+                        this.dispose();
+                        Main main = new Main(tk);
+                        main.setVisible(true);
+                    } catch (UnsupportedLookAndFeelException ex) {
+                        Logger.getLogger(login_page.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(this, "Mật khẩu không khớp", "Cảnh báo!", JOptionPane.WARNING_MESSAGE);
+                }
+            }
         }
     }
+}
+
+
     
 
     // public static void main(String[] args) {

@@ -81,30 +81,47 @@ public class TaiKhoanDialog extends JDialog {
         btnCapNhat = new ButtonCustom("Lưu thông tin", "success", 14);
         btnHuyBo = new ButtonCustom("Huỷ bỏ", "danger", 14);
 
-        btnThem.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (validateInput()) {
-                    String tendangnhap = username.getText();
-                    int check = 0;
-                    if(!taiKhoan.taiKhoanBus.checkTDN(tendangnhap)) check = 1;
-                    if (check == 0) {
-                        String pass = BCrypt.hashpw(password.getPass(), BCrypt.gensalt(12));
-                        int manhom = listNq.get(maNhomQuyen.getSelectedIndex()).getManhomquyen();
-                        int tt = trangthai.getSelectedIndex();
-                        TaiKhoanDTO tk = new TaiKhoanDTO(manv, tendangnhap, pass, manhom, tt);
-                        taiKhoan.taiKhoanBus.addAcc(tk);
-                        taiKhoan.loadTable(taiKhoan.taiKhoanBus.getTaiKhoanAll());
-                        JOptionPane.showMessageDialog(null, "Thêm tài khoản thành công!");
-                        dispose();
-                    } else {
-                        JOptionPane.showMessageDialog(null, "Tên tài khoản đã tồn tại. Vui lòng đổi tên khác!", "Cảnh báo!", JOptionPane.WARNING_MESSAGE);
-                        username.getFocusCycleRootAncestor();
-                    }
+btnThem.addActionListener(new ActionListener() {
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (validateInput()) {
+            String tendangnhap = username.getText();
+            int check = 0;
+            if (!taiKhoan.taiKhoanBus.checkTDN(tendangnhap)) check = 1;
 
-                }
+            if (check == 0) {
+                String pass = password.getPass(); // Lấy mật khẩu nhập vào
+                String hashedPass = BCrypt.hashpw(pass, BCrypt.gensalt(12)); // Mã hóa mật khẩu
+                int manhom = listNq.get(maNhomQuyen.getSelectedIndex()).getManhomquyen();
+                int tt = trangthai.getSelectedIndex();
+                TaiKhoanDTO tk = new TaiKhoanDTO(manv, tendangnhap, hashedPass, manhom, tt);
+                // 
+                   System.out.print("Chưa đưa vào database" + hashedPass);
+                
+                // Thêm tài khoản vào hệ thống
+                taiKhoan.taiKhoanBus.addAcc(tk);
+                
+                // Cập nhật bảng tài khoản
+                taiKhoan.loadTable(taiKhoan.taiKhoanBus.getTaiKhoanAll());
+                
+                // Hiển thị thông báo thành công cùng với mật khẩu mới
+                JOptionPane.showMessageDialog(null, 
+                    "Thêm tài khoản thành công!\nMật khẩu mới: " + pass, 
+                    "Thông báo", 
+                    JOptionPane.INFORMATION_MESSAGE);
+                
+                dispose();
+            } else {
+                JOptionPane.showMessageDialog(null, 
+                    "Tên tài khoản đã tồn tại. Vui lòng đổi tên khác!", 
+                    "Cảnh báo!", 
+                    JOptionPane.WARNING_MESSAGE);
+                username.getFocusCycleRootAncestor();
             }
-        });
+        }
+    }
+});
+
         btnCapNhat.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {

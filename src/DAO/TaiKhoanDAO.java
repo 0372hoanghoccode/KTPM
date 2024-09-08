@@ -26,7 +26,7 @@ public class TaiKhoanDAO implements DAOinterface<TaiKhoanDTO>{
             PreparedStatement pst = (PreparedStatement) con.prepareStatement(sql);
             pst.setInt(1, t.getMNV());
             pst.setString(2, t.getTDN());
-            pst.setString(3, BCrypt.hashpw(t.getMK(), BCrypt.gensalt(12)));
+            pst.setString(3, t.getMK());
             pst.setInt(4, t.getMNQ());
             pst.setInt(5, t.getTT());
             result = pst.executeUpdate();
@@ -34,6 +34,7 @@ public class TaiKhoanDAO implements DAOinterface<TaiKhoanDTO>{
         } catch (SQLException ex) {
             Logger.getLogger(TaiKhoanDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
+        System.out.print("Đã đưa vào database " + t.getMK());
         return result;
     }
 
@@ -275,4 +276,5 @@ public class TaiKhoanDAO implements DAOinterface<TaiKhoanDTO>{
         }
         return result;
     }
+    
 }
