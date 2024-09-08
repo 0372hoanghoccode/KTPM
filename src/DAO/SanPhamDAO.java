@@ -201,6 +201,7 @@ public class SanPhamDAO implements DAOinterface<SanPhamDTO> {
 
     public int updateSoLuongTon(int MSP, int soluong) {
         int quantity_current = this.selectById(Integer.toString(MSP)).getSL();
+        System.out.print("Còn nhiêu sau khi bán:" + quantity_current);
         int result = 0;
         int quantity_change = quantity_current + soluong;
         try {

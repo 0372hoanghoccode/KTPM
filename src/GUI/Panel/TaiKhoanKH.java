@@ -195,17 +195,23 @@ public class TaiKhoanKH extends JPanel implements ActionListener, ItemListener {
                 new TaiKhoanKHDialog(this, owner, "Cập nhật tài khoản", true, "update", listTk.get(index));
             }
         } else if (e.getSource() == mainFunction.btn.get("delete")) {
-            int index = getRowSelected();
-            if (index != -1) {
-                int input = JOptionPane.showConfirmDialog(null,
-                        "Bạn có chắc chắn muốn xóa tài khoản :)!", "Xóa xóa tài khoản",
-                        JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
-                if (input == 0) {
-                    TaiKhoanKHDAO.getInstance().delete(listTk.get(index).getMNV() + "");
-                    loadTable(taiKhoanBus.getTaiKhoanAll());
-                }
+    int index = getRowSelected();
+    if (index != -1) {
+        int input = JOptionPane.showConfirmDialog(null,
+                "Bạn có chắc chắn muốn xóa tài khoản :)!", "Xóa tài khoản",
+                JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
+        if (input == 0) { // Nếu chọn OK
+            int success = TaiKhoanKHDAO.getInstance().delete(listTk.get(index).getMNV() + "");
+            if (success == 1 ) {
+                loadTable(taiKhoanBus.getTaiKhoanAllKH());
+                JOptionPane.showMessageDialog(null, "Xóa tài khoản thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                JOptionPane.showMessageDialog(null, "Xóa tài khoản không thành công. Vui lòng thử lại.", "Lỗi", JOptionPane.ERROR_MESSAGE);
             }
-        } else if (e.getSource() == mainFunction.btn.get("detail")) {
+        }
+    }
+}
+else if (e.getSource() == mainFunction.btn.get("detail")) {
             int index = getRowSelected();
             if (index != -1) {
                 new TaiKhoanKHDialog(this, owner, "Thêm tài khoản", true, "view", listTk.get(index));

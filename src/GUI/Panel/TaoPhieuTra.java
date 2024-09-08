@@ -437,7 +437,7 @@ public final class TaoPhieuTra extends JPanel implements ItemListener, ActionLis
             return false;
         } else if (phuongthuc == 0) {
             if (Validation.isEmpty(txtLydo.getText())) {
-                JOptionPane.showMessageDialog(this, "Ly dó không được để rỗng!", "Cảnh báo !", JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Lý do không được để rỗng!", "Cảnh báo !", JOptionPane.WARNING_MESSAGE);
                 return false;
             }
             if (Validation.isEmpty(txtSoLuongSPtra.getText()) || !Validation.isNumber(txtSoLuongSPtra.getText()) || Integer.parseInt(txtSoLuongSPtra.getText()) > slmax ) {
