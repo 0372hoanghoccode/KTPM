@@ -87,9 +87,10 @@ public class TaiKhoanKHDialog extends JDialog {
                 if (validateInput()) {
                     String tendangnhap = username.getText();
                     int check = 0;
-                    if(!taiKhoan.taiKhoanBus.checkTDN(tendangnhap)) check = 1;
+                    if (!taiKhoan.taiKhoanBus.checkTDN(tendangnhap)) check = 1;
                     if (check == 0) {
-                        String pass = BCrypt.hashpw(password.getPass(), BCrypt.gensalt(12));
+                        // Không mã hóa mật khẩu, lưu trực tiếp
+                        String pass = password.getPass();
                         int manhom = listNq.get(maNhomQuyen.getSelectedIndex()).getManhomquyen();
                         int tt = trangthai.getSelectedIndex();
                         TaiKhoanDTO tk = new TaiKhoanDTO(manv, tendangnhap, pass, manhom, tt);
@@ -101,18 +102,18 @@ public class TaiKhoanKHDialog extends JDialog {
                         JOptionPane.showMessageDialog(null, "Tên tài khoản đã tồn tại. Vui lòng đổi tên khác!", "Cảnh báo!", JOptionPane.WARNING_MESSAGE);
                         username.getFocusCycleRootAncestor();
                     }
-
                 }
             }
         });
+        
         btnCapNhat.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (!(username.getText().length() == 0)) {
                     String tendangnhap = username.getText();
                     String pass;
-                    if(password.getPass().equals("")) pass = BCrypt.hashpw(tk.getMK(), BCrypt.gensalt(12));
-                    else pass = BCrypt.hashpw(password.getPass(), BCrypt.gensalt(12));
+                    if (password.getPass().equals("")) pass = tk.getMK(); // Nếu không thay đổi mật khẩu, giữ nguyên mật khẩu cũ
+                    else pass = password.getPass(); // Cập nhật mật khẩu mới
                     int manhom = listNq.get(maNhomQuyen.getSelectedIndex()).getManhomquyen();
                     int tt = trangthai.getSelectedIndex();
                     TaiKhoanDTO tk = new TaiKhoanDTO(manv, tendangnhap, pass, manhom, tt);
@@ -125,6 +126,7 @@ public class TaiKhoanKHDialog extends JDialog {
                 }
             }
         });
+        
         // btnHuyBo.addActionListener(new ActionListener() {
         //     @Override
         //     public void actionPerformed(ActionEvent e) {

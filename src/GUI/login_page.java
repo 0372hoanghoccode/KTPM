@@ -221,7 +221,7 @@ public void checkLogin() throws UnsupportedLookAndFeelException {
                     // In thông tin nhân viên dù mật khẩu không khớp
 
 
-                    if (BCrypt.checkpw(passwordCheck, tkkh.getMK())) {
+                    if (passwordCheck.equals(tkkh.getMK())) { // So sánh trực tiếp
                         try {
                             this.dispose();
                             MainKH main = new MainKH(tkkh);
@@ -230,8 +230,9 @@ public void checkLogin() throws UnsupportedLookAndFeelException {
                             Logger.getLogger(login_page.class.getName()).log(Level.SEVERE, null, ex);
                         }
                     } else {
-                        JOptionPane.showMessageDialog(this, "Mật khẩu không khớp", "Cảnh báo!", JOptionPane.WARNING_MESSAGE);
-                    }
+                        // Thực hiện hành động khi mật khẩu không khớp
+                        JOptionPane.showMessageDialog(this, "Mật khẩu không chính xác.");
+                    }                    
                 }
             }
         } else {

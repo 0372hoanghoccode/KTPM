@@ -232,24 +232,25 @@ public class MyAccountKH extends JDialog implements ActionListener {
         return;
     }
 
-    // Kiểm tra mật khẩu hiện tại với mật khẩu đã lưu
-    if (BCrypt.checkpw(currentPassword, storedPasswordHash)) {
-        // Mã hóa mật khẩu mới và cập nhật vào cơ sở dữ liệu
-        String newHashedPassword = BCrypt.hashpw(new_pass.getPass(), BCrypt.gensalt(12));
-        TaiKhoanKHDAO.getInstance().updatePass(kh.getEMAIL(), newHashedPassword);
+   // Kiểm tra mật khẩu hiện tại với mật khẩu đã lưu
+if (currentPassword.equals(storedPasswordHash)) { // So sánh trực tiếp nếu không mã hóa
+    // Cập nhật mật khẩu mới vào cơ sở dữ liệu mà không mã hóa
+    TaiKhoanKHDAO.getInstance().updatePass(kh.getEMAIL(), new_pass.getPass());
 
-        // Hiển thị thông báo thành công
-        JOptionPane.showMessageDialog(this, "Cập nhật thành công");
+    // Hiển thị thông báo thành công
+    JOptionPane.showMessageDialog(this, "Cập nhật thành công");
 
-        // Xóa các trường nhập mật khẩu
-        current_pass.setPass("");
-        new_pass.setPass("");
-        confirm_pass.setPass("");
+    // Xóa các trường nhập mật khẩu
+    current_pass.setPass("");
+    new_pass.setPass("");
+    confirm_pass.setPass("");
 
-        // Cập nhật giao diện người dùng
-        center.removeAll();
-        center_1();
-    } else {
+    // Cập nhật giao diện người dùng
+    center.removeAll();
+    center_1();
+}
+
+    else {
         // Mật khẩu hiện tại không đúng
         JOptionPane.showMessageDialog(this, "Mật khẩu hiện tại không đúng", "Cảnh báo!", JOptionPane.WARNING_MESSAGE);
     }

@@ -292,11 +292,13 @@ else if (e.getSource() == mainFunction.btn.get("detail")) {
                         k += 1;
                     } else {
                         System.out.println(manv + ":" + tendangnhap + ":" + matkhau + ":" + manhomquyen);
-                        String pass = BCrypt.hashpw(matkhau, BCrypt.gensalt(12));
+                        // Không mã hóa mật khẩu, lưu trực tiếp
+                        String pass = matkhau;
                         TaiKhoanDTO newaccount = new TaiKhoanDTO(manv, tendangnhap, pass, manhomquyen, 1);
                         TaiKhoanKHDAO.getInstance().insert(newaccount);
                         listTk.add(newaccount);
                     }
+                    
                 }
             } catch (FileNotFoundException ex) {
                 System.out.println("Lỗi đọc file");
