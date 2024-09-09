@@ -12,6 +12,7 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -197,11 +198,47 @@ if (!sdt.startsWith("0")) {
 
         } else if (e.getSource() == btnHuyBo) {
             dispose();
-        } else if (e.getSource() == btnCapNhat && Validation()) {
-            jpKH.khachhangBUS.update(new KhachHangDTO(kh.getMaKH(), tenKH.getText(), sdtKH.getText(), diachiKH.getText(), emailKH.getText()));
-            jpKH.loadDataTable(jpKH.listkh);
-            dispose();
         }
+//        else if (e.getSource() == btnCapNhat && Validation()) {
+//            
+//            jpKH.khachhangBUS.update(new DTO.KhachHangDTO(kh.getMaKH(), tenKH.getText(), sdtKH.getText(), diachiKH.getText(), emailKH.getText()));
+//            
+//            jpKH.loadDataTable(jpKH.listkh);
+//            dispose();
+//        }
+else if (e.getSource() == btnCapNhat && Validation()) {
+    // Clone the existing list
+    ArrayList<KhachHangDTO> updatedList = new ArrayList<>(jpKH.listkh);
+    
+    // Create the updated KhachHangDTO object
+    KhachHangDTO updatedKhachHang = new KhachHangDTO(
+        kh.getMaKH(), // Existing ID
+        tenKH.getText(),
+        sdtKH.getText(),
+        diachiKH.getText(),
+        emailKH.getText(),
+        kh.getNgaythamgia() // Preserve the existing timestamp
+    );
+    
+    // Find and update the record in the new list
+    for (int i = 0; i < updatedList.size(); i++) {
+        KhachHangDTO kh1 = updatedList.get(i);
+        if (kh1.getMaKH() == updatedKhachHang.getMaKH()) {
+            updatedList.set(i, updatedKhachHang);
+            break;
+        }
+    }
+    
+    // Perform the update in the database
+    jpKH.khachhangBUS.update(updatedKhachHang);
+    
+    // Reload the data table with the new list
+    jpKH.loadDataTable(updatedList);
+    
+    // Dispose of the current window or dialog
+    dispose();
+}
+
     }
 
     public static boolean isPhoneNumber(String str) {
