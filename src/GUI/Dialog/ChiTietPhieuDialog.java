@@ -54,7 +54,7 @@ public final class ChiTietPhieuDialog extends JDialog implements ActionListener 
     PhieuXuatBUS phieuxuatBus;
     PhieuTraBUS phieutraBus;
 
-    ButtonCustom btnPdf, btnHuyBo, btnDuyet;
+    ButtonCustom btnPdf, btnDuyet;
 
     ArrayList<ChiTietPhieuDTO> chitietphieu;
 
@@ -183,14 +183,14 @@ public final class ChiTietPhieuDialog extends JDialog implements ActionListener 
         pnmain_btn.setBorder(new EmptyBorder(10, 0, 10, 0));
         pnmain_btn.setBackground(Color.white);
         btnPdf = new ButtonCustom("Xuất file PDF", "success", 14);
-        btnHuyBo = new ButtonCustom("Huỷ bỏ", "danger", 14);
+        // btnHuyBo = new ButtonCustom("Huỷ bỏ", "danger", 14);
         btnDuyet = new ButtonCustom("Duyệt phiếu", "success", 14);
         btnDuyet.addActionListener(this);
         btnPdf.addActionListener(this);
-        btnHuyBo.addActionListener(this);
+        // btnHuyBo.addActionListener(this);
         pnmain_btn.add(btnDuyet);
         pnmain_btn.add(btnPdf);
-        pnmain_btn.add(btnHuyBo);
+        // pnmain_btn.add(btnHuyBo);
 
         pnmain.add(pnmain_top, BorderLayout.NORTH);
         pnmain.add(pnmain_bottom, BorderLayout.CENTER);
@@ -204,9 +204,9 @@ public final class ChiTietPhieuDialog extends JDialog implements ActionListener 
     @Override
     public void actionPerformed(ActionEvent e) {
         Object source = e.getSource();
-        if (source == btnHuyBo) {
-            dispose();
-        }
+        // if (source == btnHuyBo) {
+        //     dispose();
+        // }
         if (source == btnPdf) {
             writePDF w = new writePDF();
             if (this.phieuxuat != null) {
