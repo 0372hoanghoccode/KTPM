@@ -111,7 +111,7 @@ public class login_page extends JFrame implements KeyListener{
         
         login_nhap.add(paneldn);
 
-        lb2 = new JLabel("<html><u><i style='font-size: 10px;'>Quên mật khẩu ?</i></u></html>", JLabel.LEFT);
+        lb2 = new JLabel("<html><u><i style='font-size: 10px;'>  </i></u></html>", JLabel.LEFT);
         lb2.setPreferredSize(new Dimension(200,50));
         lb2.setForeground(Color.BLACK); // Set text color
         lb2.addMouseListener(new MouseAdapter() {
