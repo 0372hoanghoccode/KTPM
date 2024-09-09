@@ -88,7 +88,7 @@ public final class SanPhamKH extends JPanel implements ActionListener {
         }
         functionBar.add(mainFunction);
 
-        search = new IntegratedSearch(new String[]{"Tất cả", "Mã sản phẩm", "Tên sản phẩm"});
+        search = new IntegratedSearch(new String[]{"Tất cả","Tên Tác giả", "Tên sản phẩm"});
         search.txtSearchForm.addKeyListener(new KeyAdapter() {
             @Override
             public void keyReleased(KeyEvent e) {
