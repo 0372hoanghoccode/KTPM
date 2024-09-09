@@ -38,7 +38,7 @@ public class NhanVienDialog extends JDialog {
     private NhanVienBUS nv;
     private HeaderTitle titlePage;
     private JPanel main, bottom;
-    private ButtonCustom btnAdd, btnEdit, btnExit;
+    private ButtonCustom btnAdd, btnEdit;
     private InputForm name;
     private InputForm sdt;
     private InputForm email;
@@ -126,13 +126,13 @@ public class NhanVienDialog extends JDialog {
         bottom.setBackground(Color.white);
         btnAdd = new ButtonCustom("Thêm nhân viên ", "success", 14);
         btnEdit = new ButtonCustom("Lưu thông tin", "success", 14);
-        btnExit = new ButtonCustom("Hủy bỏ", "danger", 14);
-        btnExit.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                dispose();
-            }
-        });
+        // btnExit = new ButtonCustom("Hủy bỏ", "danger", 14);
+        // btnExit.addActionListener(new ActionListener() {
+        //     @Override
+        //     public void actionPerformed(ActionEvent e) {
+        //         dispose();
+        //     }
+        // });
 
         btnAdd.addActionListener(new ActionListener() {
             @Override
@@ -235,7 +235,7 @@ public class NhanVienDialog extends JDialog {
                 throw new AssertionError();
         }
 
-        bottom.add(btnExit);
+        // bottom.add(btnExit);
 
         this.add(titlePage, BorderLayout.NORTH);
         this.add(main, BorderLayout.CENTER);
