@@ -185,7 +185,7 @@ public class SanPhamDAO implements DAOinterface<SanPhamDTO> {
             String sql = "SELECT `AUTO_INCREMENT` FROM  INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'quanlycuahangsach' AND   TABLE_NAME   = 'SANPHAM'";
             PreparedStatement pst = (PreparedStatement) con.prepareStatement(sql);
             ResultSet rs2 = pst.executeQuery(sql);
-            if (!rs2.isBeforeFirst()) {
+            if (!rs2.isBeforeFirst()) { 
                 System.out.println("No data");
             } else {
                 while (rs2.next()) {

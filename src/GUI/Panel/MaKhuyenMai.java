@@ -29,10 +29,11 @@ import java.awt.event.KeyEvent;
 import java.io.IOException;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumnModel;
+import GUI.Component.InputDate;
 
 public class MaKhuyenMai extends JPanel implements ActionListener, ItemListener {
 
-    PanelBorderRadius main, functionBar;
+    PanelBorderRadius main, functionBar, leftPanel;
     JPanel contentCenter;
     JTable tableMKM;
     JScrollPane scrollPane;
@@ -71,7 +72,6 @@ public class MaKhuyenMai extends JPanel implements ActionListener, ItemListener 
         columnModel.getColumn(1).setCellRenderer(centerRenderer);
         columnModel.getColumn(2).setCellRenderer(centerRenderer);
         tableMKM.setFocusable(false);
-
 
         this.setBackground(BackgroundColor);
         this.setLayout(new GridLayout(1, 1));
@@ -112,6 +112,9 @@ public class MaKhuyenMai extends JPanel implements ActionListener, ItemListener 
         search.btnReset.addActionListener(this);
         functionBar.add(search);
         contentCenter.add(functionBar, BorderLayout.NORTH);
+
+        leftFunc(); // Call the new method to add date filters
+
         // main là phần ở dưới để thống kê bảng biểu
         main = new PanelBorderRadius();
         BoxLayout boxly = new BoxLayout(main, BoxLayout.Y_AXIS);
@@ -119,7 +122,22 @@ public class MaKhuyenMai extends JPanel implements ActionListener, ItemListener 
 //        main.setBorder(new EmptyBorder(20, 20, 20, 20));
         contentCenter.add(main, BorderLayout.CENTER);
         main.add(scrollTableSanPham);
+    }
 
+    private void leftFunc() {
+        leftPanel = new PanelBorderRadius();
+        leftPanel.setPreferredSize(new Dimension(250, 0));
+        leftPanel.setLayout(new GridLayout(6, 1, 10, 0));
+        leftPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
+
+        // Create and add date filter components
+        InputDate dateStart = new InputDate("Ngày bắt đầu");
+        InputDate dateEnd = new InputDate("Ngày kết thúc");
+
+        leftPanel.add(dateStart);
+        leftPanel.add(dateEnd);
+
+        contentCenter.add(leftPanel, BorderLayout.WEST);
     }
 
     public MaKhuyenMai(Main m, NhanVienDTO nv) {
@@ -139,7 +157,6 @@ public class MaKhuyenMai extends JPanel implements ActionListener, ItemListener 
         }
     }
 
-
     public int getRowSelected() {
         int index = tableMKM.getSelectedRow();
         if (index == -1) {
@@ -158,8 +175,7 @@ public class MaKhuyenMai extends JPanel implements ActionListener, ItemListener 
             if (index != -1) {
                 new MaKhuyenMaiDialog(m, "Thông tin mã khuyến mãi", true, listMKM.get(index));
             }
-        }
-        else if (e.getSource() == mainFunction.btn.get("delete")) {
+        } else if (e.getSource() == mainFunction.btn.get("delete")) {
             int index = getRowSelected();
             if (index != -1) {
                 int input = JOptionPane.showConfirmDialog(null,
@@ -188,7 +204,7 @@ public class MaKhuyenMai extends JPanel implements ActionListener, ItemListener 
             }
         }
     }
-
+    
     @Override
     public void itemStateChanged(ItemEvent e) {
         String txt = search.txtSearchForm.getText();
