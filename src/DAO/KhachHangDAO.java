@@ -45,16 +45,16 @@ public class KhachHangDAO implements DAOinterface<KhachHangDTO> {
     public int update(KhachHangDTO t) {
         int result = 0;
         try {
-            Connection con = (Connection) JDBCUtil.getConnection();
-            String sql = "UPDATE `KHACHHANG` SET `MKH`=?,`HOTEN`=?,`DIACHI`=?,`SDT`=? `EMAIL`=? WHERE MKH=?";
-            PreparedStatement pst = (PreparedStatement) con.prepareStatement(sql);
+            Connection con = JDBCUtil.getConnection();
+            String sql = "UPDATE `KHACHHANG` SET `MKH`=?, `HOTEN`=?, `DIACHI`=?, `SDT`=?, `EMAIL`=? WHERE MKH=?";
+            PreparedStatement pst = con.prepareStatement(sql);
             pst.setInt(1, t.getMaKH());
             pst.setString(2, t.getHoten());
             pst.setString(3, t.getDiachi());
             pst.setString(4, t.getSdt());
             pst.setString(5, t.getEMAIL());
             pst.setInt(6, t.getMaKH());
-            
+    
             result = pst.executeUpdate();
             JDBCUtil.closeConnection(con);
         } catch (SQLException ex) {
@@ -62,6 +62,7 @@ public class KhachHangDAO implements DAOinterface<KhachHangDTO> {
         }
         return result;
     }
+    
 
     @Override
     public int delete(String t) {

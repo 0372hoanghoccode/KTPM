@@ -266,7 +266,7 @@ public class MyAccountKH extends JDialog implements ActionListener {
                         if (Validation.isEmpty(phone.getText()) || phone.getText().length() != 10) {
                         JOptionPane.showMessageDialog(this, "Số điện thoại không được rỗng và phải có 10 ký tự sô", "Chỉnh sửa số điện thoại", JOptionPane.WARNING_MESSAGE);
                     } else {
-                        KhachHangDTO khdto = new KhachHangDTO(kh.getMaKH(), kh.getHoten(), text_phone, kh.getDiachi(), kh.getEMAIL());
+                        KhachHangDTO khdto = new KhachHangDTO(kh.getMaKH(), kh.getHoten(), text_phone, kh.getDiachi(), text_email);
                         KhachHangDAO.getInstance().update(khdto);
                         changed = true;
                         }
@@ -276,7 +276,7 @@ public class MyAccountKH extends JDialog implements ActionListener {
                         if (Validation.isEmpty(address.getText())) {
                         JOptionPane.showMessageDialog(this, "Địa chỉ không được rỗng", "Chỉnh sửa", JOptionPane.WARNING_MESSAGE);
                         } else {
-                            KhachHangDTO khdto = new KhachHangDTO(kh.getMaKH(), kh.getHoten(), text_phone, text_diachi, kh.getEMAIL());
+                            KhachHangDTO khdto = new KhachHangDTO(kh.getMaKH(), kh.getHoten(), text_phone, text_diachi, text_email);
                             KhachHangDAO.getInstance().update(khdto);
                             changed = true;
                         }
