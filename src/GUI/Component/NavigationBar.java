@@ -11,7 +11,7 @@ public class NavigationBar extends JPanel implements MouseListener{
 
     private JFrame f;
     JLabel lbl;
-    JPanel control, btnExit, btnMinimize;
+    JPanel control, btnMinimize;
     Color MainColor = new Color(250, 250, 250);
 
     public NavigationBar(JFrame f) {
@@ -29,12 +29,12 @@ public class NavigationBar extends JPanel implements MouseListener{
         lbl.setForeground(MainColor);
         this.add(lbl, BorderLayout.CENTER);
         
-        btnExit = new JPanel();
-        btnExit.setPreferredSize(new Dimension(20, 20));
-        btnExit.setForeground(Color.red);
-                btnExit.setBackground(Color.red);
-        btnExit.addMouseListener(this);
-        this.add(btnExit, BorderLayout.EAST);
+        // btnExit = new JPanel();
+        // btnExit.setPreferredSize(new Dimension(20, 20));
+        // btnExit.setForeground(Color.red);
+        //         btnExit.setBackground(Color.red);
+        // btnExit.addMouseListener(this);
+        // this.add(btnExit, BorderLayout.EAST);
         
         btnMinimize = new JPanel();
         btnMinimize.setPreferredSize(new Dimension(20, 20));
@@ -46,9 +46,9 @@ public class NavigationBar extends JPanel implements MouseListener{
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        if(e.getSource()==btnExit) {
-            f.dispose();
-        }
+        // if(e.getSource()==btnExit) {
+        //     f.dispose();
+        // }
         if(e.getSource()==btnMinimize)
             f.setExtendedState(JFrame.NORMAL);
     }
