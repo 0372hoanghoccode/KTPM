@@ -23,7 +23,7 @@ public class KhachHangDialog extends JDialog implements MouseListener {
     KhachHang jpKH;
     private HeaderTitle titlePage;
     private JPanel pnlMain, pnlButtom;
-    private ButtonCustom btnThem, btnCapNhat, btnHuyBo;
+    private ButtonCustom btnThem, btnCapNhat;
     private InputForm tenKH, sdtKH, diachiKH, emailKH;
     private JTextField maKH;
     KhachHangDTO kh;
@@ -74,12 +74,12 @@ public class KhachHangDialog extends JDialog implements MouseListener {
         pnlButtom.setBackground(Color.white);
         btnThem = new ButtonCustom("Thêm khách hàng", "success", 14);
         btnCapNhat = new ButtonCustom("Lưu thông tin", "success", 14);
-        btnHuyBo = new ButtonCustom("Huỷ bỏ", "danger", 14);
+        // btnHuyBo = new ButtonCustom("Huỷ bỏ", "danger", 14);
 
         //Add MouseListener btn
         btnThem.addMouseListener(this);
         btnCapNhat.addMouseListener(this);
-        btnHuyBo.addMouseListener(this);
+        // btnHuyBo.addMouseListener(this);
 
         switch (type) {
             case "create" ->
@@ -95,7 +95,7 @@ public class KhachHangDialog extends JDialog implements MouseListener {
             default ->
                 throw new AssertionError();
         }
-        pnlButtom.add(btnHuyBo);
+        // pnlButtom.add(btnHuyBo);
 
         this.add(titlePage, BorderLayout.NORTH);
         this.add(pnlMain, BorderLayout.CENTER);
@@ -196,9 +196,10 @@ if (!sdt.startsWith("0")) {
                 jpKH.loadDataTable(jpKH.listkh);
                 dispose();
 
-        } else if (e.getSource() == btnHuyBo) {
-            dispose();
-        }
+        } 
+        // else if (e.getSource() == btnHuyBo) {
+        //     dispose();
+        // }
 //        else if (e.getSource() == btnCapNhat && Validation()) {
 //            
 //            jpKH.khachhangBUS.update(new DTO.KhachHangDTO(kh.getMaKH(), tenKH.getText(), sdtKH.getText(), diachiKH.getText(), emailKH.getText()));
