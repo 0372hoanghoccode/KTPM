@@ -42,7 +42,7 @@ public final class SanPhamDialog extends JDialog implements ActionListener {
 
     private HeaderTitle titlePage;
     private JPanel pninfosanpham, pnbottom, pnCenter, pninfosanphamright, pnmain;
-    private ButtonCustom btnHuyBo, btnAddSanPham;
+    private ButtonCustom  btnAddSanPham;
     InputForm tenSP, tenTG, namXB, danhmuc, isbn;
     InputForm txtgianhap, txtgiaxuat;
     SelectForm  cbNXB;
@@ -145,9 +145,9 @@ public final class SanPhamDialog extends JDialog implements ActionListener {
             }
         }
 
-        btnHuyBo = new ButtonCustom("Huỷ bỏ", "danger", 14);
-        btnHuyBo.addActionListener(this);
-        pnbottom.add(btnHuyBo);
+        // btnHuyBo = new ButtonCustom("Huỷ bỏ", "danger", 14);
+        // btnHuyBo.addActionListener(this);
+        // pnbottom.add(btnHuyBo);
         pnCenter.add(pnbottom, BorderLayout.SOUTH);
     }
 
@@ -195,10 +195,10 @@ public final class SanPhamDialog extends JDialog implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         Object source = e.getSource();
-        if(source == btnHuyBo){
-            dispose();
-        }
-        else if (source == btnAddSanPham && checkCreate()) {
+        // if(source == btnHuyBo){
+        //     dispose();
+        // }
+         if (source == btnAddSanPham && checkCreate()) {
             eventAddSanPham();
         }  
         else if(source == btnSaveCH){

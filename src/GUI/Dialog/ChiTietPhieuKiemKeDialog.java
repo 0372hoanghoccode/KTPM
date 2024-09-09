@@ -43,7 +43,7 @@ public final class ChiTietPhieuKiemKeDialog extends JDialog implements ActionLis
     SanPhamBUS spBus = new SanPhamBUS();
     PhieuKiemKeBUS phieukiemKeBus;
 
-    ButtonCustom btnPdf, btnHuyBo;
+    ButtonCustom btnPdf;
 
     ArrayList<ChiTietKiemKeDTO> chitietphieu;
 
@@ -120,11 +120,11 @@ public final class ChiTietPhieuKiemKeDialog extends JDialog implements ActionLis
         pnmain_btn.setBorder(new EmptyBorder(10, 0, 10, 0));
         pnmain_btn.setBackground(Color.white);
         btnPdf = new ButtonCustom("Xuất file PDF", "success", 14);
-        btnHuyBo = new ButtonCustom("Huỷ bỏ", "danger", 14);
+        // btnHuyBo = new ButtonCustom("Huỷ bỏ", "danger", 14);
         btnPdf.addActionListener(this);
-        btnHuyBo.addActionListener(this);
+        // btnHuyBo.addActionListener(this);
         pnmain_btn.add(btnPdf);
-        pnmain_btn.add(btnHuyBo);
+        // pnmain_btn.add(btnHuyBo);
 
         pnmain.add(pnmain_top, BorderLayout.NORTH);
         pnmain.add(pnmain_bottom, BorderLayout.CENTER);
@@ -138,9 +138,9 @@ public final class ChiTietPhieuKiemKeDialog extends JDialog implements ActionLis
     @Override
     public void actionPerformed(ActionEvent e) {
         Object source = e.getSource();
-        if (source == btnHuyBo) {
-            dispose();
-        }
+        // if (source == btnHuyBo) {
+        //     dispose();
+        // }
         if (source == btnPdf) {
             writePDF w = new writePDF();
             if (this.phieukiemKe != null) {

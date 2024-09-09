@@ -28,7 +28,7 @@ public class TaiKhoanDialog extends JDialog {
     private TaiKhoan taiKhoan;
     private HeaderTitle titlePage;
     private JPanel pnmain, pnbottom;
-    private ButtonCustom btnThem, btnCapNhat, btnHuyBo;
+    private ButtonCustom btnThem, btnCapNhat;
     private InputForm username;
     private InputForm password;
     private SelectForm maNhomQuyen;
@@ -79,7 +79,7 @@ public class TaiKhoanDialog extends JDialog {
         pnbottom.setBackground(Color.white);
         btnThem = new ButtonCustom("Thêm tài khoản", "success", 14);
         btnCapNhat = new ButtonCustom("Lưu thông tin", "success", 14);
-        btnHuyBo = new ButtonCustom("Huỷ bỏ", "danger", 14);
+        // btnHuyBo = new ButtonCustom("Huỷ bỏ", "danger", 14);
 
 btnThem.addActionListener(new ActionListener() {
     @Override
@@ -142,12 +142,12 @@ btnThem.addActionListener(new ActionListener() {
                 }
             }
         });
-        btnHuyBo.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                dispose();
-            }
-        });
+        // btnHuyBo.addActionListener(new ActionListener() {
+        //     @Override
+        //     public void actionPerformed(ActionEvent e) {
+        //         dispose();
+        //     }
+        // });
 
         switch (type) {
             case "create" ->
@@ -165,7 +165,7 @@ btnThem.addActionListener(new ActionListener() {
             default ->
                 throw new AssertionError();
         }
-        pnbottom.add(btnHuyBo);
+        // pnbottom.add(btnHuyBo);
         this.add(titlePage, BorderLayout.NORTH);
         this.add(pnmain, BorderLayout.CENTER);
         this.add(pnbottom, BorderLayout.SOUTH);

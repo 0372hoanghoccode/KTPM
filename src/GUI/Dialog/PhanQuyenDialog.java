@@ -34,7 +34,7 @@ public final class PhanQuyenDialog extends JDialog implements ActionListener {
     private JTextField txtTennhomquyen;
     private JPanel jpTop, jpLeft, jpCen, jpBottom;
     private JCheckBox[][] listCheckBox;
-    private ButtonCustom btnAddNhomQuyen, btnUpdateNhomQuyen,btnHuybo;
+    private ButtonCustom btnAddNhomQuyen, btnUpdateNhomQuyen;
     private PhanQuyen jpPhanQuyen;
     private int sizeDmCn, sizeHanhdong;
     private ArrayList<DanhMucChucNangDTO> dmcn;
@@ -116,10 +116,10 @@ public final class PhanQuyenDialog extends JDialog implements ActionListener {
         }
         
         
-        btnHuybo = new ButtonCustom("Huỷ bỏ", "danger", 14);
-        btnHuybo.addActionListener(this);
+        // btnHuybo = new ButtonCustom("Huỷ bỏ", "danger", 14);
+        // btnHuybo.addActionListener(this);
         
-        jpBottom.add(btnHuybo);
+        // jpBottom.add(btnHuybo);
 
         this.add(jpTop, BorderLayout.NORTH);
         this.add(jpLeft, BorderLayout.WEST);
@@ -159,9 +159,10 @@ public final class PhanQuyenDialog extends JDialog implements ActionListener {
             nhomquyenBUS.update(nhomquyen,ctQuyen,index);
             this.jpPhanQuyen.loadDataTalbe(nhomquyenBUS.getAll());
             dispose();
-        } else if (e.getSource() == btnHuybo) {
-            dispose();
         }
+        //  else if (e.getSource() == btnHuybo) {
+        //     dispose();
+        // }
     }
 
     public ArrayList<ChiTietQuyenDTO> getListChiTietQuyen(int manhomquyen) {

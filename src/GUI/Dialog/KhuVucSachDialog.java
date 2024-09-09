@@ -25,7 +25,7 @@ public final class KhuVucSachDialog extends JDialog implements ActionListener {
     private KhuVucSach jpkvk;
     private HeaderTitle titlePage;
     private JPanel pnmain, pnbottom;
-    private ButtonCustom btnThem, btnCapNhat, btnHuyBo;
+    private ButtonCustom btnThem, btnCapNhat;
     private InputForm tenkhuvuc;
     private InputForm ghichu;
     private KhuVucSachDTO kvk;
@@ -60,12 +60,12 @@ public final class KhuVucSachDialog extends JDialog implements ActionListener {
         pnbottom.setBackground(Color.white);
         btnThem = new ButtonCustom("Thêm khu vực sách", "success", 14);
         btnCapNhat = new ButtonCustom("Lưu thông tin", "success", 14);
-        btnHuyBo = new ButtonCustom("Huỷ bỏ", "danger", 14);
+        // btnHuyBo = new ButtonCustom("Huỷ bỏ", "danger", 14);
 
         //Add MouseListener btn
         btnThem.addActionListener(this);
         btnCapNhat.addActionListener(this);
-        btnHuyBo.addActionListener(this);
+        // btnHuyBo.addActionListener(this);
 
         switch (type) {
             case "create" -> pnbottom.add(btnThem);
@@ -75,7 +75,7 @@ public final class KhuVucSachDialog extends JDialog implements ActionListener {
             }
             default -> throw new AssertionError();
         }
-        pnbottom.add(btnHuyBo);
+        // pnbottom.add(btnHuyBo);
         this.add(titlePage, BorderLayout.NORTH);
         this.add(pnmain, BorderLayout.CENTER);
         this.add(pnbottom, BorderLayout.SOUTH);
@@ -124,10 +124,12 @@ public final class KhuVucSachDialog extends JDialog implements ActionListener {
 
         // Close the window
         dispose();
-    } else if (e.getSource() == btnHuyBo) {
-        System.out.println("Operation cancelled.");
-        dispose();
-    } else if (e.getSource() == btnCapNhat && Validation()) {
+    }
+    //  else if (e.getSource() == btnHuyBo) {
+    //     System.out.println("Operation cancelled.");
+    //     dispose();
+    // }
+     else if (e.getSource() == btnCapNhat && Validation()) {
         String tenkhuvuc1 = this.tenkhuvuc.getText();
         
         // Check for duplicate name, but skip if it's the same as the current one

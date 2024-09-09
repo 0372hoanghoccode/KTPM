@@ -27,7 +27,7 @@ public class NhaCungCapDialog extends JDialog implements ActionListener {
     private NhaCungCap jpNcc;
     private HeaderTitle titlePage;
     private JPanel pnmain, pnbottom;
-    private ButtonCustom btnThem, btnCapNhat, btnHuyBo;
+    private ButtonCustom btnThem, btnCapNhat;
     private InputForm tenNcc;
     private InputForm diachi;
     private InputForm email;
@@ -70,12 +70,12 @@ public class NhaCungCapDialog extends JDialog implements ActionListener {
         pnbottom.setBackground(Color.white);
         btnThem = new ButtonCustom("Thêm đơn vị", "success", 14);
         btnCapNhat = new ButtonCustom("Lưu thông tin", "success", 14);
-        btnHuyBo = new ButtonCustom("Huỷ bỏ", "danger", 14);
+        // btnHuyBo = new ButtonCustom("Huỷ bỏ", "danger", 14);
 
         //Add MouseListener btn
         btnThem.addActionListener(this);
         btnCapNhat.addActionListener(this);
-        btnHuyBo.addActionListener(this);
+        // btnHuyBo.addActionListener(this);
 
         switch (type) {
             case "create" ->
@@ -91,7 +91,7 @@ public class NhaCungCapDialog extends JDialog implements ActionListener {
             default ->
                 throw new AssertionError();
         }
-        pnbottom.add(btnHuyBo);
+        // pnbottom.add(btnHuyBo);
         this.add(titlePage, BorderLayout.NORTH);
         this.add(pnmain, BorderLayout.CENTER);
         this.add(pnbottom, BorderLayout.SOUTH);
@@ -141,9 +141,11 @@ public class NhaCungCapDialog extends JDialog implements ActionListener {
             jpNcc.loadDataTable(jpNcc.listncc);
             dispose();
 
-        } else if (e.getSource() == btnHuyBo) {
-            dispose();
-        } else if (e.getSource() == btnCapNhat && Validation()) {
+        } 
+        // else if (e.getSource() == btnHuyBo) {
+        //     dispose();
+        // } 
+        else if (e.getSource() == btnCapNhat && Validation()) {
             jpNcc.nccBUS.update(new NhaCungCapDTO(nccDTO.getMancc(), tenNcc.getText(), diachi.getText(), email.getText(), sodienthoai.getText()));
             jpNcc.loadDataTable(jpNcc.listncc);
             dispose();
