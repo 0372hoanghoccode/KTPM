@@ -106,26 +106,26 @@ public class TaiKhoanKHDialog extends JDialog {
             }
         });
         
-        btnCapNhat.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (!(username.getText().length() == 0)) {
-                    String tendangnhap = username.getText();
-                    String pass;
-                    if (password.getPass().equals("")) pass = tk.getMK(); // Nếu không thay đổi mật khẩu, giữ nguyên mật khẩu cũ
-                    else pass = password.getPass(); // Cập nhật mật khẩu mới
-                    int manhom = listNq.get(maNhomQuyen.getSelectedIndex()).getManhomquyen();
-                    int tt = trangthai.getSelectedIndex();
-                    TaiKhoanDTO tk = new TaiKhoanDTO(manv, tendangnhap, pass, manhom, tt);
-                    taiKhoan.taiKhoanBus.updateAccKH(tk);
-                    taiKhoan.loadTable(taiKhoan.taiKhoanBus.getTaiKhoanAllKH());
-                    JOptionPane.showMessageDialog(null, "Cập nhật thành công!");
-                    dispose();
-                } else {
-                    JOptionPane.showMessageDialog(null, "Vui lòng không để trống tên");
-                }
-            }
-        });
+   btnCapNhat.addActionListener(new ActionListener() {
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (!(username.getText().length() == 0)) {
+            System.out.print("Hello1");
+            String tendangnhap = username.getText();
+            String pass = password.getPass().equals("") ? tk.getMK() : password.getPass(); // Keep old password if not changed
+            int manhom = listNq.get(maNhomQuyen.getSelectedIndex()).getManhomquyen();
+            int tt = trangthai.getSelectedIndex();
+            TaiKhoanDTO tk = new TaiKhoanDTO(manv, tendangnhap, pass, manhom, tt);
+            taiKhoan.taiKhoanBus.updateAccKH(tk);
+            taiKhoan.loadTable(taiKhoan.taiKhoanBus.getTaiKhoanAllKH());
+            JOptionPane.showMessageDialog(null, "Cập nhật thành công!");
+            dispose();
+        } else {
+            JOptionPane.showMessageDialog(null, "Vui lòng không để trống tên");
+        }
+    }
+});
+
         
         // btnHuyBo.addActionListener(new ActionListener() {
         //     @Override

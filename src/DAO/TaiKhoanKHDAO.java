@@ -38,24 +38,26 @@ public class TaiKhoanKHDAO implements DAOinterface<TaiKhoanDTO>{
         return result;
     }
 
-    @Override
     public int update(TaiKhoanDTO t) {
-        int result = 0 ;
-        try {
-            Connection con = (Connection) JDBCUtil.getConnection();
-            String sql = "UPDATE `TAIKHOANKH` SET `TDN` = ?, `TT` = ?, `MNQ` = ? WHERE `MKH` = ?";
-            PreparedStatement pst = (PreparedStatement) con.prepareStatement(sql);
-            pst.setString(1, t.getTDN());
-            pst.setInt(2, t.getTT());
-            pst.setInt(3, t.getMNQ());
-            pst.setInt(4, t.getMNV());
-            result = pst.executeUpdate();
-            JDBCUtil.closeConnection(con);
-        } catch (SQLException ex) {
-            Logger.getLogger(TaiKhoanDAO.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return result;
+    int result = 0;
+    try {
+        System.out.println("Hello2");
+        Connection con = JDBCUtil.getConnection();
+        String sql = "UPDATE TAIKHOANKH SET TDN = ?, MK = ?, TT = ?, MNQ = ? WHERE MKH = ?";
+        PreparedStatement pst = con.prepareStatement(sql);
+        pst.setString(1, t.getTDN());  // Username
+        pst.setString(2, t.getMK());   // Password
+        pst.setInt(3, t.getTT());      // Status
+        pst.setInt(4, t.getMNQ());     // Role
+        pst.setInt(5, t.getMNV());     // User ID (Primary Key)
+        result = pst.executeUpdate();
+        JDBCUtil.closeConnection(con);
+    } catch (SQLException ex) {
+        Logger.getLogger(TaiKhoanDAO.class.getName()).log(Level.SEVERE, null, ex);
     }
+    return result;
+}
+
 
     public int updateTTCXL(String t) {
         int result = 0 ;
