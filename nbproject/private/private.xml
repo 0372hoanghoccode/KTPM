@@ -4,19 +4,23 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
             <file>file:/C:/Users/ASUS%20Vivobook/Documents/GitHub/KTPM/src/GUI/Dialog/MyAccount.java</file>
+            <file>file:/C:/Users/ASUS%20Vivobook/Documents/GitHub/KTPM/src/GUI/Panel/TaiKhoan.java</file>
             <file>file:/C:/Users/ASUS%20Vivobook/Documents/GitHub/KTPM/src/GUI/Panel/PhieuKiemKe.java</file>
             <file>file:/C:/Users/ASUS%20Vivobook/Documents/GitHub/KTPM/src/GUI/Dialog/TaiKhoanDialog.java</file>
             <file>file:/C:/Users/ASUS%20Vivobook/Documents/GitHub/KTPM/src/DAO/ChiTietKiemKeDAO.java</file>
             <file>file:/C:/Users/ASUS%20Vivobook/Documents/GitHub/KTPM/src/DAO/ChiTietPhieuTraDAO.java</file>
+            <file>file:/C:/Users/ASUS%20Vivobook/Documents/GitHub/KTPM/src/DAO/TaiKhoanKHDAO.java</file>
             <file>file:/C:/Users/ASUS%20Vivobook/Documents/GitHub/KTPM/src/DAO/TaiKhoanDAO.java</file>
             <file>file:/C:/Users/ASUS%20Vivobook/Documents/GitHub/KTPM/src/GUI/Dialog/MyAccountKH.java</file>
             <file>file:/C:/Users/ASUS%20Vivobook/Documents/GitHub/KTPM/src/BUS/TaiKhoanBUS.java</file>
             <file>file:/C:/Users/ASUS%20Vivobook/Documents/GitHub/KTPM/src/BUS/PhieuKiemKeBUS.java</file>
             <file>file:/C:/Users/ASUS%20Vivobook/Documents/GitHub/KTPM/src/GUI/login_page.java</file>
+            <file>file:/C:/Users/ASUS%20Vivobook/Documents/GitHub/KTPM/src/GUI/Panel/TaiKhoanKH.java</file>
             <file>file:/C:/Users/ASUS%20Vivobook/Documents/GitHub/KTPM/src/GUI/Panel/TaoPhieuTra.java</file>
             <file>file:/C:/Users/ASUS%20Vivobook/Documents/GitHub/KTPM/src/DAO/PhieuKiemKeDAO.java</file>
             <file>file:/C:/Users/ASUS%20Vivobook/Documents/GitHub/KTPM/src/DAO/SanPhamDAO.java</file>
             <file>file:/C:/Users/ASUS%20Vivobook/Documents/GitHub/KTPM/src/BUS/PhieuTraBUS.java</file>
+            <file>file:/C:/Users/ASUS%20Vivobook/Documents/GitHub/KTPM/src/GUI/Dialog/TaiKhoanKHDialog.java</file>
             <file>file:/C:/Users/ASUS%20Vivobook/Documents/GitHub/KTPM/src/GUI/Dialog/ListNhanVien.java</file>
         </group>
     </open-files>
