@@ -216,15 +216,16 @@ public final class GioHang extends JPanel {
         content_right_top = new JPanel(new BorderLayout());
         content_right_top.setPreferredSize(new Dimension(300, 450)); 
         
-        txtTenSp = new InputForm("Tên sản phẩm");
-        txtTenSp.setEditable(false);
-        txtTenSp.setPreferredSize(new Dimension(280, 20));
+        txtMaISBN = new InputForm("Mã ISBN");
+        txtMaISBN.setEditable(false);
+        txtMaISBN.setVisible(false);
+        txtMaISBN.setPreferredSize(new Dimension(130, 20));
         txtMaSp = new InputForm("Mã sản phẩm");
         txtMaSp.setEditable(false);
         txtMaSp.setPreferredSize(new Dimension(130, 20));
-        txtMaISBN = new InputForm("Mã ISBN");
-        txtMaISBN.setEditable(false);
-        txtMaISBN.setPreferredSize(new Dimension(130, 20));
+        txtTenSp = new InputForm("Tên sản phẩm");
+        txtTenSp.setEditable(false);
+        txtTenSp.setPreferredSize(new Dimension(280, 20));
         txtGiaXuat = new InputForm("Giá bán");
         txtGiaXuat.setEditable(false);
         txtGiaXuat.setPreferredSize(new Dimension(130, 20));
@@ -236,8 +237,10 @@ public final class GioHang extends JPanel {
         soluong.setDocumentFilter(new NumericDocumentFilter()); // chỉ cho nhập số
         txtMaKM = new InputForm("Mã giảm giá");
         txtMaKM.setPreferredSize(new Dimension(130, 20));
+        txtMaKM.setVisible(false);
         txtGiaGiam = new InputForm("Giá giảm");
         txtGiaGiam.setText(" ");
+        txtGiaGiam.setVisible(false);
         txtGiaGiam.setEditable(false);
         txtGiaGiam.setPreferredSize(new Dimension(130, 20));
         
@@ -261,10 +264,10 @@ public final class GioHang extends JPanel {
         JPanel formPanel = new JPanel(new GridLayout(6, 2, 5, 5)); // 6 hàng, 2 cột
         formPanel.setPreferredSize(new Dimension(300, 160)); 
 
-        formPanel.add(txtTenSp);
+        formPanel.add(txtMaISBN);
         formPanel.add(new JLabel()); 
         formPanel.add(txtMaSp);
-        formPanel.add(txtMaISBN);
+        formPanel.add(txtTenSp);
         formPanel.add(txtGiaXuat);
         formPanel.add(txtSoLuongSPxuat);
         formPanel.add(txtMaKM);
