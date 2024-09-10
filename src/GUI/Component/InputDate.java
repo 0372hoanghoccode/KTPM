@@ -5,6 +5,8 @@ import com.toedter.calendar.JTextFieldDateEditor;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.awt.event.ActionListener;
+import java.beans.PropertyChangeListener;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -71,4 +73,13 @@ public class InputDate extends JPanel {
         JTextFieldDateEditor editor = (JTextFieldDateEditor) date.getDateEditor();
         editor.setEditable(false);
     }
+  public void addDateChangeListener(PropertyChangeListener listener) {
+        date.addPropertyChangeListener("date", listener);
+    }
+    
+    // Phương thức để hủy đăng ký PropertyChangeListener
+    public void removeDateChangeListener(PropertyChangeListener listener) {
+        date.removePropertyChangeListener("date", listener);
+    }
+   
 }

@@ -24,12 +24,17 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.ArrayList;
 import javax.swing.table.DefaultTableModel;
-import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumnModel;
 import GUI.Component.InputDate;
+import java.awt.event.KeyAdapter;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.text.ParseException;
+import java.util.Calendar;
+import java.util.Date;
 
 public class MaKhuyenMai extends JPanel implements ActionListener, ItemListener {
 
@@ -53,6 +58,8 @@ public class MaKhuyenMai extends JPanel implements ActionListener, ItemListener 
     TaoMaKhuyenMai nhapMKM;
     Main m;
     NhanVienDTO nv;
+    private InputDate dateStart;
+    private InputDate dateEnd;
 
     private void initComponent() {
         tableMKM = new JTable();
@@ -113,32 +120,55 @@ public class MaKhuyenMai extends JPanel implements ActionListener, ItemListener 
         functionBar.add(search);
         contentCenter.add(functionBar, BorderLayout.NORTH);
 
-        leftFunc(); // Call the new method to add date filters
-
-        // main là phần ở dưới để thống kê bảng biểu
-        main = new PanelBorderRadius();
-        BoxLayout boxly = new BoxLayout(main, BoxLayout.Y_AXIS);
-        main.setLayout(boxly);
-//        main.setBorder(new EmptyBorder(20, 20, 20, 20));
-        contentCenter.add(main, BorderLayout.CENTER);
-        main.add(scrollTableSanPham);
-    }
-
-    private void leftFunc() {
+    
         leftPanel = new PanelBorderRadius();
         leftPanel.setPreferredSize(new Dimension(250, 0));
         leftPanel.setLayout(new GridLayout(6, 1, 10, 0));
         leftPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
 
         // Create and add date filter components
-        InputDate dateStart = new InputDate("Ngày bắt đầu");
-        InputDate dateEnd = new InputDate("Ngày kết thúc");
+         dateStart = new InputDate("Ngày bắt đầu");
+         dateEnd = new InputDate("Ngày kết thúc");
+         
+      dateStart.addDateChangeListener(new PropertyChangeListener() {
+            @Override
+            public void propertyChange(PropertyChangeEvent evt) {
+                try {
+                    Fillter();
+                } catch (ParseException ex) {
+                    Logger.getLogger(MaKhuyenMai.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        });
+
+        // Đăng ký PropertyChangeListener cho ngày kết thúc
+        dateEnd.addDateChangeListener(new PropertyChangeListener() {
+            @Override
+            public void propertyChange(PropertyChangeEvent evt) {
+                try {
+                    Fillter();
+                } catch (ParseException ex) {
+                    Logger.getLogger(MaKhuyenMai.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        });
 
         leftPanel.add(dateStart);
         leftPanel.add(dateEnd);
 
-        contentCenter.add(leftPanel, BorderLayout.WEST);
+        contentCenter.add(leftPanel, BorderLayout.WEST);   
+        
+        
+        main = new PanelBorderRadius();
+        BoxLayout boxly = new BoxLayout(main, BoxLayout.Y_AXIS);
+        main.setLayout(boxly);
+//        main.setBorder(new EmptyBorder(20, 20, 20, 20));
+        contentCenter.add(main, BorderLayout.CENTER);
+        main.add(scrollTableSanPham);
+       
+
     }
+ 
 
     public MaKhuyenMai(Main m, NhanVienDTO nv) {
         this.m = m;
@@ -211,4 +241,86 @@ public class MaKhuyenMai extends JPanel implements ActionListener, ItemListener 
         listMKM = mkmBUS.search(txt);
         loadDataTable(listMKM);
     }
+    
+
+
+public void Fillter() throws ParseException {
+    if (validateSelectDate()) {
+        // Print debug statement
+        System.out.println("Filtering data...");
+
+        // Retrieve the start and end dates
+        Date time_start = dateStart.getDate();
+        Date time_end = dateEnd.getDate();
+
+        // If no start date is selected, use the earliest possible date
+        if (time_start == null) {
+            time_start = new Date(0); // Set to the earliest possible date (January 1, 1970)
+        }
+
+        // If no end date is selected, use the end of the current day
+        if (time_end == null) {
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(new Date()); // Set to the current date
+            calendar.set(Calendar.HOUR_OF_DAY, 23);
+            calendar.set(Calendar.MINUTE, 59);
+            calendar.set(Calendar.SECOND, 59);
+            calendar.set(Calendar.MILLISECOND, 999);
+            time_end = calendar.getTime();
+        }
+
+        // Perform the filtering based on selected dates
+        this.listMKM = mkmBUS.fillerPhieuNhap(time_start, time_end);
+
+        // Load the filtered data into the table
+        loadDataTable(listMKM);
+    }
+}
+
+   public boolean validateSelectDate() throws ParseException {
+    Date time_start = dateStart.getDate();
+    Date time_end = dateEnd.getDate();
+
+  //  Date current_date = new Date();
+    
+//    // Check if start date is in the future
+//    if (time_start != null && time_start.after(current_date)) {
+//        JOptionPane.showMessageDialog(this, "Ngày bắt đầu không được lớn hơn ngày hiện tại", "Lỗi !", JOptionPane.ERROR_MESSAGE);
+//        dateStart.getDateChooser().setCalendar(null);
+//        return false;
+//    }
+//    
+//    // Check if end date is in the future
+//    if (time_end != null && time_end.after(current_date)) {
+//        JOptionPane.showMessageDialog(this, "Ngày kết thúc không được lớn hơn ngày hiện tại", "Lỗi !", JOptionPane.ERROR_MESSAGE);
+//        dateEnd.getDateChooser().setCalendar(null);
+//        return false;
+//    }
+    
+    // Check if start date is after end date
+    if (time_start != null && time_end != null && time_start.after(time_end)) {
+        JOptionPane.showMessageDialog(this, "Ngày kết thúc phải lớn hơn ngày bắt đầu", "Lỗi !", JOptionPane.ERROR_MESSAGE);
+        dateEnd.getDateChooser().setCalendar(null);
+        return false;
+    }
+    
+    return true;
+}
+
+   
+
+
+  
+    public void keyTyped(KeyEvent e) {
+//        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+  
+    public void keyPressed(KeyEvent e) {
+
+    }
+
+  
+
+
 }

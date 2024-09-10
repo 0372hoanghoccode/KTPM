@@ -113,25 +113,51 @@ public class NhaCungCapDialog extends JDialog implements ActionListener {
         sodienthoai.setEditable(false);
 
     }
-    public boolean Validation(){
-         if (Validation.isEmpty(tenNcc.getText())) {
-            JOptionPane.showMessageDialog(this, "Tên nhà cung cấp không được rỗng", "Cảnh báo !", JOptionPane.WARNING_MESSAGE);
-            return false;
-         }
-         else  if (Validation.isEmpty(diachi.getText())) {
-            JOptionPane.showMessageDialog(this, "Địa chỉ không được rỗng", "Cảnh báo !", JOptionPane.WARNING_MESSAGE);
-            return false;
-         }
-         else if (Validation.isEmpty(email.getText()) || !Validation.isEmail(email.getText())) {
-            JOptionPane.showMessageDialog(this, "Email không được rỗng và phải đúng cú pháp", "Cảnh báo !", JOptionPane.WARNING_MESSAGE);
-            return false;
-         }
-         else if (Validation.isEmpty(sodienthoai.getText()) || !Validation.isNumber(sodienthoai.getText()) && sodienthoai.getText().length()!=10) {
-            JOptionPane.showMessageDialog(this, "Số điện thoại không được rỗng và phải là 10 ký tự số", "Cảnh báo !", JOptionPane.WARNING_MESSAGE);
-            return false;
-         }
-          return true;
+public boolean Validation() {
+    boolean valid = true;
+
+    // Kiểm tra tên nhà cung cấp
+    if (Validation.isEmpty(tenNcc.getText())) {
+        JOptionPane.showMessageDialog(this, "Tên nhà cung cấp không được rỗng", "Cảnh báo !", JOptionPane.WARNING_MESSAGE);
+        valid = false;
     }
+
+    // Kiểm tra địa chỉ
+    if (Validation.isEmpty(diachi.getText())) {
+        JOptionPane.showMessageDialog(this, "Địa chỉ không được rỗng", "Cảnh báo !", JOptionPane.WARNING_MESSAGE);
+        valid = false;
+    }
+
+    // Kiểm tra email
+    String emailText = email.getText();
+    if (Validation.isEmpty(emailText)) {
+        JOptionPane.showMessageDialog(this, "Email không được rỗng", "Cảnh báo !", JOptionPane.WARNING_MESSAGE);
+        valid = false;
+    } else if (!Validation.isEmail(emailText)) {
+        JOptionPane.showMessageDialog(this, "Email phải đúng cú pháp", "Cảnh báo !", JOptionPane.WARNING_MESSAGE);
+        valid = false;
+    }
+
+    // Kiểm tra số điện thoại
+    String phoneText = sodienthoai.getText();
+    if (Validation.isEmpty(phoneText)) {
+        JOptionPane.showMessageDialog(this, "Số điện thoại không được rỗng", "Cảnh báo !", JOptionPane.WARNING_MESSAGE);
+        valid = false;
+    } else if (!Validation.isNumber(phoneText)) {
+        JOptionPane.showMessageDialog(this, "Số điện thoại phải là số", "Cảnh báo !", JOptionPane.WARNING_MESSAGE);
+        valid = false;
+    } else if (phoneText.length() != 10) {
+        JOptionPane.showMessageDialog(this, "Số điện thoại phải có 10 ký tự số", "Cảnh báo !", JOptionPane.WARNING_MESSAGE);
+        valid = false;
+    } else if (!phoneText.startsWith("0")) {
+        JOptionPane.showMessageDialog(this, "Số điện thoại phải bắt đầu bằng số 0", "Cảnh báo !", JOptionPane.WARNING_MESSAGE);
+        valid = false;
+    }
+
+    return valid;
+}
+
+
 
     @Override
     public void actionPerformed(ActionEvent e) {

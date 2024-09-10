@@ -6,8 +6,9 @@ import DTO.MaKhuyenMaiDTO;
 import DTO.ChiTietMaKhuyenMaiDTO;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
-
+import java.sql.Timestamp;
 public class MaKhuyenMaiBUS {
 
     private final MaKhuyenMaiDAO mkmDAO = new MaKhuyenMaiDAO();
@@ -130,6 +131,37 @@ public class MaKhuyenMaiBUS {
         }
         return true;
     }
+    
+public ArrayList<MaKhuyenMaiDTO> fillerPhieuNhap(Date time_s, Date time_e) {
+    // Convert input dates to Timestamps
+    Timestamp time_start = new Timestamp(time_s.getTime());
+    Calendar calendar = Calendar.getInstance();
+    calendar.setTime(time_e);
+    // Set time to the end of the day
+    calendar.set(Calendar.HOUR_OF_DAY, 23);
+    calendar.set(Calendar.MINUTE, 59);
+    calendar.set(Calendar.SECOND, 59);
+    calendar.set(Calendar.MILLISECOND, 999);
+    
+    Timestamp time_end = new Timestamp(calendar.getTimeInMillis());
+
+    ArrayList<MaKhuyenMaiDTO> result = new ArrayList<>();
+    
+    for (MaKhuyenMaiDTO phieuNhap : getAll()) {
+        Timestamp tgBD = phieuNhap.getTGBD();
+        Timestamp tgKT = phieuNhap.getTGKT();
+        
+        // Check if the date range of `phieuNhap` overlaps with the search range
+          if ((tgBD.compareTo(time_end) <= 0 && tgKT.compareTo(time_start) >= 0) ||
+            (tgBD.before(time_start) && tgKT.after(time_end))) {
+            result.add(phieuNhap);
+        }
+    }
+
+    return result;
+}
+
+    
     public boolean add(MaKhuyenMaiDTO phieu, ArrayList<ChiTietMaKhuyenMaiDTO> ctPhieu) {
         boolean check = mkmDAO.insert(phieu) != 0;
         if (check) {
