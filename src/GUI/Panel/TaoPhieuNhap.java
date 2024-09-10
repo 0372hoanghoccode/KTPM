@@ -211,6 +211,7 @@ public final class TaoPhieuNhap extends JPanel implements ItemListener, ActionLi
         txtMaSp.setEditable(false);
         txtMaISBN = new InputForm("Mã ISBN");
         txtMaISBN.setEditable(false);
+        txtMaISBN.setVisible(false);
         // cái này dùng để nhập isbn dô khung txtMaISBN có thể search đc sp, nhưng disable ko dùng ròi
         txtMaISBN.getTxtForm().addKeyListener(new KeyAdapter() {
             @Override
@@ -230,8 +231,8 @@ public final class TaoPhieuNhap extends JPanel implements ItemListener, ActionLi
 
         JPanel merge1 = new JPanel(new BorderLayout());
         merge1.setPreferredSize(new Dimension(100, 50));
-        merge1.add(txtMaSp, BorderLayout.WEST);
-        merge1.add(txtMaISBN, BorderLayout.CENTER);
+        merge1.add(txtMaSp, BorderLayout.CENTER);
+        merge1.add(txtMaISBN, BorderLayout.EAST);
 
         JPanel merge2 = new JPanel(new GridLayout());
         merge2.setPreferredSize(new Dimension(100, 80));

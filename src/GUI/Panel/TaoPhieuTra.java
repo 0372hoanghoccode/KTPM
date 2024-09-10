@@ -207,6 +207,7 @@ public final class TaoPhieuTra extends JPanel implements ItemListener, ActionLis
         txtMaSp.setEditable(false);
         txtMaISBN = new InputForm("Mã ISBN");
         txtMaISBN.setEditable(false);
+        txtMaISBN.setVisible(false);
 
         txtDongia = new InputForm("Giá trả");
         PlainDocument dongia = (PlainDocument) txtDongia.getTxtForm().getDocument();
@@ -219,8 +220,8 @@ public final class TaoPhieuTra extends JPanel implements ItemListener, ActionLis
 
         JPanel merge1 = new JPanel(new BorderLayout());
         merge1.setPreferredSize(new Dimension(100, 50));
-        merge1.add(txtMaSp, BorderLayout.WEST);
-        merge1.add(txtMaISBN, BorderLayout.CENTER);
+        merge1.add(txtMaSp, BorderLayout.CENTER);
+        merge1.add(txtMaISBN, BorderLayout.EAST);
 
         JPanel merge2 = new JPanel(new GridLayout());
         merge2.setPreferredSize(new Dimension(100, 80));

@@ -69,7 +69,7 @@ public final class SanPhamKHDialog extends JDialog implements ActionListener {
 
     public void initCardOne(String type) {
         pnCenter = new JPanel(new BorderLayout());
-        pninfosanpham = new JPanel(new GridLayout(3, 4, 0, 0));
+        pninfosanpham = new JPanel(new GridLayout(4, 4, 0, 0));
         pninfosanpham.setBackground(Color.WHITE);
         pnCenter.add(pninfosanpham, BorderLayout.CENTER);
 

@@ -222,7 +222,9 @@ public final class TaoPhieuXuat extends JPanel {
         txtMaSp = new InputForm("Mã sản phẩm");
         txtMaSp.setEditable(false);
         txtMaISBN = new InputForm("Mã ISBN");
-        txtMaISBN.setEditable(false);
+        // txtMaISBN.setEditable(false);
+        txtMaISBN.setVisible(false); // Ẩn thành phần InputForm
+
         txtGiaXuat = new InputForm("Giá xuất");
         PlainDocument dongia = (PlainDocument) txtGiaXuat.getTxtForm().getDocument();
         dongia.setDocumentFilter((new NumericDocumentFilter()));   //chỉ cho nhập số
@@ -260,8 +262,8 @@ public final class TaoPhieuXuat extends JPanel {
             
         JPanel merge1 = new JPanel(new BorderLayout());
         merge1.setPreferredSize(new Dimension(100, 50));
-        merge1.add(txtMaSp, BorderLayout.WEST);
-        merge1.add(txtMaISBN, BorderLayout.CENTER);
+        merge1.add(txtMaSp, BorderLayout.CENTER);
+        merge1.add(txtMaISBN, BorderLayout.EAST);
 
         JPanel merge2 = new JPanel(new GridLayout(2,2));
         merge2.setPreferredSize(new Dimension(100, 160));

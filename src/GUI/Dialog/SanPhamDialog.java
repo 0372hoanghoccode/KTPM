@@ -113,6 +113,7 @@ public final class SanPhamDialog extends JDialog implements ActionListener {
         isbn = new InputForm("Mã ISBN");
         PlainDocument ma = (PlainDocument)isbn.getTxtForm().getDocument();
         ma.setDocumentFilter((new NumericDocumentFilter()));
+        isbn.setVisible(false);
         hinhanh = new InputImage("Hình minh họa");
 
         pninfosanpham.add(tenSP);
@@ -263,7 +264,8 @@ public final class SanPhamDialog extends JDialog implements ActionListener {
                 || Validation.isEmpty(txtgiaxuat.getText()) || Validation.isEmpty(isbn.getText())) {
             check = false;
             JOptionPane.showMessageDialog(this, "Vui lòng nhập đầy đủ thông tin !");
-        } else if(!spBus.checkISBN(isbn.getText())) {
+        } 
+        else if(!spBus.checkISBN(isbn.getText())) {
                 JOptionPane.showMessageDialog(this, "Mã ISBN đã tồn tại!"); 
                 check = false;
             }
