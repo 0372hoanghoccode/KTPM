@@ -21,7 +21,9 @@ public class SanPhamDAO implements DAOinterface<SanPhamDTO> {
         int result = 0;
         try {
             Connection con = (Connection) JDBCUtil.getConnection();
-            String sql = "INSERT INTO `SANPHAM` (`MSP`, `TEN`, `HINHANH`, `DANHMUC`, `NAMXB`, `MNXB`, `TENTG`, `MKVS`, `TIENX`, `TIENN`, `SL`, `ISBN`, `TT`) VALUES (?,?,?,?,?,?,?,?,?,?,?,1)";
+            // `ISBN`
+            String sql = "INSERT INTO `SANPHAM` (`MSP`, `TEN`, `HINHANH`, "
+                    + "`DANHMUC`, `NAMXB`, `MNXB`, `TENTG`, `MKVS`, `TIENX`, `TIENN`, `SL`, `TT`) VALUES (?,?,?,?,?,?,?,?,?,?,?,1)";
             PreparedStatement pst = (PreparedStatement) con.prepareStatement(sql);
             pst.setInt(1, t.getMSP());
             pst.setString(2, t.getTEN());
@@ -34,7 +36,7 @@ public class SanPhamDAO implements DAOinterface<SanPhamDTO> {
             pst.setInt(9, t.getTIENX());
             pst.setInt(10, t.getTIENN());
             pst.setInt(11, t.getSL());
-            pst.setString(12, t.getISBN());
+//            pst.setString(12, t.getISBN());
             result = pst.executeUpdate();
             JDBCUtil.closeConnection(con);
         } catch (SQLException ex) {
@@ -48,7 +50,10 @@ public class SanPhamDAO implements DAOinterface<SanPhamDTO> {
         int result = 0;
         try {
             Connection con = (Connection) JDBCUtil.getConnection();
-            String sql = "UPDATE `SANPHAM` SET `TEN` = ?, `HINHANH` = ?, `DANHMUC` = ?, `NAMXB` = ?, `MNXB` = ?, `TENTG` = ?, `MKVS` = ?, `TIENX` = ?, `TIENN` = ?, `SL` = ?, `ISBN` = ? WHERE `MSP`=?";
+      //      , `ISBN` = ?
+            String sql = "UPDATE `SANPHAM` SET `TEN` = ?, `HINHANH` = ?, `DANHMUC` = ?,"
+                    + " `NAMXB` = ?, `MNXB` = ?, `TENTG` = ?, `MKVS` = ?,"
+                    + " `TIENX` = ?, `TIENN` = ?, `SL` = ? WHERE `MSP`=?";
             PreparedStatement pst = (PreparedStatement) con.prepareStatement(sql);
             pst.setString(1, t.getTEN());
             pst.setString(2, t.getHINHANH());
@@ -60,8 +65,8 @@ public class SanPhamDAO implements DAOinterface<SanPhamDTO> {
             pst.setInt(8, t.getTIENX());
             pst.setInt(9, t.getTIENN());
             pst.setInt(10, t.getSL());
-            pst.setString(11, t.getISBN());
-            pst.setInt(12, t.getMSP());
+          //  pst.setString(11, t.getISBN());
+            pst.setInt(11, t.getMSP());
 
             result = pst.executeUpdate();
             JDBCUtil.closeConnection(con);

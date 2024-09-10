@@ -171,9 +171,9 @@ public class SanPhamBUS {
         return true;
     }
 
-    public SanPhamDTO getSPbyISBN(String ISBN) {
+    public SanPhamDTO getSPbyISBN(int ISBN) {
         for(SanPhamDTO i : this.listSP) {
-            if(i.getISBN().equals(ISBN)) return i;
+            if(i.getMSP()==ISBN) return i;
         }
         return null;
     }

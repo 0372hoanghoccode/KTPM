@@ -202,18 +202,36 @@ public final class SanPhamDialog extends JDialog implements ActionListener {
          if (source == btnAddSanPham && checkCreate()) {
             eventAddSanPham();
         }  
-        else if(source == btnSaveCH){
-            SanPhamDTO snNew = getInfo();
-            snNew.setSL(spBus.getSPbyISBN(snNew.getISBN()).getSL());
-            if(!snNew.getHINHANH().equals(this.sp.getHINHANH())){
-                snNew.setHINHANH(addImage(snNew.getHINHANH()));
-            }
-            snNew.setMSP(this.sp.getMSP());
-            SanPhamDAO.getInstance().update(sp);
-            this.jpSP.spBUS.update(snNew);
-            this.jpSP.loadDataTalbe(this.jpSP.spBUS.getAll());
-            JOptionPane.showMessageDialog(this, "Sửa thông tin sản phẩm thành công !");
-        }
+    else if(source == btnSaveCH) {
+    // Lấy thông tin sản phẩm mới từ phương thức getInfo()
+    SanPhamDTO snNew = getInfo();
+
+    // Lấy số lượng hiện tại của sản phẩm từ cơ sở dữ liệu
+    //int currentQuantity = spBus.getSPbyISBN(snNew.getMSP()).getSL();
+    //snNew.setSL(currentQuantity);
+
+    // Kiểm tra xem có thay đổi hình ảnh không
+    if(!snNew.getHINHANH().equals(this.sp.getHINHANH())) {
+        // Cập nhật hình ảnh mới
+        snNew.setHINHANH(addImage(snNew.getHINHANH()));
+    }
+
+    // Đảm bảo mã sản phẩm mới không thay đổi
+    snNew.setMSP(this.sp.getMSP());
+
+    // Cập nhật thông tin sản phẩm trong cơ sở dữ liệu
+    SanPhamDAO.getInstance().update(snNew);
+
+    // Cập nhật thông tin sản phẩm trong danh sách
+    this.jpSP.spBUS.update(snNew);
+
+    // Tải lại dữ liệu vào bảng
+    this.jpSP.loadDataTalbe(this.jpSP.spBUS.getAll());
+
+    // Hiển thị thông báo thành công
+    JOptionPane.showMessageDialog(this, "Sửa thông tin sản phẩm thành công!");
+}
+
         
     }
 
@@ -237,8 +255,8 @@ public final class SanPhamDialog extends JDialog implements ActionListener {
         int MKVK = kvkhoBus.getAll().get(this.khuvuc.getSelectedIndex()).getMakhuvuc();
         int tIENX = Integer.parseInt(txtgiaxuat.getText());
         int tIENN = Integer.parseInt(txtgianhap.getText());
-        String ISBN = isbn.getText();
-        SanPhamDTO result = new SanPhamDTO(masp, vtensp, hinhanh, danhMuc, naMXB, MNXB, TenTG, MKVK, tIENX, tIENN, 0, ISBN);
+     //   String ISBN = isbn.getText();
+        SanPhamDTO result = new SanPhamDTO(masp, vtensp, hinhanh, danhMuc, naMXB, MNXB, TenTG, MKVK, tIENX, tIENN, 0, null);
         return result;
     }
 
@@ -261,14 +279,16 @@ public final class SanPhamDialog extends JDialog implements ActionListener {
         if (Validation.isEmpty(tenSP.getText()) || Validation.isEmpty((String) cbNXB.getSelectedItem())
                 || Validation.isEmpty(danhmuc.getText()) || Validation.isEmpty(namXB.getText())
                 || Validation.isEmpty(tenTG.getText()) || Validation.isEmpty(txtgianhap.getText())
-                || Validation.isEmpty(txtgiaxuat.getText()) || Validation.isEmpty(isbn.getText())) {
+                || Validation.isEmpty(txtgiaxuat.getText()) 
+                ) {
+        //    || Validation.isEmpty(isbn.getText())
             check = false;
             JOptionPane.showMessageDialog(this, "Vui lòng nhập đầy đủ thông tin !");
         } 
-        else if(!spBus.checkISBN(isbn.getText())) {
-                JOptionPane.showMessageDialog(this, "Mã ISBN đã tồn tại!"); 
-                check = false;
-            }
+//        else if(!spBus.checkISBN(isbn.getText())) {
+//                JOptionPane.showMessageDialog(this, "Mã ISBN đã tồn tại!"); 
+//                check = false;
+//            }
             else {
                 if(hinhanh.getUrl_img() == null) {
                     JOptionPane.showMessageDialog(this, "Chưa thêm ảnh sản phẩm!"); 
@@ -283,7 +303,8 @@ public final class SanPhamDialog extends JDialog implements ActionListener {
         if (Validation.isEmpty(tenSP.getText()) || Validation.isEmpty((String) cbNXB.getSelectedItem())
                 || Validation.isEmpty(danhmuc.getText()) || Validation.isEmpty(namXB.getText())
                 || Validation.isEmpty(tenTG.getText()) || Validation.isEmpty(txtgianhap.getText())
-                || Validation.isEmpty(txtgiaxuat.getText()) || Validation.isEmpty(isbn.getText())) {
+                || Validation.isEmpty(txtgiaxuat.getText()) ) {
+        //    || Validation.isEmpty(isbn.getText())
             check = false;
             JOptionPane.showMessageDialog(this, "Vui lòng nhập đầy đủ thông tin !");
         }
