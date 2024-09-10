@@ -374,8 +374,8 @@ public final class TaoPhieuTra extends JPanel implements ItemListener, ActionLis
         this.txtMaSp.setText(Integer.toString(sp.getMSP()));
         this.txtTenSp.setText(sp.getTEN());
         this.txtSoLuongSPtra.setText(Integer.toString(sp.getSL()));
-        this.txtMaISBN.setText(sp.getISBN());
-        this.txtDongia.setText(Integer.toString(sp.getTIENN()/2));
+      //  this.txtMaISBN.setText(sp.getISBN());
+        this.txtDongia.setText(Integer.toString(sp.getTIENN()*2));
         slmax = sp.getSL();
     }
 

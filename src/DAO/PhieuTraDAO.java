@@ -196,7 +196,7 @@ public class PhieuTraDAO implements DAOinterface<PhieuTraDTO> {
             while (rs.next()) {
                 int masp = rs.getInt("MSP");
                 int soluong = rs.getInt("SL");
-                int tiennhap = rs.getInt("TIENNHAP");
+                int tiennhap = rs.getInt("TIEN");
                 String lydo = rs.getString("LYDO");
                 ChiTietPhieuTraDTO ct = new ChiTietPhieuTraDTO(maphieu, masp,  soluong, tiennhap, lydo);
                 result.add(ct);
@@ -253,6 +253,25 @@ public class PhieuTraDAO implements DAOinterface<PhieuTraDTO> {
             Logger.getLogger(PhieuTraDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
         return result;
+    }
+    
+      public ArrayList<Integer> getAllReturnReceiptIds() {
+        ArrayList<Integer> returnReceiptIds = new ArrayList<>();
+        String query = "SELECT MPX FROM PhieuTra"; // Adjust the query as needed
+
+        try ( Connection con = (Connection) JDBCUtil.getConnection();
+             PreparedStatement statement = con.prepareStatement(query);
+             ResultSet resultSet = statement.executeQuery()) {
+
+            while (resultSet.next()) {
+                int maPhieuTra = resultSet.getInt("MPX"); // Adjust column name as needed
+                returnReceiptIds.add(maPhieuTra);
+            }
+        } catch (SQLException e) {
+            System.out.println("Error retrieving return receipt IDs: " + e.getMessage());
+        }
+
+        return returnReceiptIds;
     }
 
 }

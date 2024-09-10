@@ -42,8 +42,11 @@ public class PhieuXuatBUS {
         return listPhieuXuat.get(index);
     }
 
-    public void cancel(int px) {
-        phieuXuatDAO.cancel(px);
+    public int cancel(int px) {
+       if( phieuXuatDAO.cancel(px)==null)
+           return 0 ;
+       else 
+           return 1 ; 
     }
 
     public void remove(int px) {

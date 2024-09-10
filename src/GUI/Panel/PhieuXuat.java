@@ -223,11 +223,17 @@ public final class PhieuXuat extends JPanel implements ActionListener, KeyListen
                 int n = JOptionPane.showConfirmDialog(null, "Bạn có chắc muốn xóa phiếu này?", "Xóa phiếu", JOptionPane.YES_NO_OPTION);
                 if (n == JOptionPane.YES_OPTION) {
                     PhieuXuatDTO px = pxBUS.getSelect(tablePhieuXuat.getSelectedRow());
-                    pxBUS.cancel(px.getMP());
+                   if( pxBUS.cancel(px.getMP())==1) {
                     pxBUS.remove(tablePhieuXuat.getSelectedRow());
                     loadDataTalbe(pxBUS.getAll());
                     Notification notification = new Notification(m, Notification.Type.SUCCESS, Notification.Location.TOP_CENTER, "Hủy phiếu thành công");
                     notification.showNotification();
+                   }
+                   else{
+                             loadDataTalbe(pxBUS.getAll());
+                    Notification notification = new Notification(m, Notification.Type.WARNING, Notification.Location.TOP_CENTER, "Hủy phiếu thất bại");
+                    notification.showNotification();
+                   }
                 }
             }
         } else if (source == search.btnReset) {

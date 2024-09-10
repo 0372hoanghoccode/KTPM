@@ -32,7 +32,7 @@ public class KhachHangBUS {
                 i++;
             }
         }
-        return vitri;
+        return listKhachHang.get(i).getMaKH();
     }
 
     public int getIndexByMaDV(int makhachhang) {

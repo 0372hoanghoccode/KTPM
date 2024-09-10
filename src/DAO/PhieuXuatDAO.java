@@ -14,10 +14,14 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import BUS.SanPhamBUS;
+import javax.swing.JOptionPane;
 
 
 
 public class PhieuXuatDAO implements DAOinterface<PhieuXuatDTO> {
+    
+    
+    private PhieuTraDAO phieutra = new PhieuTraDAO();
     
     public static PhieuXuatDAO getInstance(){
         return new PhieuXuatDAO();
@@ -159,17 +163,52 @@ public class PhieuXuatDAO implements DAOinterface<PhieuXuatDTO> {
     public PhieuXuatDTO cancel(int phieu) {
         PhieuXuatDTO result = null;
         try {
+            ArrayList<Integer> returnReceiptIds = phieutra.getAllReturnReceiptIds();
             
-            ArrayList<ChiTietPhieuDTO> chitietphieu = ChiTietPhieuXuatDAO.getInstance().selectAll(phieu+"");
-            ChiTietPhieuXuatDAO.getInstance().reset(chitietphieu);
+            boolean isInReturnReceipts = returnReceiptIds.contains(phieu);
+        if (isInReturnReceipts) {
+            // Nếu phiếu xuất có liên quan đến phiếu trả, cập nhật trạng thái và thông báo cảnh báo
+            PhieuXuatDAO.getInstance().updateStatusToDeleted(phieu);
+             JOptionPane.showMessageDialog(null,
+                        "Phiếu xuất với mã " + phieu + " còn liên quan đến phiếu trả. Không thể hủy.",
+                        "Cảnh báo",
+                        JOptionPane.WARNING_MESSAGE);
+                        return null ; 
+        } else {
+             ArrayList<ChiTietPhieuDTO> chitietphieu = ChiTietPhieuXuatDAO.getInstance().selectAll(phieu+"");
+          //  ChiTietPhieuXuatDAO.getInstance().reset(chitietphieu);
+         PhieuXuatDAO.getInstance().updateStatusToDeleted(phieu);
+             JOptionPane.showMessageDialog(null,
+                        "Phiếu xuất với mã " + phieu + " có chi tiết sản phẩm. Không thể xóa.",
+                        "Cảnh báo",
+                        JOptionPane.WARNING_MESSAGE);
+                        return null ; 
+           
             
-            deletePhieu(phieu);
+        }
         } catch (Exception e) {
             System.out.println(e);
         }
         return result;
     }
 
+       public void updateStatusToDeleted(int phieuId) throws SQLException {
+        String query = "UPDATE PhieuXuat SET TT = ? WHERE MPX = ?";
+
+        try (    Connection con = (Connection) JDBCUtil.getConnection();
+             PreparedStatement statement = con.prepareStatement(query)) {
+
+            // Set the status to -1 (or another value indicating deletion)
+            statement.setInt(1, 0); // Status value
+            statement.setInt(2, phieuId); // ID of the record to update
+
+            int rowsAffected = statement.executeUpdate();
+            if (rowsAffected == 0) {
+                throw new SQLException("No rows affected. The record with ID " + phieuId + " might not exist.");
+            }
+        }
+    }
+    
     public int updateDP(String t) {
         int result = 0 ;
         try {
