@@ -57,7 +57,7 @@ public final class TaoPhieuXuat extends JPanel {
     JTable tablePhieuXuat, tableSanPham;
     JScrollPane scrollTablePhieuNhap, scrollTableSanPham;
     DefaultTableModel tblModel, tblModelSP; //table co san 
-    ButtonCustom btnAddSp, btnEditSP, btnDelete, btnNhapHang;
+    ButtonCustom btnAddSp, btnDelete, btnNhapHang;
     InputForm txtMaphieu, txtNhanVien, txtTenSp, txtMaSp, txtMaISBN, txtSoLuongSPxuat, txtMaGiamGia, txtGiaGiam;
     SelectForm cbxMaKM; 
     JTextField txtTimKiem;
@@ -289,7 +289,7 @@ public final class TaoPhieuXuat extends JPanel {
         content_btn.setBorder(new EmptyBorder(8, 5, 0, 10));
         content_btn.setOpaque(false);
         btnAddSp = new ButtonCustom("Thêm sản phẩm", "success", 14);
-        btnEditSP = new ButtonCustom("Sửa sản phẩm", "warning", 14);
+        // btnEditSP = new ButtonCustom("Sửa sản phẩm", "warning", 14);
         btnDelete = new ButtonCustom("Xoá sản phẩm", "danger", 14);
 
         btnAddSp.addActionListener(new ActionListener() {
@@ -308,22 +308,22 @@ public final class TaoPhieuXuat extends JPanel {
             
         });
 
-        btnEditSP.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                int index = tablePhieuXuat.getSelectedRow();
-                if (index < 0) {
-                    JOptionPane.showMessageDialog(null, "Vui lòng chọn cấu hình cần chỉnh");
-                } else {
-                    chitietphieu.get(index).setSL(Integer.parseInt(txtSoLuongSPxuat.getText()));
-                    if(!txtGiaGiam.getText().equals(" ")) 
-                        chitietphieu.get(index).setTIEN(Integer.parseInt(txtGiaGiam.getText()));
-                    else
-                        chitietphieu.get(index).setTIEN(Integer.parseInt(txtGiaXuat.getText()));                    
-                    loadDataTableChiTietPhieu(chitietphieu);
-                }
-            }
-        });
+        // btnEditSP.addActionListener(new ActionListener() {
+        //     @Override
+        //     public void actionPerformed(ActionEvent e) {
+        //         int index = tablePhieuXuat.getSelectedRow();
+        //         if (index < 0) {
+        //             JOptionPane.showMessageDialog(null, "Vui lòng chọn cấu hình cần chỉnh");
+        //         } else {
+        //             chitietphieu.get(index).setSL(Integer.parseInt(txtSoLuongSPxuat.getText()));
+        //             if(!txtGiaGiam.getText().equals(" ")) 
+        //                 chitietphieu.get(index).setTIEN(Integer.parseInt(txtGiaGiam.getText()));
+        //             else
+        //                 chitietphieu.get(index).setTIEN(Integer.parseInt(txtGiaXuat.getText()));                    
+        //             loadDataTableChiTietPhieu(chitietphieu);
+        //         }
+        //     }
+        // });
 
         btnDelete.addActionListener(new ActionListener() {
             @Override
@@ -340,10 +340,10 @@ public final class TaoPhieuXuat extends JPanel {
             }
         });
 
-        btnEditSP.setEnabled(false);
+        // btnEditSP.setEnabled(false);
         btnDelete.setEnabled(false);
         content_btn.add(btnAddSp);
-        content_btn.add(btnEditSP);
+        // content_btn.add(btnEditSP);
         content_btn.add(btnDelete);
         left_top.add(content_btn, BorderLayout.SOUTH);
 
@@ -446,7 +446,7 @@ public final class TaoPhieuXuat extends JPanel {
         boolean val_1 = type.equals("add");
         boolean val_2 = type.equals("update");
         btnAddSp.setEnabled(val_1);
-        btnEditSP.setEnabled(val_2);
+        // btnEditSP.setEnabled(val_2);
         btnDelete.setEnabled(val_2);
         content_btn.revalidate();
         content_btn.repaint();

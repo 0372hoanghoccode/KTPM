@@ -48,7 +48,7 @@ public final class TaoPhieuNhap extends JPanel implements ItemListener, ActionLi
     JScrollPane scrollTablePhieuNhap, scrollTableSanPham;
     JPanel contentCenter, left_top, content_btn, left_bottom;
     DefaultTableModel tblModel, tblModelSP; //table co san 
-    ButtonCustom btnAddSp, btnEditSP, btnDelete, btnNhapHang; //, btnImport
+    ButtonCustom btnAddSp, btnDelete, btnNhapHang; //, btnImport
     InputForm txtMaphieu, txtNhanVien, txtMaSp, txtTenSp, txtDongia, txtMaISBN, txtSoLuongSPnhap ;
     JTextField txtTimKiem;
     JLabel  lbltongtien;
@@ -251,18 +251,18 @@ public final class TaoPhieuNhap extends JPanel implements ItemListener, ActionLi
         content_btn.setBorder(new EmptyBorder(8, 5, 0, 10));
         content_btn.setOpaque(false);
         btnAddSp = new ButtonCustom("Thêm sản phẩm", "success", 14);
-        btnEditSP = new ButtonCustom("Sửa sản phẩm", "warning", 14);
+        // btnEditSP = new ButtonCustom("Sửa sản phẩm", "warning", 14);
         btnDelete = new ButtonCustom("Xoá sản phẩm", "danger", 14);
             // btnImport = new ButtonCustom("Nhập Excel", "excel", 14);
         btnAddSp.addActionListener(this);
-        btnEditSP.addActionListener(this);
+        // btnEditSP.addActionListener(this);
         btnDelete.addActionListener(this);
             // btnImport.addActionListener(this);
-        btnEditSP.setEnabled(false);
+        // btnEditSP.setEnabled(false);
         btnDelete.setEnabled(false);
         content_btn.add(btnAddSp);
             // content_btn.add(btnImport);
-        content_btn.add(btnEditSP);
+        // content_btn.add(btnEditSP);
         content_btn.add(btnDelete);
         left_top.add(content_btn, BorderLayout.SOUTH);
 
@@ -333,7 +333,7 @@ public final class TaoPhieuNhap extends JPanel implements ItemListener, ActionLi
         boolean val_2 = type.equals("update");
         btnAddSp.setEnabled(val_1);
         // btnImport.setEnabled(val_1);
-        btnEditSP.setEnabled(val_2);
+        // btnEditSP.setEnabled(val_2);
         btnDelete.setEnabled(val_2);
         content_btn.revalidate();
         content_btn.repaint();
@@ -479,10 +479,6 @@ public final class TaoPhieuNhap extends JPanel implements ItemListener, ActionLi
             actionbtn("add");
             loadDataTableChiTietPhieu(chitietphieu);
             resetForm();
-        } else if (source == btnEditSP) {
-            chitietphieu.get(rowPhieuSelect).setSL(Integer.parseInt(txtSoLuongSPnhap.getText()));
-            chitietphieu.get(rowPhieuSelect).setTIEN(Integer.parseInt(txtDongia.getText()));
-            loadDataTableChiTietPhieu(chitietphieu);
         } else if (source == btnNhapHang) {
             eventBtnNhapHang();
         } 
