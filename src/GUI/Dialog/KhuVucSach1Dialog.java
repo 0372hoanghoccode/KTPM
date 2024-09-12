@@ -19,10 +19,11 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import GUI.Panel.KhuVucSach1;
 
 public final class KhuVucSach1Dialog extends JDialog implements ActionListener {
 
-    private KhuVucSach jpkvk;
+    private KhuVucSach1 jpkvk;
     private HeaderTitle titlePage;
     private JPanel pnmain, pnbottom;
     private ButtonCustom btnThem, btnCapNhat;
@@ -30,13 +31,13 @@ public final class KhuVucSach1Dialog extends JDialog implements ActionListener {
     private InputForm ghichu;
     private KhuVucSachDTO kvk;
 
-    public KhuVucSach1Dialog(KhuVucSach jpkvk, JFrame owner, String title, boolean modal, String type) {
+    public KhuVucSach1Dialog(KhuVucSach1 jpkvk, JFrame owner, String title, boolean modal, String type) {
         super(owner, title, modal);
         this.jpkvk = jpkvk;
         initComponents(title, type);
     }
 
-    public KhuVucSach1Dialog(KhuVucSach jpkvk, JFrame owner, String title, boolean modal, String type, KhuVucSachDTO kvk) {
+    public KhuVucSach1Dialog(KhuVucSach1 jpkvk, JFrame owner, String title, boolean modal, String type, KhuVucSachDTO kvk) {
         super(owner, title, modal);
         this.jpkvk = jpkvk;
         this.kvk = kvk;
@@ -69,6 +70,9 @@ public final class KhuVucSach1Dialog extends JDialog implements ActionListener {
 
         switch (type) {
             case "create" -> pnbottom.add(btnThem);
+            case "detail" -> {
+                initInfo();
+            }
             case "update" -> {
                 pnbottom.add(btnCapNhat);
                 initInfo();
