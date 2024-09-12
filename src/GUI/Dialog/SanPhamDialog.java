@@ -43,6 +43,7 @@ public final class SanPhamDialog extends JDialog implements ActionListener {
     private HeaderTitle titlePage;
     private JPanel pninfosanpham, pnbottom, pnCenter, pninfosanphamright, pnmain;
     private ButtonCustom  btnAddSanPham;
+    private SelectForm cbbLoHang;
     InputForm tenSP, tenTG, namXB, danhmuc, isbn;
     InputForm txtgianhap, txtgiaxuat;
     SelectForm  cbNXB;
@@ -104,16 +105,16 @@ public final class SanPhamDialog extends JDialog implements ActionListener {
         khuvuc = new SelectForm("Khu vực sách", arrkhuvuc);
         PlainDocument NamXB = (PlainDocument)namXB.getTxtForm().getDocument();
         NamXB.setDocumentFilter((new NumericDocumentFilter()));
-        txtgianhap = new InputForm("Giá nhập");
+        txtgianhap = new InputForm("Số Lượng");
         PlainDocument nhap = (PlainDocument)txtgianhap.getTxtForm().getDocument();
         nhap.setDocumentFilter((new NumericDocumentFilter()));
         txtgiaxuat = new InputForm("Giá xuất");
         PlainDocument xuat = (PlainDocument)txtgiaxuat.getTxtForm().getDocument();
         xuat.setDocumentFilter((new NumericDocumentFilter()));
-        isbn = new InputForm("Mã ISBN");
-        PlainDocument ma = (PlainDocument)isbn.getTxtForm().getDocument();
-        ma.setDocumentFilter((new NumericDocumentFilter()));
-        isbn.setVisible(false);
+        cbbLoHang = new SelectForm("Lô Hàng",  new String[]{"Lô 1", "Lô2", "Lô 3"}); //Hieusua -thêm cái string lo hang vo
+
+
+        // isbn.setVisible(false);
         hinhanh = new InputImage("Hình minh họa");
 
         pninfosanpham.add(tenSP);
@@ -124,7 +125,7 @@ public final class SanPhamDialog extends JDialog implements ActionListener {
         pninfosanpham.add(khuvuc);
         pninfosanpham.add(txtgianhap);
         pninfosanpham.add(txtgiaxuat);
-        pninfosanpham.add(isbn);
+        pninfosanpham.add(cbbLoHang);
         pninfosanphamright.add(hinhanh);
 
         pnbottom = new JPanel(new FlowLayout());
@@ -270,7 +271,7 @@ public final class SanPhamDialog extends JDialog implements ActionListener {
         khuvuc.setSelectedIndex(kvkhoBus.getIndexByMaKVK(sp.getMKVS()));
         txtgiaxuat.setText(Integer.toString(sp.getTIENX()));
         txtgianhap.setText(Integer.toString(sp.getTIENN()));
-        isbn.setText(sp.getISBN());
+        cbbLoHang.setSelectedItem(sp.getISBN()); //Hieusua - sửa lại set lô hàng
     }
 
 
