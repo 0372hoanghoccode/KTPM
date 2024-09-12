@@ -1,24 +1,9 @@
 package GUI.Panel;
 
-import BUS.NhanVienBUS;
-import BUS.PhieuNhapBUS;
-import DTO.NhanVienDTO;
-import DTO.PhieuNhapDTO;
-import GUI.Component.InputDate;
-import GUI.Component.InputForm;
-import GUI.Main;
-import GUI.Component.IntegratedSearch;
-import GUI.Component.MainFunction;
-import GUI.Component.NumericDocumentFilter;
-import java.awt.*;
-import javax.swing.*;
-import javax.swing.border.EmptyBorder;
-import GUI.Component.PanelBorderRadius;
-import GUI.Component.SelectForm;
-import GUI.Component.TableSorter;
-import GUI.Dialog.ChiTietPhieuDialog;
-import helper.Formater;
-import helper.JTableExporter;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
@@ -28,16 +13,41 @@ import java.awt.event.KeyListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
-import java.util.ArrayList;
-import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.DefaultTableModel;
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
+
+import javax.swing.BoxLayout;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.text.PlainDocument;
+
+import BUS.NhanVienBUS;
+import BUS.PhieuNhapBUS;
+import DTO.NhanVienDTO;
+import DTO.PhieuNhapDTO;
+import GUI.Main;
+import GUI.Component.InputDate;
+import GUI.Component.InputForm;
+import GUI.Component.IntegratedSearch;
+import GUI.Component.MainFunction;
+import GUI.Component.NumericDocumentFilter;
+import GUI.Component.PanelBorderRadius;
+import GUI.Component.SelectForm;
+import GUI.Component.TableSorter;
+import GUI.Dialog.ChiTietPhieuDialog;
+import helper.Formater;
+import helper.JTableExporter;
 
 public final class PhieuNhap extends JPanel implements ActionListener, KeyListener, PropertyChangeListener, ItemListener {
 
@@ -136,7 +146,7 @@ public final class PhieuNhap extends JPanel implements ActionListener, KeyListen
         functionBar.setLayout(new GridLayout(1, 2, 50, 0));
         functionBar.setBorder(new EmptyBorder(10, 10, 10, 10));
 
-        String[] action = {"create", "detail", "cancel", "export"};
+        String[] action = {"create", "detail", "export"};
         mainFunction = new MainFunction(m.user.getMNQ(), "nhaphang", action);
 
         //Add Event MouseListener
@@ -209,9 +219,7 @@ public final class PhieuNhap extends JPanel implements ActionListener, KeyListen
                 case 1 -> {
                     trangthaiString = "Đã duyệt";
                 }
-                case 0 -> {
-                    trangthaiString = "Đã hủy";
-                }
+                
                 case 2 -> {
                     trangthaiString = "Chờ xử lý";
                 }
@@ -295,27 +303,6 @@ public final class PhieuNhap extends JPanel implements ActionListener, KeyListen
 //                nhapKho = new TaoPhieuNhap(nv, "view", listPhieu.get(index), m);
 //                m.setPanel(nhapKho);
                 new ChiTietPhieuDialog(m, "Thông tin phiếu nhập", true, listPhieu.get(index));
-            }
-        } else if (source == mainFunction.btn.get("cancel")) {
-            int index = getRowSelected();
-            if (index != -1) {
-                int input = JOptionPane.showConfirmDialog(null, "Bạn có chắc chắn muốn huỷ phiếu ?\nThao tác này không thể hoàn tác nên hãy suy nghĩ kĩ !", "Huỷ phiếu", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
-                if (input == 0) {
-                    PhieuNhapDTO pn = listPhieu.get(index);
-                    System.out.println(pn);
-                    if (!phieunhapBUS.checkSLPn(pn.getMP())) {
-                        JOptionPane.showMessageDialog(null, "Không đủ số lượng để hủy phiếu!");
-                    } else {
-                        int c = phieunhapBUS.cancelPhieuNhap(pn.getMP());
-                        if (c == 0) {
-                            JOptionPane.showMessageDialog(null, "Hủy phiếu không thành công!");
-                        } else {
-                            JOptionPane.showMessageDialog(null, "Hủy phiếu thành công!");
-                            loadDataTalbe(phieunhapBUS.getAll());
-                        }
-                    }
-                    
-                }
             }
         } else if (source == search.btnReset) {
             resetForm();
