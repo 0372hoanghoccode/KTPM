@@ -37,12 +37,14 @@ import GUI.Component.ButtonCustom;
 import GUI.Component.InputForm;
 import GUI.Component.NumericDocumentFilter;
 import GUI.Component.PanelBorderRadius;
+import GUI.Component.SelectForm;
 import helper.Formater;
 import helper.Validation;
 
 
 public final class TaoPhieuNhap extends JPanel implements ItemListener, ActionListener {
     
+    private SelectForm cbbLoHang;
     PanelBorderRadius left, right;
     JTable tablePhieuNhap, tableSanPham; //tablePhieuNhap ở left_bottom chứa sp của phiếu, tableSanPham chứa sp đang bán
     JScrollPane scrollTablePhieuNhap, scrollTableSanPham;
@@ -293,8 +295,10 @@ public final class TaoPhieuNhap extends JPanel implements ItemListener, ActionLi
         txtNhanVien = new InputForm("Nhân viên nhập");
         txtNhanVien.setText(nvDto.getHOTEN());
         txtNhanVien.setEditable(false);
+        cbbLoHang = new SelectForm("Lô Hàng",  new String[]{"Lô 1", "Lô2", "Lô 3"}); //Hieusua -thêm cái string lo hang vo
         right_top.add(txtMaphieu);
         right_top.add(txtNhanVien);
+        right_top.add(cbbLoHang);
 
         right_center = new JPanel();
         right_center.setPreferredSize(new Dimension(100, 100));
