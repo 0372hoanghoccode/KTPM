@@ -18,7 +18,7 @@ public class PhieuNhapBUS {
     public final PhieuNhapDAO phieunhapDAO = new PhieuNhapDAO();
     public final ChiTietPhieuNhapDAO ctPhieuNhapDAO = new ChiTietPhieuNhapDAO();
 
-    NhaCungCapBUS nccBUS = new NhaCungCapBUS();
+    //NhaCungCapBUS nccBUS = new NhaCungCapBUS();
     NhanVienBUS nvBUS = new NhanVienBUS();
 
     ArrayList<PhieuNhapDTO> listPhieuNhap;
