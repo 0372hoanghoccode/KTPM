@@ -130,7 +130,7 @@ public class PhieuNhapBUS {
             }
 
             if (match
-                    && (manv == 0 || phieuNhap.getMNV() == manv)
+                    && (manv == 0 || phieuNhap.getMNV() == manv) 
                     && (phieuNhap.getTG().compareTo(time_start) >= 0)
                     && (phieuNhap.getTG().compareTo(time_end) <= 0)
                     && phieuNhap.getTIEN() >= price_min
