@@ -117,7 +117,7 @@ public class KhuVucSach1 extends JPanel implements ActionListener, ItemListener 
         }
         functionBar.add(mainFunction);
 
-        search = new IntegratedSearch(new String[]{"Tất cả", "Mã khu vực sách", "Tên khu vực sách"});
+        search = new IntegratedSearch(new String[]{"Tất cả", "Mã khu vực lô", "Tên khu vực lô"});
         search.cbxChoose.addItemListener(this);
         search.txtSearchForm.addKeyListener(new KeyAdapter() {
             @Override
@@ -237,7 +237,7 @@ public class KhuVucSach1 extends JPanel implements ActionListener, ItemListener 
     public int getRowSelected() {
         int index = tableKhuvuc.getSelectedRow();
         if (index == -1) {
-            JOptionPane.showMessageDialog(this, "Vui lòng chọn khu vực sách");
+            JOptionPane.showMessageDialog(this, "Vui lòng chọn khu vực lô");
         }
         return index;
     }
@@ -245,25 +245,25 @@ public class KhuVucSach1 extends JPanel implements ActionListener, ItemListener 
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == mainFunction.btn.get("create")) {
-            new KhuVucSach1Dialog(this, owner, "Thêm khu vực sách", true, "create");
+            new KhuVucSach1Dialog(this, owner, "Thêm khu vực lô", true, "create");
         } else if (e.getSource() == mainFunction.btn.get("update")) {
             int index = getRowSelected();
             if (index != -1) {
-                new KhuVucSach1Dialog(this, owner, "Chỉnh sửa khu vực sách", true, "update", listKVK.get(index));
+                new KhuVucSach1Dialog(this, owner, "Chỉnh sửa khu vực lô", true, "update", listKVK.get(index));
             }
         }
         
         else if (e.getSource() == mainFunction.btn.get("detail")) {
             int index = getRowSelected();
             if (index != -1) {
-                new KhuVucSach1Dialog(this, owner, "Chi tiết khu vực sách", false, "detail", listKVK.get(index));
+                new KhuVucSach1Dialog(this, owner, "Chi tiết khu vực lô", false, "detail", listKVK.get(index));
             }
         }
         else if (e.getSource() == mainFunction.btn.get("delete")) {        
             int index = getRowSelected();
             if (index != -1) {
                 int input = JOptionPane.showConfirmDialog(null,
-                        "Bạn có chắc chắn muốn xóa khu vực!", "Xóa khu vực sách",
+                        "Bạn có chắc chắn muốn xóa khu vực!", "Xóa khu vực lô",
                         JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
                 if (input == 0) {
                     int check = 0;
