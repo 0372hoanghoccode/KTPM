@@ -112,7 +112,7 @@ public class TaiKhoanKHDialog extends JDialog {
         if (!(username.getText().length() == 0)) {
             System.out.print("Hello1");
             String tendangnhap = username.getText();
-            String pass = password.getPass().equals("") ? tk.getMK() : password.getPass(); // Keep old password if not changed
+            String pass = password.getPass().equals("") ? tk.getMK() : password.getPass();
             int manhom = listNq.get(maNhomQuyen.getSelectedIndex()).getManhomquyen();
             int tt = trangthai.getSelectedIndex();
             TaiKhoanDTO tk = new TaiKhoanDTO(manv, tendangnhap, pass, manhom, tt);

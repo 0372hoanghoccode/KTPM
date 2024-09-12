@@ -115,7 +115,7 @@ public class TaiKhoan extends JPanel implements ActionListener, ItemListener {
         functionBar.setLayout(new GridLayout(1, 2, 50, 0));
         functionBar.setBorder(new EmptyBorder(10, 10, 10, 10));
 
-        String[] action = {"create", "update", "delete", "detail", "import", "export"};
+        String[] action = {"create", "update", "detail", "import", "export"};
         mainFunction = new MainFunction(m.user.getMNQ(), "taikhoan", action);
         for (String ac : action) {
             mainFunction.btn.get(ac).addActionListener(this);
@@ -194,17 +194,17 @@ public class TaiKhoan extends JPanel implements ActionListener, ItemListener {
             if (index != -1) {
                 new TaiKhoanDialog(this, owner, "Cập nhật tài khoản", true, "update", listTk.get(index));
             }
-        } else if (e.getSource() == mainFunction.btn.get("delete")) {
-            int index = getRowSelected();
-            if (index != -1) {
-                int input = JOptionPane.showConfirmDialog(null,
-                        "Bạn có chắc chắn muốn xóa tài khoản :)!", "Xóa xóa tài khoản",
-                        JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
-                if (input == 0) {
-                    TaiKhoanDAO.getInstance().delete(listTk.get(index).getMNV() + "");
-                    loadTable(taiKhoanBus.getTaiKhoanAll());
-                }
-            }
+        // } else if (e.getSource() == mainFunction.btn.get("delete")) {
+        //     int index = getRowSelected();
+        //     if (index != -1) {
+        //         int input = JOptionPane.showConfirmDialog(null,
+        //                 "Bạn có chắc chắn muốn xóa tài khoản :)!", "Xóa xóa tài khoản",
+        //                 JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
+        //         if (input == 0) {
+        //             TaiKhoanDAO.getInstance().delete(listTk.get(index).getMNV() + "");
+        //             loadTable(taiKhoanBus.getTaiKhoanAll());
+        //         }
+        //     }
         } else if (e.getSource() == mainFunction.btn.get("detail")) {
             int index = getRowSelected();
             if (index != -1) {
