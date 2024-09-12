@@ -80,13 +80,13 @@ public class NhaXuatBanDAO implements DAOinterface<NhaXuatBanDTO>{
             PreparedStatement pst = (PreparedStatement) con.prepareStatement(sql);
             ResultSet rs = (ResultSet) pst.executeQuery();
             while(rs.next()){
-                int mancc = rs.getInt("MNXB");
-                String tenncc = rs.getString("TEN");
+                int manxb = rs.getInt("MNXB");
+                String tennxb = rs.getString("TEN");
                 String DIACHI = rs.getString("DIACHI");
                 String EMAIL = rs.getString("EMAIL");
                 String SDT = rs.getString("SDT");
-                NhaXuatBanDTO ncc = new NhaXuatBanDTO(mancc, tenncc, DIACHI, EMAIL, SDT);
-                result.add(ncc);
+                NhaXuatBanDTO nxb = new NhaXuatBanDTO(manxb, tennxb, DIACHI, EMAIL, SDT);
+                result.add(nxb);
             }
             JDBCUtil.closeConnection(con);
         } catch (Exception e) {
@@ -104,13 +104,13 @@ public class NhaXuatBanDAO implements DAOinterface<NhaXuatBanDTO>{
             pst.setString(1, t);
             ResultSet rs = (ResultSet) pst.executeQuery();
             while(rs.next()){
-                int mancc = rs.getInt("MNXB");
-                String tenncc = rs.getString("TEN");
+                int manxb = rs.getInt("MNXB");
+                String tennxb = rs.getString("TEN");
                 String DIACHI = rs.getString("DIACHI");
                 String EMAIL = rs.getString("DIACHI");
                 String SDT = rs.getString("SDT");
                 
-                result = new NhaXuatBanDTO(mancc,tenncc,DIACHI,EMAIL,SDT);
+                result = new NhaXuatBanDTO(manxb,tennxb,DIACHI,EMAIL,SDT);
             }
             JDBCUtil.closeConnection(con);
         } catch (Exception e) {

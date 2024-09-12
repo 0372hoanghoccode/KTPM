@@ -21,35 +21,35 @@ public class NhaXuatBanBUS {
         return this.listNxb.get(index);
     }
 
-    public boolean add(NhaXuatBanDTO ncc) {
-        boolean check = NxbDAO.insert(ncc) != 0;
+    public boolean add(NhaXuatBanDTO nxb) {
+        boolean check = NxbDAO.insert(nxb) != 0;
         if (check) {
-            this.listNxb.add(ncc);
+            this.listNxb.add(nxb);
         }
         return check;
     }
 
-    public boolean delete(NhaXuatBanDTO ncc, int index) {
-        boolean check = NxbDAO.delete(Integer.toString(ncc.getManxb())) != 0;
+    public boolean delete(NhaXuatBanDTO nxb, int index) {
+        boolean check = NxbDAO.delete(Integer.toString(nxb.getManxb())) != 0;
         if (check) {
             this.listNxb.remove(index);
         }
         return check;
     }
 
-    public boolean update(NhaXuatBanDTO ncc) {
-        boolean check = NxbDAO.update(ncc) != 0;
+    public boolean update(NhaXuatBanDTO nxb) {
+        boolean check = NxbDAO.update(nxb) != 0;
         if (check) {
-            this.listNxb.set(getIndexByMaNXB(ncc.getManxb()), ncc);
+            this.listNxb.set(getIndexByMaNXB(nxb.getManxb()), nxb);
         }
         return check;
     }
 
-    public int getIndexByMaNXB(int mancc) {
+    public int getIndexByMaNXB(int manxb) {
         int i = 0;
         int vitri = -1;
         while (i < this.listNxb.size() && vitri == -1) {
-            if (listNxb.get(i).getManxb() == mancc) {
+            if (listNxb.get(i).getManxb() == manxb) {
                 vitri = i;
             } else {
                 i++;
@@ -117,16 +117,16 @@ public class NhaXuatBanBUS {
         return result;
     }
 
-    public String getTenNhaXuatBan(int mancc) {
-        return this.listNxb.get(getIndexByMaNXB(mancc)).getTennxb();
+    public String getTenNhaXuatBan(int manxb) {
+        return this.listNxb.get(getIndexByMaNXB(manxb)).getTennxb();
     }
 
-    public NhaXuatBanDTO findCT(ArrayList<NhaXuatBanDTO> ncc, String tenncc) {
+    public NhaXuatBanDTO findCT(ArrayList<NhaXuatBanDTO> nxb, String tennxb) {
         NhaXuatBanDTO p = null;
         int i = 0;
-        while (i < ncc.size() && p == null) {
-            if (ncc.get(i).getTennxb().equals(tenncc)) {
-                p = ncc.get(i);
+        while (i < nxb.size() && p == null) {
+            if (nxb.get(i).getTennxb().equals(tennxb)) {
+                p = nxb.get(i);
             } else {
                 i++;
             }

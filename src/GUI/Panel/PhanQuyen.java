@@ -109,9 +109,9 @@ public class PhanQuyen extends JPanel implements ActionListener {
 
     public void loadDataTalbe(ArrayList<NhomQuyenDTO> result) {
         tblModel.setRowCount(0);
-        for (NhomQuyenDTO ncc : result) {
+        for (NhomQuyenDTO nxb : result) {
             tblModel.addRow(new Object[]{
-                ncc.getManhomquyen(), ncc.getTennhomquyen()
+                nxb.getManhomquyen(), nxb.getTennhomquyen()
             });
         }
     }

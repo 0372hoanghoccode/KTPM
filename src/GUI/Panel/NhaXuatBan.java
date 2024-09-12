@@ -106,7 +106,7 @@ public final class NhaXuatBan extends JPanel implements ActionListener, ItemList
         functionBar.setBorder(new EmptyBorder(10, 10, 10, 10));
 
         String[] action = {"create", "update", "delete", "detail", "import", "export"};
-        mainFunction = new MainFunction(m.user.getMNQ(), "nhacungcap", action);
+        mainFunction = new MainFunction(m.user.getMNQ(), "nhaxuatban", action);
         for (String ac : action) {
             mainFunction.btn.get(ac).addActionListener(this);
         }
@@ -181,11 +181,11 @@ public final class NhaXuatBan extends JPanel implements ActionListener, ItemList
                     int check = 1;
                     XSSFRow excelRow = excelSheet.getRow(row);
                     int id = NhaXuatBanDAO.getInstance().getAutoIncrement();
-                    String tenNCC = excelRow.getCell(0).getStringCellValue();
+                    String tenNXB = excelRow.getCell(0).getStringCellValue();
                     String diachi = excelRow.getCell(1).getStringCellValue();
                     String email = excelRow.getCell(2).getStringCellValue();
                     String sdt = excelRow.getCell(3).getStringCellValue();
-                    if (Validation.isEmpty(tenNCC) || Validation.isEmpty(email)
+                    if (Validation.isEmpty(tenNXB) || Validation.isEmpty(email)
                             || !Validation.isEmail(email) || Validation.isEmpty(sdt) || !isPhoneNumber(sdt)
                             || sdt.length() != 10 || Validation.isEmpty(diachi)) {
                         check = 0;
@@ -193,7 +193,7 @@ public final class NhaXuatBan extends JPanel implements ActionListener, ItemList
                     if (check == 0) {
                         k += 1;
                     } else {
-                        nxbBUS.add(new NhaXuatBanDTO(id, tenNCC, diachi, email, sdt));
+                        nxbBUS.add(new NhaXuatBanDTO(id, tenNXB, diachi, email, sdt));
                     }
                 }
                 if (k != 0) {

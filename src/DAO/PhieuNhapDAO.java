@@ -1,18 +1,19 @@
 package DAO;
 
-import DTO.ChiTietPhieuNhapDTO;
-import DTO.SanPhamDTO;
-import DTO.PhieuNhapDTO;
-import BUS.SanPhamBUS;
-import config.JDBCUtil;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import BUS.SanPhamBUS;
+import DTO.ChiTietPhieuNhapDTO;
+import DTO.PhieuNhapDTO;
+import DTO.SanPhamDTO;
+import config.JDBCUtil;
 
 public class PhieuNhapDAO implements DAOinterface<PhieuNhapDTO> {
 
@@ -26,7 +27,7 @@ public class PhieuNhapDAO implements DAOinterface<PhieuNhapDTO> {
         int result = 0;
         try {
             Connection con = (Connection) JDBCUtil.getConnection();
-            String sql = "INSERT INTO `PHIEUNHAP` (`MNV`, `TIEN`, `TG`, `TT`) VALUES (?,?,?,?,?)";
+            String sql = "INSERT INTO `PHIEUNHAP` (`MNV`, `TIEN`, `TG`, `TT`) VALUES (?,?,?,?)";
             PreparedStatement pst = con.prepareStatement(sql);
             pst.setInt(1, t.getMNV());
             pst.setDouble(2, t.getTIEN());

@@ -100,7 +100,7 @@ public class NhaXuatBanDTO {
 
     @Override
     public String toString() {
-        return "NhaCungCap{" + "Ma nha xuat ban = " + MNXB + ", Ten nha xuat ban = " + TEN + ", Dia chi = " + DIACHI + ", Email = " + EMAIL + ", So dien thoai = " + SDT + '}';
+        return "Ma nha xuat ban = " + MNXB + ", Ten nha xuat ban = " + TEN + ", Dia chi = " + DIACHI + ", Email = " + EMAIL + ", So dien thoai = " + SDT + '}';
     }
     
 }

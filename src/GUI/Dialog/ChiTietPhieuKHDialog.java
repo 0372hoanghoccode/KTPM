@@ -1,18 +1,5 @@
 package GUI.Dialog;
 
-import BUS.SanPhamBUS;
-import BUS.PhieuXuatBUS;
-import DAO.KhachHangDAO;
-import DAO.NhanVienDAO;
-import DAO.SanPhamDAO;
-import DTO.ChiTietPhieuDTO;
-import DTO.SanPhamDTO;
-import DTO.PhieuXuatDTO;
-import GUI.Component.ButtonCustom;
-import GUI.Component.HeaderTitle;
-import GUI.Component.InputForm;
-import helper.Formater;
-import helper.writePDF;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -21,6 +8,7 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -31,11 +19,24 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
+import BUS.PhieuXuatBUS;
+import BUS.SanPhamBUS;
+import DAO.NhanVienDAO;
+import DAO.SanPhamDAO;
+import DTO.ChiTietPhieuDTO;
+import DTO.PhieuXuatDTO;
+import DTO.SanPhamDTO;
+import GUI.Component.ButtonCustom;
+import GUI.Component.HeaderTitle;
+import GUI.Component.InputForm;
+import helper.Formater;
+import helper.writePDF;
+
 public final class ChiTietPhieuKHDialog extends JDialog implements ActionListener {
 
     HeaderTitle titlePage;
     JPanel pnmain, pnmain_top, pnmain_bottom, pnmain_btn; //bỏ pnmain_bottom_right, pnmain_bottom_left 
-    InputForm txtMaPhieu, txtNhanVien, txtNhaCungCap, txtThoiGian;
+    InputForm txtMaPhieu, txtNhanVien, txtThoiGian;
     DefaultTableModel tblModel;
     JTable table, tblImei;
     JScrollPane scrollTable;
@@ -63,8 +64,6 @@ public final class ChiTietPhieuKHDialog extends JDialog implements ActionListene
 
     public void initPhieuXuat() {
         txtMaPhieu.setText("PX" + Integer.toString(this.phieuxuat.getMP()));
-        txtNhaCungCap.setTitle("Khách hàng");
-        txtNhaCungCap.setText(KhachHangDAO.getInstance().selectById(phieuxuat.getMKH() + "").getHoten());
         txtNhanVien.setText(NhanVienDAO.getInstance().selectById(phieuxuat.getMNV() + "").getHOTEN());
         txtThoiGian.setText(Formater.FormatTime(phieuxuat.getTG()));
     }
