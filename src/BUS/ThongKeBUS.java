@@ -3,7 +3,6 @@ package BUS;
 import DAO.ThongKeDAO;
 import DTO.ThongKe.ThongKeDoanhThuDTO;
 import DTO.ThongKe.ThongKeKhachHangDTO;
-import DTO.ThongKe.ThongKeNhaCungCapDTO;
 import DTO.ThongKe.ThongKeTheoThangDTO;
 import DTO.ThongKe.ThongKeTonKhoDTO;
 import DTO.ThongKe.ThongKeTungNgayTrongThangDTO;
@@ -14,7 +13,6 @@ public class ThongKeBUS {
 
     ThongKeDAO thongkeDAO = new ThongKeDAO();
     ArrayList<ThongKeKhachHangDTO> tkkh;
-    ArrayList<ThongKeNhaCungCapDTO> tkncc;
     ArrayList<ThongKeTonKhoDTO> listTonKho;
 
     public ThongKeBUS() {
@@ -29,15 +27,6 @@ public class ThongKeBUS {
     public ArrayList<ThongKeKhachHangDTO> FilterKhachHang(String text,Date start, Date end) {
         this.tkkh = ThongKeDAO.getThongKeKhachHang(text,start, end);
         return this.tkkh;
-    }
-        public ArrayList<ThongKeNhaCungCapDTO> getAllNCC() {
-        this.tkncc=ThongKeDAO.getThongKeNCC("",new Date(0), new Date(System.currentTimeMillis()));
-        return this.tkncc;
-    }
-
-    public ArrayList<ThongKeNhaCungCapDTO> FilterNCC(String text,Date start, Date end) {
-        this.tkncc = ThongKeDAO.getThongKeNCC(text,start, end);
-        return this.tkncc;
     }
 
     public ArrayList<ThongKeTonKhoDTO> getTonKho() {

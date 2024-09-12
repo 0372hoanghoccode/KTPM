@@ -90,17 +90,14 @@ public final class ChiTietPhieuKHDialog extends JDialog implements ActionListene
         pnmain_top = new JPanel(new GridLayout(1, 4));
         txtMaPhieu = new InputForm("Mã phiếu");
         txtNhanVien = new InputForm("Nhân viên nhập");
-        txtNhaCungCap = new InputForm("Nhà cung cấp");
         txtThoiGian = new InputForm("Thời gian tạo");
 
         txtMaPhieu.setEditable(false);
         txtNhanVien.setEditable(false);
-        txtNhaCungCap.setEditable(false);
         txtThoiGian.setEditable(false);
 
         pnmain_top.add(txtMaPhieu);
         pnmain_top.add(txtNhanVien);
-        pnmain_top.add(txtNhaCungCap);
         pnmain_top.add(txtThoiGian);
 
         pnmain_bottom = new JPanel(new GridLayout(1, 5));

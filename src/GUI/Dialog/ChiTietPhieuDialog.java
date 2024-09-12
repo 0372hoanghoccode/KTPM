@@ -3,9 +3,7 @@ package GUI.Dialog;
 import BUS.SanPhamBUS;
 import BUS.PhieuNhapBUS;
 import BUS.PhieuXuatBUS;
-import BUS.PhieuTraBUS;
 import DAO.KhachHangDAO;
-import DAO.NhaCungCapDAO;
 import DAO.NhanVienDAO;
 import DAO.SanPhamDAO;
 import DTO.ChiTietPhieuDTO;
@@ -52,7 +50,6 @@ public final class ChiTietPhieuDialog extends JDialog implements ActionListener 
     SanPhamBUS spBus = new SanPhamBUS();
     PhieuNhapBUS phieunhapBus;
     PhieuXuatBUS phieuxuatBus;
-    PhieuTraBUS phieutraBus;
 
     ButtonCustom btnPdf, btnDuyet;
 
@@ -88,23 +85,9 @@ public final class ChiTietPhieuDialog extends JDialog implements ActionListener 
         this.setVisible(true);
     }
 
-    public ChiTietPhieuDialog(JFrame owner, String title, boolean modal, PhieuTraDTO phieutraDTO) {
-        super(owner, title, modal);
-        this.phieutra = phieutraDTO;
-        phieutraBus = new PhieuTraBUS();
-        chitietphieu = phieutraBus.getChiTietPhieu_Type(phieutraDTO.getMP());
-        initComponent(title);
-        if(phieutraDTO.getTT() != 2) {
-            btnDuyet.setEnabled(false);
-        }
-        initPhieuTra();
-        loadDataTableChiTietPhieu(chitietphieu);
-        this.setVisible(true);
-    }
 
     public void initPhieuNhap() {
         txtMaPhieu.setText("PN" + Integer.toString(this.phieunhap.getMP()));
-        txtNhaCungCap.setText(NhaCungCapDAO.getInstance().selectById(phieunhap.getMNCC() + "").getTenncc());
         txtNhanVien.setText(NhanVienDAO.getInstance().selectById(phieunhap.getMNV() + "").getHOTEN());
         txtThoiGian.setText(Formater.FormatTime(phieunhap.getTG()));
     }
@@ -146,12 +129,10 @@ public final class ChiTietPhieuDialog extends JDialog implements ActionListener 
         pnmain_top = new JPanel(new GridLayout(1, 4));
         txtMaPhieu = new InputForm("Mã phiếu");
         txtNhanVien = new InputForm("Nhân viên nhập");
-        txtNhaCungCap = new InputForm("Nhà cung cấp");
         txtThoiGian = new InputForm("Thời gian tạo");
 
         txtMaPhieu.setEditable(false);
         txtNhanVien.setEditable(false);
-        txtNhaCungCap.setEditable(false);
         txtThoiGian.setEditable(false);
 
         pnmain_top.add(txtMaPhieu);
@@ -215,9 +196,6 @@ public final class ChiTietPhieuDialog extends JDialog implements ActionListener 
             if (this.phieunhap != null) {
                 w.writePN(phieunhap.getMP());
             }
-            if (this.phieutra != null) {
-                w.writePT(phieutra.getMP());
-            }
         }
         if(source == btnDuyet) {
             if (this.phieuxuat != null) {
@@ -226,7 +204,6 @@ public final class ChiTietPhieuDialog extends JDialog implements ActionListener 
                     phieuxuat.setTT(1);
                     phieuxuatBus.update(phieuxuat);
                 }
-
             }
             if (this.phieunhap != null) {
 

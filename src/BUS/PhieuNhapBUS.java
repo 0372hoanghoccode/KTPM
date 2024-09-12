@@ -18,7 +18,6 @@ public class PhieuNhapBUS {
     public final PhieuNhapDAO phieunhapDAO = new PhieuNhapDAO();
     public final ChiTietPhieuNhapDAO ctPhieuNhapDAO = new ChiTietPhieuNhapDAO();
 
-    NhaCungCapBUS nccBUS = new NhaCungCapBUS();
     NhanVienBUS nvBUS = new NhanVienBUS();
 
     ArrayList<PhieuNhapDTO> listPhieuNhap;
@@ -94,7 +93,7 @@ public class PhieuNhapBUS {
         return result;
     }
 
-    public ArrayList<PhieuNhapDTO> fillerPhieuNhap(int type, String input, int mancc, int manv, Date time_s, Date time_e, String price_minnn, String price_maxxx) {
+    public ArrayList<PhieuNhapDTO> fillerPhieuNhap(int type, String input, int manv, Date time_s, Date time_e, String price_minnn, String price_maxxx) {
         Long price_min = !price_minnn.equals("") ? Long.valueOf(price_minnn) : 0L;
         Long price_max = !price_maxxx.equals("") ? Long.valueOf(price_maxxx) : Long.MAX_VALUE;
         Timestamp time_start = new Timestamp(time_s.getTime());
@@ -113,7 +112,6 @@ public class PhieuNhapBUS {
             switch (type) {
                 case 0 -> { 
                     if (Integer.toString(phieuNhap.getMP()).contains(input)
-                            || nccBUS.getTenNhaCungCap(phieuNhap.getMNCC()).toLowerCase().contains(input)
                             || nvBUS.getNameById(phieuNhap.getMNV()).toLowerCase().contains(input)) {
                         match = true;
                     }
@@ -123,12 +121,8 @@ public class PhieuNhapBUS {
                         match = true;
                     }
                 }
+                
                 case 2 -> {
-                    if (nccBUS.getTenNhaCungCap(phieuNhap.getMNCC()).toLowerCase().contains(input)) {
-                        match = true;
-                    }
-                }
-                case 3 -> {
                     if (nvBUS.getNameById(phieuNhap.getMNV()).toLowerCase().contains(input)) {
                         match = true;
                     }
@@ -136,7 +130,7 @@ public class PhieuNhapBUS {
             }
 
             if (match
-                    && (manv == 0 || phieuNhap.getMNV() == manv) && (mancc == 0 || phieuNhap.getMNCC() == mancc)
+                    && (manv == 0 || phieuNhap.getMNV() == manv)
                     && (phieuNhap.getTG().compareTo(time_start) >= 0)
                     && (phieuNhap.getTG().compareTo(time_end) <= 0)
                     && phieuNhap.getTIEN() >= price_min

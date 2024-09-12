@@ -28,7 +28,6 @@ import javax.swing.text.PlainDocument;
 
 import com.formdev.flatlaf.extras.FlatSVGIcon;
 
-import BUS.NhaCungCapBUS;
 import BUS.MaKhuyenMaiBUS;
 import BUS.SanPhamBUS;
 import DTO.ChiTietMaKhuyenMaiDTO;
@@ -60,7 +59,6 @@ public final class TaoMaKhuyenMai extends JPanel implements ItemListener, Action
     Color BackgroundColor = new Color(211, 211, 211);
 
     SanPhamBUS spBUS = new SanPhamBUS();
-    NhaCungCapBUS nccBus = new NhaCungCapBUS();
     MaKhuyenMaiBUS MaKhuyenMaiBus = new MaKhuyenMaiBUS();
     NhanVienDTO nvDto;
 

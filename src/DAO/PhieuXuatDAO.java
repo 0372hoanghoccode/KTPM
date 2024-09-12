@@ -20,9 +20,6 @@ import javax.swing.JOptionPane;
 
 public class PhieuXuatDAO implements DAOinterface<PhieuXuatDTO> {
     
-    
-    private PhieuTraDAO phieutra = new PhieuTraDAO();
-    
     public static PhieuXuatDAO getInstance(){
         return new PhieuXuatDAO();
     }
@@ -160,37 +157,6 @@ public class PhieuXuatDAO implements DAOinterface<PhieuXuatDTO> {
         return result;
     }
     
-    public PhieuXuatDTO cancel(int phieu) {
-        PhieuXuatDTO result = null;
-        try {
-            ArrayList<Integer> returnReceiptIds = phieutra.getAllReturnReceiptIds();
-            
-            boolean isInReturnReceipts = returnReceiptIds.contains(phieu);
-        if (isInReturnReceipts) {
-            // Nếu phiếu xuất có liên quan đến phiếu trả, cập nhật trạng thái và thông báo cảnh báo
-            PhieuXuatDAO.getInstance().updateStatusToDeleted(phieu);
-             JOptionPane.showMessageDialog(null,
-                        "Phiếu xuất với mã " + phieu + " còn liên quan đến phiếu trả. Không thể hủy.",
-                        "Cảnh báo",
-                        JOptionPane.WARNING_MESSAGE);
-                        return null ; 
-        } else {
-             ArrayList<ChiTietPhieuDTO> chitietphieu = ChiTietPhieuXuatDAO.getInstance().selectAll(phieu+"");
-          //  ChiTietPhieuXuatDAO.getInstance().reset(chitietphieu);
-         PhieuXuatDAO.getInstance().updateStatusToDeleted(phieu);
-             JOptionPane.showMessageDialog(null,
-                        "Phiếu xuất với mã " + phieu + " có chi tiết sản phẩm. Không thể xóa.",
-                        "Cảnh báo",
-                        JOptionPane.WARNING_MESSAGE);
-                        return null ; 
-           
-            
-        }
-        } catch (Exception e) {
-            System.out.println(e);
-        }
-        return result;
-    }
 
        public void updateStatusToDeleted(int phieuId) throws SQLException {
         String query = "UPDATE PhieuXuat SET TT = ? WHERE MPX = ?";

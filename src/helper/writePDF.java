@@ -2,17 +2,12 @@ package helper;
 
 import DAO.ChiTietPhieuNhapDAO;
 import DAO.ChiTietPhieuXuatDAO;
-import DAO.ChiTietPhieuTraDAO;
-import DAO.ChiTietKiemKeDAO;
 import DAO.KhachHangDAO;
-import DAO.NhaCungCapDAO;
 import DAO.NhanVienDAO;
 import DAO.PhieuKiemKeDAO;
 import DAO.PhieuNhapDAO;
-import DAO.PhieuTraDAO;
 import DAO.PhieuXuatDAO;
 import DAO.SanPhamDAO;
-import DTO.ChiTietKiemKeDTO;
 import DTO.ChiTietPhieuDTO;
 import DTO.PhieuNhapDTO;
 import DTO.PhieuXuatDTO;
@@ -167,25 +162,18 @@ public class writePDF {
             // Thêm dòng Paragraph vào file PDF
 
             Paragraph paragraph1 = new Paragraph("Mã phiếu: PN-" + pn.getMP(), fontNormal10);
-            String ncc = NhaCungCapDAO.getInstance().selectById(pn.getMNCC() + "").getTenncc();
-            Paragraph paragraph2 = new Paragraph("Nhà cung cấp: " + ncc, fontNormal10);
+
+
+            String ngtao = NhanVienDAO.getInstance().selectById(pn.getMNV() + "").getHOTEN();
+            Paragraph paragraph2 = new Paragraph("Người thực hiện: " + ngtao, fontNormal10);
             paragraph2.add(new Chunk(createWhiteSpace(5)));
             paragraph2.add(new Chunk("-"));
             paragraph2.add(new Chunk(createWhiteSpace(5)));
-            String diachincc = NhaCungCapDAO.getInstance().selectById(pn.getMNCC() + "").getDiachi();
-            paragraph2.add(new Chunk(diachincc, fontNormal10));
-
-            String ngtao = NhanVienDAO.getInstance().selectById(pn.getMNV() + "").getHOTEN();
-            Paragraph paragraph3 = new Paragraph("Người thực hiện: " + ngtao, fontNormal10);
-            paragraph3.add(new Chunk(createWhiteSpace(5)));
-            paragraph3.add(new Chunk("-"));
-            paragraph3.add(new Chunk(createWhiteSpace(5)));
-            paragraph3.add(new Chunk("Mã nhân viên: " + pn.getMNV(), fontNormal10));
-            Paragraph paragraph4 = new Paragraph("Thời gian nhập: " + formatDate.format(pn.getTG()), fontNormal10);
+            paragraph2.add(new Chunk("Mã nhân viên: " + pn.getMNV(), fontNormal10));
+            Paragraph paragraph3 = new Paragraph("Thời gian nhập: " + formatDate.format(pn.getTG()), fontNormal10);
             document.add(paragraph1);
             document.add(paragraph2);
             document.add(paragraph3);
-            document.add(paragraph4);
             document.add(Chunk.NEWLINE);
             // Thêm table 5 cột vào file PDF
             PdfPTable table = new PdfPTable(4);
@@ -249,115 +237,7 @@ public class writePDF {
 
     }
 
-    public void writePT(int maphieu) {
-        String url = "";
-        try {
-            fd.setTitle("In phiếu trả");
-            fd.setLocationRelativeTo(null);
-            url = getFile("PX" + maphieu + "");
-            if (url.equals("nullnull")) {
-                return;
-            }
-            url = url + ".pdf";
-            file = new FileOutputStream(url);
-            document = new Document();
-            PdfWriter writer = PdfWriter.getInstance(document, file);
-            document.open();
-
-            Paragraph company = new Paragraph("Hệ thống quản lý cửa hàng sách BestBook", fontBold15);
-            company.add(new Chunk(createWhiteSpace(20)));
-            Date today = new Date(System.currentTimeMillis());
-            company.add(new Chunk("Thời gian in phiếu: " + formatDate.format(today), fontNormal10));
-            company.setAlignment(Element.ALIGN_LEFT);
-            document.add(company);
-            // Thêm tên công ty vào file PDF
-            document.add(Chunk.NEWLINE);
-            Paragraph header = new Paragraph("THÔNG TIN PHIẾU TRẢ", fontBold25);
-            header.setAlignment(Element.ALIGN_CENTER);
-            document.add(header);
-            PhieuTraDTO px = PhieuTraDAO.getInstance().selectById(maphieu + "");
-            // Thêm dòng Paragraph vào file PDF
-
-            Paragraph paragraph1 = new Paragraph("Mã phiếu: PX-" + px.getMP(), fontNormal10);
-            String hoten = KhachHangDAO.getInstance().selectById(px.getMKH() + "").getHoten();
-            Paragraph paragraph2 = new Paragraph("khách hàng: " + hoten, fontNormal10);
-            paragraph2.add(new Chunk(createWhiteSpace(5)));
-            paragraph2.add(new Chunk("-"));
-            paragraph2.add(new Chunk(createWhiteSpace(5)));
-            String diachikh = KhachHangDAO.getInstance().selectById(px.getMKH() + "").getDiachi();
-            paragraph2.add(new Chunk(diachikh, fontNormal10));
-
-            String ngtao = NhanVienDAO.getInstance().selectById(px.getMNV() + "").getHOTEN();
-            Paragraph paragraph3 = new Paragraph("Người thực hiện: " + ngtao, fontNormal10);
-            paragraph3.add(new Chunk(createWhiteSpace(5)));
-            paragraph3.add(new Chunk("-"));
-            paragraph3.add(new Chunk(createWhiteSpace(5)));
-            paragraph3.add(new Chunk("Mã nhân viên: " + px.getMNV(), fontNormal10));
-            Paragraph paragraph4 = new Paragraph("Thời gian nhập: " + formatDate.format(px.getTG()), fontNormal10);
-            document.add(paragraph1);
-            document.add(paragraph2);
-            document.add(paragraph3);
-            document.add(paragraph4);
-            document.add(Chunk.NEWLINE);
-            // Thêm table 5 cột vào file PDF
-            PdfPTable table = new PdfPTable(4);
-            table.setWidthPercentage(100);
-            table.setWidths(new float[]{30f, 35f, 20f, 20f});
-            PdfPCell cell;
-
-            table.addCell(new PdfPCell(new Phrase("Tên sản phẩm", fontBold15)));
-            table.addCell(new PdfPCell(new Phrase("Giá", fontBold15)));
-            table.addCell(new PdfPCell(new Phrase("Số lượng", fontBold15)));
-            table.addCell(new PdfPCell(new Phrase("Tổng tiền", fontBold15)));
-            for (int i = 0; i < 4; i++) {
-                cell = new PdfPCell(new Phrase(""));
-                table.addCell(cell);
-            }
-
-            //Truyen thong tin tung chi tiet vao table
-            for (ChiTietPhieuDTO ctp : ChiTietPhieuTraDAO.getInstance().selectAll(maphieu + "")) {
-                SanPhamDTO sp = new SanPhamDAO().selectById(ctp.getMSP() + "");
-                table.addCell(new PdfPCell(new Phrase(sp.getTEN(), fontNormal10)));
-                table.addCell(new PdfPCell(new Phrase(formatter.format(ctp.getTIEN()) + "đ", fontNormal10)));
-                table.addCell(new PdfPCell(new Phrase(String.valueOf(ctp.getSL()), fontNormal10)));
-                table.addCell(new PdfPCell(new Phrase(formatter.format(ctp.getSL() * ctp.getTIEN()) + "đ", fontNormal10)));
-            }
-
-            document.add(table);
-            document.add(Chunk.NEWLINE);
-
-            Paragraph paraTongThanhToan = new Paragraph(new Phrase("Tổng thành tiền: " + formatter.format(px.getTIEN()) + "đ", fontBold15));
-            paraTongThanhToan.setIndentationLeft(300);
-
-            document.add(paraTongThanhToan);
-            document.add(Chunk.NEWLINE);
-            document.add(Chunk.NEWLINE);
-            Paragraph paragraph = new Paragraph();
-            paragraph.setIndentationLeft(22);
-            paragraph.add(new Chunk("Người lập phiếu", fontBoldItalic15));
-            paragraph.add(new Chunk(createWhiteSpace(30)));
-            // paragraph.add(new Chunk("Người giao", fontBoldItalic15));
-            // paragraph.add(new Chunk(createWhiteSpace(30)));
-            paragraph.add(new Chunk("Khách hàng", fontBoldItalic15));
-
-            Paragraph sign = new Paragraph();
-            sign.setIndentationLeft(20);
-            sign.add(new Chunk("(Ký và ghi rõ họ tên)", fontNormal10));
-            sign.add(new Chunk(createWhiteSpace(25)));
-            // sign.add(new Chunk("(Ký và ghi rõ họ tên)", fontNormal10));
-            // sign.add(new Chunk(createWhiteSpace(23)));
-            sign.add(new Chunk("(Ký và ghi rõ họ tên)", fontNormal10));
-            document.add(paragraph);
-            document.add(sign);
-            document.close();
-            writer.close();
-            openFile(url);
-
-        } catch (DocumentException | FileNotFoundException ex) {
-            JOptionPane.showMessageDialog(null, "Lỗi khi ghi file " + url);
-        }
-    }
-
+    
     public void writePX(int maphieu) {
         String url = "";
         try {
@@ -466,96 +346,5 @@ public class writePDF {
             JOptionPane.showMessageDialog(null, "Lỗi khi ghi file " + url);
         }
     }
-
-    public void writePKK(int maphieu) {
-        String url = "";
-        try {
-            fd.setTitle("In phiếu kiểm kê");
-            fd.setLocationRelativeTo(null);
-            url = getFile("PKK" + maphieu + "");
-            if (url.equals("nullnull")) {
-                return;
-            }
-            url = url + ".pdf";
-            file = new FileOutputStream(url);
-            document = new Document();
-            PdfWriter writer = PdfWriter.getInstance(document, file);
-            document.open();
-
-            Paragraph company = new Paragraph("Hệ thống quản lý cửa hàng sách BestBook", fontBold15);
-            company.add(new Chunk(createWhiteSpace(20)));
-            Date today = new Date(System.currentTimeMillis());
-            company.add(new Chunk("Thời gian in phiếu: " + formatDate.format(today), fontNormal10));
-            company.setAlignment(Element.ALIGN_LEFT);
-            document.add(company);
-            // Thêm tên công ty vào file PDF
-            document.add(Chunk.NEWLINE);
-            Paragraph header = new Paragraph("THÔNG TIN PHIẾU KIỂM KÊ", fontBold25);
-            header.setAlignment(Element.ALIGN_CENTER);
-            document.add(header);
-            PhieuKiemKeDTO pn = PhieuKiemKeDAO.getInstance().selectById(maphieu + "");
-            // Thêm dòng Paragraph vào file PDF
-
-            Paragraph paragraph1 = new Paragraph("Mã phiếu: PN-" + pn.getMP(), fontNormal10);
-
-            String ngtao = NhanVienDAO.getInstance().selectById(pn.getNguoitao() + "").getHOTEN();
-            Paragraph paragraph3 = new Paragraph("Người thực hiện: " + ngtao, fontNormal10);
-            paragraph3.add(new Chunk(createWhiteSpace(5)));
-            paragraph3.add(new Chunk("-"));
-            paragraph3.add(new Chunk(createWhiteSpace(5)));
-            paragraph3.add(new Chunk("Mã nhân viên: " + pn.getNguoitao(), fontNormal10));
-            Paragraph paragraph4 = new Paragraph("Thời gian nhập: " + formatDate.format(pn.getTG()), fontNormal10);
-            document.add(paragraph1);
-            document.add(paragraph3);
-            document.add(paragraph4);
-            document.add(Chunk.NEWLINE);
-            // Thêm table 5 cột vào file PDF
-            PdfPTable table = new PdfPTable(4);
-            table.setWidthPercentage(100);
-            table.setWidths(new float[]{30f, 35f, 20f, 20f});
-            PdfPCell cell;
-
-            table.addCell(new PdfPCell(new Phrase("Tên sản phẩm", fontBold15)));
-            table.addCell(new PdfPCell(new Phrase("Trạng Thái", fontBold15)));
-            table.addCell(new PdfPCell(new Phrase("Ghi chú", fontBold15)));
-            for (int i = 0; i < 3; i++) {
-                cell = new PdfPCell(new Phrase(""));
-                table.addCell(cell);
-            }
-
-            //Truyen thong tin tung chi tiet vao table
-            for (ChiTietKiemKeDTO ctp : ChiTietKiemKeDAO.getInstance().selectAll(maphieu + "")) {
-                SanPhamDTO sp = new SanPhamDAO().selectById(ctp.getMSP() + "");
-                table.addCell(new PdfPCell(new Phrase(sp.getTEN(), fontNormal10)));
-                table.addCell(new PdfPCell(new Phrase(String.valueOf(ctp.getMSP()), fontNormal10)));
-                table.addCell(new PdfPCell(new Phrase(String.valueOf(ctp.getGHICHU()), fontNormal10)));
-            }
-
-            document.add(table);
-            document.add(Chunk.NEWLINE);
-
-
-            Paragraph paragraph = new Paragraph();
-            paragraph.setIndentationLeft(22);
-            paragraph.add(new Chunk("Người lập phiếu", fontBoldItalic15));
-            paragraph.add(new Chunk(createWhiteSpace(30)));
-            paragraph.add(new Chunk("Nhân viên nhận", fontBoldItalic15));
-
-            Paragraph sign = new Paragraph();
-            sign.setIndentationLeft(23);
-            sign.add(new Chunk("(Ký và ghi rõ họ tên)", fontNormal10));
-            sign.add(new Chunk(createWhiteSpace(30)));
-            sign.add(new Chunk("(Ký và ghi rõ họ tên)", fontNormal10));
-            document.add(paragraph);
-            document.add(sign);
-
-            document.close();
-            writer.close();
-            openFile(url);
-
-        } catch (DocumentException | FileNotFoundException ex) {
-            JOptionPane.showMessageDialog(null, "Lỗi khi ghi file " + url);
-        }
-
-    }
+    
 }

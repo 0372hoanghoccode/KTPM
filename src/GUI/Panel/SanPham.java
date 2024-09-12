@@ -79,7 +79,7 @@ public final class SanPham extends JPanel implements ActionListener {
         functionBar.setLayout(new GridLayout(1, 2, 50, 0));
         functionBar.setBorder(new EmptyBorder(10, 10, 10, 10));
 
-        String[] action = {"create", "update", "delete", "detail", "export"};
+        String[] action = { "update", "delete", "detail", "export"};
         mainFunction = new MainFunction(m.user.getMNQ(), "sanpham", action);
         for (String ac : action) {
             mainFunction.btn.get(ac).addActionListener(this);
@@ -135,9 +135,7 @@ public final class SanPham extends JPanel implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == mainFunction.btn.get("create")) {
-            new SanPhamDialog(this, owner, "Thêm sản phẩm mới", true, "create");
-        } else if (e.getSource() == mainFunction.btn.get("update")) {
+        if (e.getSource() == mainFunction.btn.get("update")) {
             int index = getRowSelected();
             if (index != -1) {
             new SanPhamDialog(this, owner, "Chỉnh sửa sản phẩm", true, "update", listSP.get(index));

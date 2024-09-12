@@ -26,13 +26,12 @@ public class PhieuNhapDAO implements DAOinterface<PhieuNhapDTO> {
         int result = 0;
         try {
             Connection con = (Connection) JDBCUtil.getConnection();
-            String sql = "INSERT INTO `PHIEUNHAP` (`MNV`, `MNCC`, `TIEN`, `TG`, `TT`) VALUES (?,?,?,?,?)";
+            String sql = "INSERT INTO `PHIEUNHAP` (`MNV`, `TIEN`, `TG`, `TT`) VALUES (?,?,?,?,?)";
             PreparedStatement pst = con.prepareStatement(sql);
             pst.setInt(1, t.getMNV());
-            pst.setInt(2, t.getMNCC());
-            pst.setDouble(3, t.getTIEN());
-            pst.setTimestamp(4, t.getTG());
-            pst.setInt(5, t.getTT());
+            pst.setDouble(2, t.getTIEN());
+            pst.setTimestamp(3, t.getTG());
+            pst.setInt(4, t.getTT());
             result = pst.executeUpdate();
             JDBCUtil.closeConnection(con);
         } catch (SQLException ex) {
@@ -46,13 +45,12 @@ public class PhieuNhapDAO implements DAOinterface<PhieuNhapDTO> {
         int result = 0;
         try {
             Connection con = (Connection) JDBCUtil.getConnection();
-            String sql = "UPDATE `PHIEUNHAP` SET `TG`=?,`MNCC`=?,`TIEN`=?,`TT`=? WHERE `MPN`=?";
+            String sql = "UPDATE `PHIEUNHAP` SET `TG`=?,`TIEN`=?,`TT`=? WHERE `MPN`=?";
             PreparedStatement pst = (PreparedStatement) con.prepareStatement(sql);
             pst.setTimestamp(1, t.getTG());
-            pst.setInt(2, t.getMNCC());
-            pst.setLong(3, t.getTIEN());
-            pst.setInt(4, t.getTT());
-            pst.setInt(5, t.getMP());
+            pst.setLong(2, t.getTIEN());
+            pst.setInt(3, t.getTT());
+            pst.setInt(4, t.getMP());
             result = pst.executeUpdate();
             JDBCUtil.closeConnection(con);
         } catch (SQLException ex) {
@@ -88,11 +86,10 @@ public class PhieuNhapDAO implements DAOinterface<PhieuNhapDTO> {
             while (rs.next()) {
                 int MPN = rs.getInt("MPN");
                 Timestamp TG = rs.getTimestamp("TG");
-                int MNCC = rs.getInt("MNCC");
                 int MNV = rs.getInt("MNV");
                 long TIENN = rs.getLong("TIEN");
                 int TT = rs.getInt("TT");
-                PhieuNhapDTO phieunhap = new PhieuNhapDTO(MNCC, MPN, MNV, TG, TIENN, TT);
+                PhieuNhapDTO phieunhap = new PhieuNhapDTO( MPN, MNV, TG, TIENN, TT);
                 result.add(phieunhap);
             }
             JDBCUtil.closeConnection(con);
@@ -113,11 +110,10 @@ public class PhieuNhapDAO implements DAOinterface<PhieuNhapDTO> {
             while (rs.next()) {
                 int MPN = rs.getInt("MPN");
                 Timestamp TG = rs.getTimestamp("TG");
-                int MNCC = rs.getInt("MNCC");
                 int MNV = rs.getInt("MNV");
                 long TIENN = rs.getLong("TIEN");
                 int TT = rs.getInt("TT");
-                result = new PhieuNhapDTO(MNCC, MPN, MNV, TG, TIENN, TT);
+                result = new PhieuNhapDTO( MPN, MNV, TG, TIENN, TT);
             }
             JDBCUtil.closeConnection(con);
         } catch (Exception e) {
@@ -138,11 +134,10 @@ public class PhieuNhapDAO implements DAOinterface<PhieuNhapDTO> {
             while (rs.next()) {
                 int MPN = rs.getInt("MPN");
                 Timestamp TG = rs.getTimestamp("TG");
-                int MNCC = rs.getInt("MNCC");
                 int MNV = rs.getInt("MNV");
                 long TIENN = rs.getLong("TIEN");
                 int TT = rs.getInt("TT");
-                PhieuNhapDTO phieunhap = new PhieuNhapDTO(MNCC, MPN, MNV, TG, TIENN, TT);
+                PhieuNhapDTO phieunhap = new PhieuNhapDTO( MPN, MNV, TG, TIENN, TT);
                 result.add(phieunhap);
             }
             JDBCUtil.closeConnection(con);

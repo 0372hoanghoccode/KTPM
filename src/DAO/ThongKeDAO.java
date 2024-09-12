@@ -2,7 +2,6 @@ package DAO;
 
 import DTO.ThongKe.ThongKeDoanhThuDTO;
 import DTO.ThongKe.ThongKeKhachHangDTO;
-import DTO.ThongKe.ThongKeNhaCungCapDTO;
 import DTO.ThongKe.ThongKeTheoThangDTO;
 import DTO.ThongKe.ThongKeTonKhoDTO;
 import DTO.ThongKe.ThongKeTungNgayTrongThangDTO;
@@ -197,46 +196,6 @@ public class ThongKeDAO {
         return result;
     }
 
-    public static ArrayList<ThongKeNhaCungCapDTO> getThongKeNCC(String text, Date timeStart, Date timeEnd) {
-        ArrayList<ThongKeNhaCungCapDTO> result = new ArrayList<>();
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(timeEnd.getTime());
-        // Đặt giá trị cho giờ, phút, giây và mili giây của Calendar
-        calendar.set(Calendar.HOUR_OF_DAY, 23);
-        calendar.set(Calendar.MINUTE, 59);
-        calendar.set(Calendar.SECOND, 0);
-        calendar.set(Calendar.MILLISECOND, 0);
-        try {
-            Connection con = JDBCUtil.getConnection();
-            String sql = """
-                            WITH ncc AS (
-                            SELECT NHACUNGCAP.MNCC, NHACUNGCAP.TEN , COUNT(PHIEUNHAP.MPN) AS tongsophieu, SUM(PHIEUNHAP.TIEN) AS tongsotien
-                            FROM NHACUNGCAP
-                            JOIN PHIEUNHAP ON NHACUNGCAP.MNCC = PHIEUNHAP.MNCC
-                            WHERE PHIEUNHAP.TG BETWEEN ? AND ? 
-                            GROUP BY NHACUNGCAP.MNCC, NHACUNGCAP.TEN)
-                            SELECT MNCC,TEN,COALESCE(ncc.tongsophieu, 0) AS SL ,COALESCE(ncc.tongsotien, 0) AS total 
-                            FROM ncc WHERE TEN LIKE ? OR MNCC LIKE ?""";
-            PreparedStatement pst = con.prepareStatement(sql);
-            pst.setTimestamp(1, new Timestamp(timeStart.getTime()));
-            pst.setTimestamp(2, new Timestamp(calendar.getTimeInMillis()));
-            pst.setString(3, "%" + text + "%");
-            pst.setString(4, "%" + text + "%");
-
-            ResultSet rs = pst.executeQuery();
-            while (rs.next()) {
-                int mancc = rs.getInt("MNCC");
-                String tenncc = rs.getString("TEN");
-                int SL = rs.getInt("SL");
-                long TIEN = rs.getInt("total");
-                ThongKeNhaCungCapDTO x = new ThongKeNhaCungCapDTO(mancc, tenncc, SL, TIEN);
-                result.add(x);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return result;
-    }
 
     public ArrayList<ThongKeTheoThangDTO> getThongKeTheoThang(int nam) {
         ArrayList<ThongKeTheoThangDTO> result = new ArrayList<>();

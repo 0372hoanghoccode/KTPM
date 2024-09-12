@@ -26,7 +26,6 @@ import com.formdev.flatlaf.extras.FlatSVGIcon;
 import com.formdev.flatlaf.fonts.roboto.FlatRobotoFont;
 
 
-import BUS.NhaCungCapBUS;
 import BUS.PhieuNhapBUS;
 import BUS.SanPhamBUS;
 import DTO.ChiTietPhieuNhapDTO;
@@ -38,7 +37,6 @@ import GUI.Component.ButtonCustom;
 import GUI.Component.InputForm;
 import GUI.Component.NumericDocumentFilter;
 import GUI.Component.PanelBorderRadius;
-import GUI.Component.SelectForm;
 import helper.Formater;
 import helper.Validation;
 
@@ -52,7 +50,6 @@ public final class TaoPhieuNhap extends JPanel implements ItemListener, ActionLi
     DefaultTableModel tblModel, tblModelSP; //table co san 
     ButtonCustom btnAddSp, btnEditSP, btnDelete, btnNhapHang; //, btnImport
     InputForm txtMaphieu, txtNhanVien, txtMaSp, txtTenSp, txtDongia, txtMaISBN, txtSoLuongSPnhap ;
-    SelectForm cbxNhaCungCap; //, cbxDanhMuc
     JTextField txtTimKiem;
     JLabel  lbltongtien;
 
@@ -60,7 +57,6 @@ public final class TaoPhieuNhap extends JPanel implements ItemListener, ActionLi
     Color BackgroundColor = new Color(211, 211, 211);
 
     SanPhamBUS spBUS = new SanPhamBUS();
-    NhaCungCapBUS nccBus = new NhaCungCapBUS();
     PhieuNhapBUS phieunhapBus = new PhieuNhapBUS();
     NhanVienDTO nvDto;
 
@@ -297,10 +293,8 @@ public final class TaoPhieuNhap extends JPanel implements ItemListener, ActionLi
         txtNhanVien = new InputForm("Nhân viên nhập");
         txtNhanVien.setText(nvDto.getHOTEN());
         txtNhanVien.setEditable(false);
-        cbxNhaCungCap = new SelectForm("Nhà cung cấp", nccBus.getArrTenNhaCungCap());
         right_top.add(txtMaphieu);
         right_top.add(txtNhanVien);
-        right_top.add(cbxNhaCungCap);
 
         right_center = new JPanel();
         right_center.setPreferredSize(new Dimension(100, 100));
@@ -500,10 +494,9 @@ public final class TaoPhieuNhap extends JPanel implements ItemListener, ActionLi
         } else {
             int input = JOptionPane.showConfirmDialog(null, "Bạn có chắc chắn muốn tạo phiếu nhập !", "Xác nhận tạo phiếu", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
             if (input == 0) {
-                int mancc = nccBus.getByIndex(cbxNhaCungCap.getSelectedIndex()).getMancc();
                 long now = System.currentTimeMillis();
                 Timestamp currenTime = new Timestamp(now);
-                PhieuNhapDTO pn = new PhieuNhapDTO(mancc, maphieunhap, nvDto.getMNV(), currenTime, phieunhapBus.getTIEN(chitietphieu), 1);
+                PhieuNhapDTO pn = new PhieuNhapDTO(maphieunhap, nvDto.getMNV(), currenTime, phieunhapBus.getTIEN(chitietphieu), 1);
                 boolean result = phieunhapBus.add(pn, chitietphieu, chitietsanpham);
                 if (result) {
                     JOptionPane.showMessageDialog(this, "Nhập hàng thành công !");
