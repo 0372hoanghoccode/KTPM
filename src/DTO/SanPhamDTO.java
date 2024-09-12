@@ -13,87 +13,90 @@ public class SanPhamDTO {
     private String TENTG;
     private int MKVS;
     private int TIENX;
-    private int TIENN;
     private int SL;
-    private String ISBN;
 
+    // Constructor mặc định
     public SanPhamDTO() {
-
-    }
-    
-    public SanPhamDTO(int mSP, String tEN, String hINHANH, String dANHMUC, int nAMXB, int mNXB, String tENTG, int mKVS,
-            int tIENX, int tIENN, int sL, String iSBN) {
-        MSP = mSP;
-        TEN = tEN;
-        HINHANH = hINHANH;
-        DANHMUC = dANHMUC;
-        NAMXB = nAMXB;
-        MNXB = mNXB;
-        TENTG = tENTG;
-        MKVS = mKVS;
-        TIENX = tIENX;
-        TIENN = tIENN;
-        SL = sL;
-        ISBN = iSBN;
     }
 
-    
+    // Constructor với tất cả các tham số
+    public SanPhamDTO(int MSP, String TEN, String HINHANH, String DANHMUC, int NAMXB, int MNXB, String TENTG, int MKVS, int TIENX, int SL) {
+        this.MSP = MSP;
+        this.TEN = TEN;
+        this.HINHANH = HINHANH;
+        this.DANHMUC = DANHMUC;
+        this.NAMXB = NAMXB;
+        this.MNXB = MNXB;
+        this.TENTG = TENTG;
+        this.MKVS = MKVS;
+        this.TIENX = TIENX;
+        this.SL = SL;
+    }
+
+    // Getter và Setter cho MSP
     public int getMSP() {
         return MSP;
     }
 
-    public void setMSP(int mSP) {
-        MSP = mSP;
+    public void setMSP(int MSP) {
+        this.MSP = MSP;
     }
 
+    // Getter và Setter cho TEN
     public String getTEN() {
         return TEN;
     }
 
-    public void setTEN(String tEN) {
-        TEN = tEN;
+    public void setTEN(String TEN) {
+        this.TEN = TEN;
     }
 
+    // Getter và Setter cho HINHANH
     public String getHINHANH() {
         return HINHANH;
     }
 
-    public void setHINHANH(String hINHANH) {
-        HINHANH = hINHANH;
+    public void setHINHANH(String HINHANH) {
+        this.HINHANH = HINHANH;
     }
 
+    // Getter và Setter cho DANHMUC
     public String getDANHMUC() {
         return DANHMUC;
     }
 
-    public void setDANHMUC(String dANHMUC) {
-        DANHMUC = dANHMUC;
+    public void setDANHMUC(String DANHMUC) {
+        this.DANHMUC = DANHMUC;
     }
 
+    // Getter và Setter cho NAMXB
     public int getNAMXB() {
         return NAMXB;
     }
 
-    public void setNAMXB(int nAMXB) {
-        NAMXB = nAMXB;
+    public void setNAMXB(int NAMXB) {
+        this.NAMXB = NAMXB;
     }
 
+    // Getter và Setter cho MNXB
     public int getMNXB() {
         return MNXB;
     }
 
-    public void setMNXB(int mNXB) {
-        MNXB = mNXB;
+    public void setMNXB(int MNXB) {
+        this.MNXB = MNXB;
     }
 
+    // Getter và Setter cho TENTG
     public String getTENTG() {
         return TENTG;
     }
 
-    public void setTENTG(String tENTG) {
-        TENTG = tENTG;
+    public void setTENTG(String TENTG) {
+        this.TENTG = TENTG;
     }
 
+    // Getter và Setter cho MKVS
     public int getMKVS() {
         return MKVS;
     }
@@ -102,106 +105,37 @@ public class SanPhamDTO {
         this.MKVS = MKVS;
     }
 
+    // Getter và Setter cho TIENX
     public int getTIENX() {
         return TIENX;
     }
 
-    public void setTIENX(int tIENX) {
-        TIENX = tIENX;
+    public void setTIENX(int TIENX) {
+        this.TIENX = TIENX;
     }
 
-    public int getTIENN() {
-        return TIENN;
-    }
-
-    public void setTIENN(int tienn) {
-        TIENN = tienn;
-    }
-
+    // Getter và Setter cho SL
     public int getSL() {
         return SL;
     }
 
-    public void setSL(int sL) {
-        SL = sL;
-    }
-
-    public String getISBN() {
-        return ISBN;
-    }
-
-    public void setISBN(String iSBN) {
-        ISBN = iSBN;
+    public void setSL(int SL) {
+        this.SL = SL;
     }
 
     @Override
-    public int hashCode() {
-        int hash = 7;
-        hash = 53 * hash + this.MSP;
-        hash = 53 * hash + Objects.hashCode(this.TEN);
-        hash = 53 * hash + Objects.hashCode(this.HINHANH);
-        hash = 53 * hash + Objects.hashCode(this.DANHMUC);
-        hash = 53 * hash + this.NAMXB;
-        hash = 53 * hash + this.MNXB;
-        hash = 53 * hash + Objects.hashCode(this.TENTG);
-        hash = 53 * hash + this.MKVS;
-        hash = 53 * hash + this.TIENX;
-        hash = 53 * hash + this.SL;
-        hash = 53 * hash + Objects.hashCode(this.ISBN);
-        return hash;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final SanPhamDTO other = (SanPhamDTO) obj;
-        if (this.MSP != other.MSP) {
-            return false;
-        }
-        if (this.NAMXB != other.NAMXB) {
-            return false;
-        }
-        if (this.MNXB != other.MNXB) {
-            return false;
-        }
-        if (this.MKVS != other.MKVS) {
-            return false;
-        }
-        if (this.SL != other.SL) {
-            return false;
-        }
-        if (this.TIENX != other.TIENX) {
-            return false;
-        }
-        if (this.TIENN != other.TIENN) {
-            return false;
-        }
-        if (this.ISBN != other.ISBN) {
-            return false;
-        }
-        if (!Objects.equals(this.TEN, other.TEN)) {
-            return false;
-        }
-        if (!Objects.equals(this.HINHANH, other.HINHANH)) {
-            return false;
-        }
-        if (!Objects.equals(this.DANHMUC, other.DANHMUC)) {
-            return false;
-        }
-        return Objects.equals(this.TENTG, other.TENTG);
-    }
-
-    @Override
-    
     public String toString() {
-        return "SanPhamDTO{" + "Ma san pham = " + MSP + ", Ten san pham = " + TEN + ", Hinh anh = " + HINHANH + ", Danh muc = " + DANHMUC + ", Nam xuat ban = " + NAMXB + ", Ma nha xuat ban = " + MNXB  + ", Ten tac gia = " + TENTG + ", Ma khu vuc sach = " + MKVS + ", Tien xuat = " + TIENX + ", Tien nhap = " + TIENN + ", So luong = " + SL + ", ISBN=" + ISBN + ", MKVS=" + MKVS + ", TIENX=" + TIENX + ", ISBN=" + ISBN + '}';
+        return "SanPhamDTO{" +
+                "MSP=" + MSP +
+                ", TEN='" + TEN + '\'' +
+                ", HINHANH='" + HINHANH + '\'' +
+                ", DANHMUC='" + DANHMUC + '\'' +
+                ", NAMXB=" + NAMXB +
+                ", MNXB=" + MNXB +
+                ", TENTG='" + TENTG + '\'' +
+                ", MKVS=" + MKVS +
+                ", TIENX=" + TIENX +
+                ", SL=" + SL +
+                '}';
     }
 }

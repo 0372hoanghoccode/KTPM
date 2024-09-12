@@ -9,7 +9,7 @@ public class PhieuNhapDTO extends PhieuDTO {
         super(); 
     }
 
-    public PhieuNhapDTO(int MP, int MNV, Timestamp TG, long TIENN, int TT) {
+    public PhieuNhapDTO(int MP, int MNV, Timestamp TG, long TIENN, int TT ) {
         super(MP, MNV, TG, TIENN, TT);
     }
 

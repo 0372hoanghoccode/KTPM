@@ -3,7 +3,10 @@ package GUI.Dialog;
 import BUS.KhuVucSachBUS;
 import BUS.NhaXuatBanBUS;
 import BUS.SanPhamBUS;
+import DAO.ChiTietLoHangDAO;
+import DAO.KhuVucSach1DAO;
 import DAO.SanPhamDAO;
+import DTO.ChiTietLoHangDTO;
 import DTO.SanPhamDTO;
 import GUI.Component.ButtonCustom;
 import GUI.Component.HeaderTitle;
@@ -11,6 +14,7 @@ import GUI.Component.InputForm;
 import GUI.Component.InputImage;
 import GUI.Component.NumericDocumentFilter;
 import GUI.Component.SelectForm;
+import GUI.Panel.KhuVucSach1;
 import GUI.Panel.SanPham;
 import helper.Validation;
 import java.awt.BorderLayout;
@@ -26,6 +30,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Random;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
@@ -43,8 +48,8 @@ public final class SanPhamDialog extends JDialog implements ActionListener {
     private HeaderTitle titlePage;
     private JPanel pninfosanpham, pnbottom, pnCenter, pninfosanphamright, pnmain;
     private ButtonCustom  btnAddSanPham;
-    private SelectForm cbbLoHang;
-    InputForm tenSP, tenTG, namXB, danhmuc, isbn;
+     SelectForm cbbLoHang;
+    InputForm tenSP, tenTG, namXB, danhmuc, masp1;
     InputForm txtgianhap, txtgiaxuat;
     SelectForm  cbNXB;
     SelectForm khuvuc;
@@ -58,18 +63,24 @@ public final class SanPhamDialog extends JDialog implements ActionListener {
     KhuVucSachBUS kvkhoBus = new KhuVucSachBUS();
     NhaXuatBanBUS nxbBus = new NhaXuatBanBUS();
     SanPhamBUS spBus = new SanPhamBUS();
-
+    KhuVucSach1DAO kvs1dao = new KhuVucSach1DAO();
     SanPhamDTO sp;
     String[] arrkhuvuc;
     String[] arrnxb;
+    String[] arrmlh ; 
     int masp;
     private ButtonCustom btnSaveCH;
-
+  
+    
     public void init(SanPham jpSP) {
         this.jpSP = jpSP;
         masp = jpSP.spBUS.spDAO.getAutoIncrement();
         arrkhuvuc = kvkhoBus.getArrTenKhuVuc();
         arrnxb = nxbBus.getArrTenNhaXuatBan();        
+        arrmlh = kvs1dao.getArrMLH();
+//        for (String mlh : arrmlh) {
+//        System.out.println("MLH: " + mlh);
+//    }
     }
 
     public SanPhamDialog(SanPham jpSP, JFrame owner, String title, boolean modal, String type) {
@@ -111,10 +122,10 @@ public final class SanPhamDialog extends JDialog implements ActionListener {
         txtgiaxuat = new InputForm("Giá xuất");
         PlainDocument xuat = (PlainDocument)txtgiaxuat.getTxtForm().getDocument();
         xuat.setDocumentFilter((new NumericDocumentFilter()));
-        cbbLoHang = new SelectForm("Lô Hàng",  new String[]{"Lô 1", "Lô2", "Lô 3"}); //Hieusua -thêm cái string lo hang vo
+        cbbLoHang = new SelectForm("Lô Hàng",  arrmlh); //Hieusua -thêm cái string lo hang vo
 
-
-        // isbn.setVisible(false);
+  masp1 = new InputForm("Mã sản phẩm");
+        masp1.setVisible(false);
         hinhanh = new InputImage("Hình minh họa");
 
         pninfosanpham.add(tenSP);
@@ -255,23 +266,34 @@ public final class SanPhamDialog extends JDialog implements ActionListener {
         String TenTG = tenTG.getText();
         int MKVK = kvkhoBus.getAll().get(this.khuvuc.getSelectedIndex()).getMakhuvuc();
         int tIENX = Integer.parseInt(txtgiaxuat.getText());
-        int tIENN = Integer.parseInt(txtgianhap.getText());
+       // int tIENN = Integer.parseInt(txtgianhap.getText());
      //   String ISBN = isbn.getText();
-        SanPhamDTO result = new SanPhamDTO(masp, vtensp, hinhanh, danhMuc, naMXB, MNXB, TenTG, MKVK, tIENX, tIENN, 0, null);
+      //  String MaLo = (String) cbbLoHang.getSelectedItem();
+        // int selectedInt = Integer.parseInt(MaLo);
+        SanPhamDTO result = new SanPhamDTO(masp, vtensp, hinhanh, danhMuc, naMXB, MNXB, TenTG, MKVK, tIENX, 0);
+        // Sản phẩm : int MSP, String TEN, String HINHANH, 
+        //String DANHMUC, int NAMXB, int MNXB, String TENTG, int MKVS, int TIENX, String MLH, int SL
         return result;
     }
 
     public void setInfo(SanPhamDTO sp) {
         hinhanh.setUrl_img(sp.getHINHANH());
         tenSP.setText(sp.getTEN());
-        danhmuc.setText(sp.getDANHMUC());
+        danhmuc.setText(sp.getDANHMUC()); 
         namXB.setText(Integer.toString(sp.getNAMXB()));
         cbNXB.setSelectedIndex(nxbBus.getIndexByMaNXB(sp.getMNXB()));
         tenTG.setText(sp.getTENTG());
         khuvuc.setSelectedIndex(kvkhoBus.getIndexByMaKVK(sp.getMKVS()));
         txtgiaxuat.setText(Integer.toString(sp.getTIENX()));
-        txtgianhap.setText(Integer.toString(sp.getTIENN()));
-        cbbLoHang.setSelectedItem(sp.getISBN()); //Hieusua - sửa lại set lô hàng
+     //   txtgianhap.setText(Integer.toString(sp.getTIENN()));
+        ChiTietLoHangDAO dao = new ChiTietLoHangDAO();
+        ArrayList<String> mlhList = dao.findMLHByMSP(masp);
+
+        //for (String mlh : mlhList) {
+            
+              cbbLoHang.setArr(mlhList);
+       // }
+       // cbbLoHang.setSelectedItem(sp.getMLH()); //Hieusua - sửa lại set lô hàng
     }
 
 
@@ -318,10 +340,10 @@ public final class SanPhamDialog extends JDialog implements ActionListener {
         return check;
     }
     public void initView() {
-        isbn.setEditable(false);
+        masp1.setEditable(false);
     }
     public void initCreate() {
-        isbn.setEditable(true);
+        masp1.setEditable(true);
     }
 }
 

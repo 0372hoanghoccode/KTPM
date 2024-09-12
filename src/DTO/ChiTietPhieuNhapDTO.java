@@ -4,29 +4,29 @@ package DTO;
 // import DTO.ChiTietPhieuDTO;
 
 public class ChiTietPhieuNhapDTO extends ChiTietPhieuDTO{
-    private int HINHTHUC;
+    private int MLH;
 
-    public ChiTietPhieuNhapDTO(int TIENNHAP, int HINHTHUC) {
-        this.HINHTHUC = HINHTHUC;
+    public ChiTietPhieuNhapDTO(int TIENNHAP, int MLH) {
+        this.MLH = MLH;
     }
 
-    public ChiTietPhieuNhapDTO(int MP, int MSP, int SL, int TIENNHAP, int HINHTHUC) {
+    public ChiTietPhieuNhapDTO(int MP, int MSP, int SL, int TIENNHAP, int MLH) {
         super(MP, MSP, SL, TIENNHAP);
-        this.HINHTHUC = HINHTHUC;
+        this.MLH = MLH;
     }
 
-    public int getHINHTHUC() {
-        return HINHTHUC;
+    public int getMLH() {
+        return MLH;
     }
 
-    public void setHINHTHUC(int HINHTHUC) {
-        this.HINHTHUC = HINHTHUC;
+    public void setMLH(int MLH) {
+        this.MLH = MLH;
     }
 
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 59 * hash + this.HINHTHUC;
+        hash = 59 * hash + this.MLH;
         return hash;
     }
 
@@ -42,6 +42,6 @@ public class ChiTietPhieuNhapDTO extends ChiTietPhieuDTO{
             return false;
         }
         final ChiTietPhieuNhapDTO other = (ChiTietPhieuNhapDTO) obj;
-        return this.HINHTHUC == other.HINHTHUC;
+        return this.MLH == other.MLH;
     }
 } 

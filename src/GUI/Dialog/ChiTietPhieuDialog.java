@@ -23,10 +23,13 @@ import javax.swing.table.DefaultTableModel;
 import BUS.PhieuNhapBUS;
 import BUS.PhieuXuatBUS;
 import BUS.SanPhamBUS;
+import BUS.lohangBUS;
 import DAO.KhachHangDAO;
+import DAO.KhuVucSach1DAO;
 import DAO.NhanVienDAO;
 import DAO.SanPhamDAO;
 import DTO.ChiTietPhieuDTO;
+import DTO.KhuVucSach1DTO;
 import DTO.PhieuNhapDTO;
 import DTO.PhieuTraDTO;
 import DTO.PhieuXuatDTO;
@@ -34,6 +37,7 @@ import DTO.SanPhamDTO;
 import GUI.Component.ButtonCustom;
 import GUI.Component.HeaderTitle;
 import GUI.Component.InputForm;
+import GUI.Panel.KhuVucSach1;
 import helper.Formater;
 import helper.writePDF;
 
@@ -48,11 +52,12 @@ public final class ChiTietPhieuDialog extends JDialog implements ActionListener 
 
     PhieuNhapDTO phieunhap;
     PhieuXuatDTO phieuxuat;
-    PhieuTraDTO phieutra;
+    KhuVucSach1DTO lohang ; 
     SanPhamBUS spBus = new SanPhamBUS();
     PhieuNhapBUS phieunhapBus;
     PhieuXuatBUS phieuxuatBus;
-
+    lohangBUS lohangBUS ; 
+    
     ButtonCustom btnPdf, btnDuyet;
 
     ArrayList<ChiTietPhieuDTO> chitietphieu;
@@ -76,12 +81,30 @@ public final class ChiTietPhieuDialog extends JDialog implements ActionListener 
     public ChiTietPhieuDialog(JFrame owner, String title, boolean modal, PhieuXuatDTO phieuxuatDTO) {
         super(owner, title, modal);
         this.phieuxuat = phieuxuatDTO;
+        
         phieuxuatBus = new PhieuXuatBUS();
+        
         chitietphieu = phieuxuatBus.selectCTP(phieuxuatDTO.getMP());
         initComponent(title);
         if(phieuxuatDTO.getTT() != 2) {
             btnDuyet.setEnabled(false);
         }
+        initPhieuXuat();
+        loadDataTableChiTietPhieu(chitietphieu);
+        this.setVisible(true);
+    }
+    // Phiếu lô hàng 
+        public ChiTietPhieuDialog(JFrame owner, String title, boolean modal, KhuVucSach1DTO  khuvucsach1DTO) {
+        super(owner, title, modal);
+        this.lohang = khuvucsach1DTO;
+        
+        lohangBUS = new lohangBUS();
+        
+        chitietphieu = lohangBUS.selectCTP(khuvucsach1DTO.getMLH());
+        initComponent(title);
+//        if(phieuxuatDTO.getTT() != 2) {
+//            btnDuyet.setEnabled(false);
+//        }
         initPhieuXuat();
         loadDataTableChiTietPhieu(chitietphieu);
         this.setVisible(true);
