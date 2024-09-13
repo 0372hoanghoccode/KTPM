@@ -28,6 +28,7 @@ import com.formdev.flatlaf.fonts.roboto.FlatRobotoFont;
 
 import BUS.PhieuNhapBUS;
 import BUS.SanPhamBUS;
+import DAO.KhuVucSach1DAO;
 import DTO.ChiTietPhieuNhapDTO;
 import DTO.NhanVienDTO;
 import DTO.PhieuNhapDTO;
@@ -54,7 +55,9 @@ public final class TaoPhieuNhap extends JPanel implements ItemListener, ActionLi
     InputForm txtMaphieu, txtNhanVien, txtMaSp, txtTenSp, txtDongia, txtMaISBN, txtSoLuongSPnhap ;
     JTextField txtTimKiem;
     JLabel  lbltongtien;
-
+   KhuVucSach1DAO kvs1dao = new KhuVucSach1DAO();
+    
+     String[] arrmlh ; 
     Main m;
     Color BackgroundColor = new Color(211, 211, 211);
 
@@ -86,6 +89,8 @@ public final class TaoPhieuNhap extends JPanel implements ItemListener, ActionLi
         this.setBackground(BackgroundColor);
         this.setLayout(new BorderLayout(0, 0));
         this.setOpaque(true);
+        
+          arrmlh = kvs1dao.getAll1();
         
         //Phieu Nhap
         tablePhieuNhap = new JTable();
@@ -295,7 +300,7 @@ public final class TaoPhieuNhap extends JPanel implements ItemListener, ActionLi
         txtNhanVien = new InputForm("Nhân viên nhập");
         txtNhanVien.setText(nvDto.getHOTEN());
         txtNhanVien.setEditable(false);
-        cbbLoHang = new SelectForm("Lô Hàng",  new String[]{"Lô 1", "Lô2", "Lô 3"}); //Hieusua -thêm cái string lo hang vo
+        cbbLoHang = new SelectForm("Lô Hàng", arrmlh); //Hieusua -thêm cái string lo hang vo
         right_top.add(txtMaphieu);
         right_top.add(txtNhanVien);
         right_top.add(cbbLoHang);
@@ -348,8 +353,8 @@ public final class TaoPhieuNhap extends JPanel implements ItemListener, ActionLi
         this.txtTenSp.setText(sp.getTEN());
         // ArrayList<SanPhamDTO> spdto = spBUS.getAll();;
         // cbxDanhMuc.setArr(getThongTinSach(sp.getMSP()));
-        this.txtMaISBN.setText(sp.getISBN());
-        this.txtDongia.setText(Integer.toString(sp.getTIENN()));
+        
+       // this.txtDongia.setText(Integer.toString(sp.getTIENX()));
     }
 
     // public ArrayList<SanPhamDTO> getChiTietSanPham() {
@@ -417,10 +422,7 @@ public final class TaoPhieuNhap extends JPanel implements ItemListener, ActionLi
             JOptionPane.showMessageDialog(this, "Giá nhập không được để rỗng !", "Cảnh báo !", JOptionPane.WARNING_MESSAGE);
             return false;
         } else if (phuongthuc == 0) {
-            if (Validation.isEmpty(txtMaISBN.getText()) || !Validation.isNumber(txtMaISBN.getText()) || txtMaISBN.getText().length() != 13) {
-                JOptionPane.showMessageDialog(this, "Mã isbn bắt đầu không được để rỗng và phải là 13 ký tự số !", "Cảnh báo !", JOptionPane.WARNING_MESSAGE);
-                return false;
-            }
+           
             if (Validation.isEmpty(txtSoLuongSPnhap.getText()) || !Validation.isNumber(txtSoLuongSPnhap.getText())) {
                 JOptionPane.showMessageDialog(this, "Số lượng không được để rỗng và phải là số!", "Cảnh báo !", JOptionPane.WARNING_MESSAGE);
                 return false;

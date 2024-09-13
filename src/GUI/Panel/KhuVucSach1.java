@@ -2,7 +2,9 @@ package GUI.Panel;
 
 import BUS.KhuVucSachBUS;
 import BUS.SanPhamBUS;
+import DAO.KhuVucSach1DAO;
 import DAO.KhuVucSachDAO;
+import DTO.KhuVucSach1DTO;
 import DTO.KhuVucSachDTO;
 import DTO.SanPhamDTO;
 import java.awt.*;
@@ -54,10 +56,10 @@ public class KhuVucSach1 extends JPanel implements ActionListener, ItemListener 
     Color BackgroundColor = new Color(211,211,211);
     DefaultTableModel tblModel;
     Main m;
-    public KhuVucSachBUS kvkBUS = new KhuVucSachBUS();
+    public KhuVucSach1DAO lohangBUS = new KhuVucSach1DAO();
     public SanPhamBUS spBUS = new SanPhamBUS();
 
-    public ArrayList<KhuVucSachDTO> listKVK = kvkBUS.getAll();
+    public ArrayList<KhuVucSach1DTO> listKVK = lohangBUS.getAll();
     public ArrayList<SanPhamDTO> listSP = spBUS.getAll();
 
     private void initComponent() {
@@ -65,7 +67,7 @@ public class KhuVucSach1 extends JPanel implements ActionListener, ItemListener 
         tableKhuvuc = new JTable();
         tblModel = new DefaultTableModel();
         tableKhuvuc.setBackground(new Color(245, 250, 250)); 
-        String[] header = new String[]{"Mã lô", "Thời gian", "Trang thái"};
+        String[] header = new String[]{"Mã lô", "Ghi Chú " , "Thời gian", "Trang thái"};
         tblModel.setColumnIdentifiers(header);
         tableKhuvuc.setModel(tblModel);
         scrollTableSanPham.setViewportView(tableKhuvuc);
@@ -122,7 +124,7 @@ public class KhuVucSach1 extends JPanel implements ActionListener, ItemListener 
             public void keyReleased(KeyEvent e) {
                 String type = (String) search.cbxChoose.getSelectedItem();
                 String txt = search.txtSearchForm.getText();
-                listKVK = kvkBUS.search(txt, type);
+                listKVK = lohangBUS.search(txt, type);
                 loadDataTable(listKVK);
             }
         });
@@ -159,11 +161,11 @@ public class KhuVucSach1 extends JPanel implements ActionListener, ItemListener 
         loadDataTable(listKVK);
     }
 
-    public void loadDataTable(ArrayList<KhuVucSachDTO> result) {
+    public void loadDataTable(ArrayList<KhuVucSach1DTO> result) {
         tblModel.setRowCount(0);
-        for (KhuVucSachDTO kvk : result) {
+        for (KhuVucSach1DTO kvk : result) {
             tblModel.addRow(new Object[]{
-                kvk.getMakhuvuc(), kvk.getTenkhuvuc(), kvk.getGhichu()
+                kvk.getMLH(), kvk.getGhichu(), kvk.getNgay(),kvk.getTT()
             });
         }
     }
@@ -188,7 +190,7 @@ public class KhuVucSach1 extends JPanel implements ActionListener, ItemListener 
                     int id = KhuVucSachDAO.getInstance().getAutoIncrement();
                     String tenkvk = excelRow.getCell(0).getStringCellValue();
                     String ghichu = excelRow.getCell(1).getStringCellValue();
-                    kvkBUS.add(new KhuVucSachDTO(id, tenkvk, ghichu));
+                    lohangBUS.add(new KhuVucSachDTO(id, tenkvk, ghichu));
                     tblModel.setRowCount(0);
                     loadDataTable(listKVK);
                 }
@@ -272,7 +274,7 @@ public class KhuVucSach1 extends JPanel implements ActionListener, ItemListener 
                         }
                     }
                     if (check == 0) {
-                        kvkBUS.delete(listKVK.get(index), index);
+                        lohangBUS.delete(listKVK.get(index), index);
                         loadDataTable(listKVK);
                     }
                     else {
@@ -283,7 +285,7 @@ public class KhuVucSach1 extends JPanel implements ActionListener, ItemListener 
         }
          else if (e.getSource() == search.btnReset) {
             search.txtSearchForm.setText("");
-            listKVK = kvkBUS.getAll();
+            listKVK = lohangBUS.getAll();
             loadDataTable(listKVK);
         } else if (e.getSource() == mainFunction.btn.get("import")) {
             importExcel();
@@ -300,7 +302,7 @@ public class KhuVucSach1 extends JPanel implements ActionListener, ItemListener 
     public void itemStateChanged(ItemEvent e) {
         String type = (String) search.cbxChoose.getSelectedItem();
         String txt = search.txtSearchForm.getText();
-        listKVK = kvkBUS.search(txt, type);
+        listKVK = lohangBUS.search(txt, type);
         loadDataTable(listKVK);
     }
 }

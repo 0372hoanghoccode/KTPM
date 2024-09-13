@@ -1,53 +1,70 @@
 package DTO;
 
+import java.sql.Timestamp;
 import java.util.Objects;
 
 public class KhuVucSach1DTO {
 
-    private int MKVS;
-    private String TEN;
-    private String GHICHU;
+    private String MLH;    // Mã lô hàng
+    private String ghichu; // Ghi chú
+    private Timestamp ngay; // Ngày được thay đổi thành Timestamp
+    private int TT;        // Trạng thái
 
+    // Constructor mặc định
     public KhuVucSach1DTO() {
     }
 
-    public KhuVucSach1DTO(int MKVS, String TEN, String GHICHU) {
-        this.MKVS = MKVS;
-        this.TEN = TEN;
-        this.GHICHU = GHICHU;
+    // Constructor với tất cả các tham số
+    public KhuVucSach1DTO(String MLH, String ghichu, Timestamp ngay, int TT) {
+        this.MLH = MLH;
+        this.ghichu = ghichu;
+        this.ngay = ngay;
+        this.TT = TT;
     }
 
-    public int getMakhuvuc() {
-        return MKVS;
+    // Getter và Setter cho MLH
+    public String getMLH() {
+        return MLH;
     }
 
-    public void setMakhuvuc(int MKVS) {
-        this.MKVS = MKVS;
+    public void setMLH(String MLH) {
+        this.MLH = MLH;
     }
 
-    public String getTenkhuvuc() {
-        return TEN;
-    }
-
-    public void setTenkhuvuc(String TEN) {
-        this.TEN = TEN;
-    }
-
+    // Getter và Setter cho ghichu
     public String getGhichu() {
-        return GHICHU;
+        return ghichu;
     }
 
-    public void setGhichu(String GHICHU) {
-        this.GHICHU = GHICHU;
+    public void setGhichu(String ghichu) {
+        this.ghichu = ghichu;
     }
 
+    // Getter và Setter cho ngay
+    public Timestamp getNgay() {
+        return ngay;
+    }
+
+    public void setNgay(Timestamp ngay) {
+        this.ngay = ngay;
+    }
+
+    // Getter và Setter cho TT
+    public int getTT() {
+        return TT;
+    }
+
+    public void setTT(int TT) {
+        this.TT = TT;
+    }
 
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 97 * hash + this.MKVS;
-        hash = 97 * hash + Objects.hashCode(this.TEN);
-        hash = 97 * hash + Objects.hashCode(this.GHICHU);
+        hash = 97 * hash + Objects.hashCode(this.MLH);
+        hash = 97 * hash + Objects.hashCode(this.ghichu);
+        hash = 97 * hash + Objects.hashCode(this.ngay);
+        hash = 97 * hash + this.TT;
         return hash;
     }
 
@@ -62,19 +79,26 @@ public class KhuVucSach1DTO {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final KhuVucSachDTO other = (KhuVucSachDTO) obj;
-        if (this.getMakhuvuc() != other.getMakhuvuc()) {
+        final KhuVucSach1DTO other = (KhuVucSach1DTO) obj;
+        if (this.TT != other.TT) {
             return false;
         }
-        if (!Objects.equals(this.getTenkhuvuc(), other.getTenkhuvuc())) {
+        if (!Objects.equals(this.MLH, other.MLH)) {
             return false;
         }
-        return Objects.equals(this.getGhichu(), other.getGhichu());
+        if (!Objects.equals(this.ghichu, other.ghichu)) {
+            return false;
+        }
+        return Objects.equals(this.ngay, other.ngay);
     }
 
     @Override
     public String toString() {
-        return "KhuVucSach{" + "Ma khu vuc sach = " + MKVS+ ", Ten khu vuc sach = " + TEN + ", Ghi chu = " + GHICHU + '}';
+        return "KhuVucSach1DTO{" +
+                "MLH='" + MLH + '\'' +
+                ", ghichu='" + ghichu + '\'' +
+                ", ngay=" + ngay +
+                ", TT=" + TT +
+                '}';
     }
-    
 }

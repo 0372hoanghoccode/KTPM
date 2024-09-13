@@ -33,9 +33,15 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.text.PlainDocument;
 
 import BUS.NhanVienBUS;
-import BUS.PhieuNhapBUS;
+
+import DAO.ChiTietLoHangDAO;
+import DAO.KhuVucSach1DAO;
+
+import DTO.ChiTietLoHangDTO;
+import DTO.KhuVucSach1DTO;
+
 import DTO.NhanVienDTO;
-import DTO.PhieuNhapDTO;
+
 import GUI.Main;
 import GUI.Component.InputDate;
 import GUI.Component.InputForm;
@@ -65,10 +71,10 @@ public final class PhieuNhap1 extends JPanel implements ActionListener, KeyListe
     TaoPhieuNhap nhapKho;
     Main m;
     NhanVienDTO nv;
-
-    PhieuNhapBUS phieunhapBUS = new PhieuNhapBUS();
+    KhuVucSach1DAO lohangdao = new KhuVucSach1DAO();
+   
     NhanVienBUS nvBUS = new NhanVienBUS();
-    ArrayList<PhieuNhapDTO> listPhieu;
+    ArrayList<KhuVucSach1DTO> listPhieu;
 
     Color BackgroundColor = new Color(211, 211, 211);
 
@@ -76,7 +82,7 @@ public final class PhieuNhap1 extends JPanel implements ActionListener, KeyListe
         this.m = m;
         this.nv = nv;
         initComponent();
-        this.listPhieu = phieunhapBUS.getAll();
+        this.listPhieu = lohangdao.selectAll();
         loadDataTalbe(this.listPhieu);
     }
 
@@ -111,7 +117,7 @@ public final class PhieuNhap1 extends JPanel implements ActionListener, KeyListe
         tablePhieuNhap.setBackground(new Color(245, 250, 250));
         scrollTablePhieuNhap = new JScrollPane();
         tblModel = new DefaultTableModel();
-        String[] header = new String[]{"STT", "Mã phiếu nhập", "Nhân viên nhập", "Thời gian", "Tổng tiền", "Trạng thái"};
+         String[] header = new String[]{"Mã lô", "Ghi Chú " , "Thời gian", "Trang thái"};
         tblModel.setColumnIdentifiers(header);
         tablePhieuNhap.setModel(tblModel);
         tablePhieuNhap.setDefaultEditor(Object.class, null);
@@ -210,26 +216,11 @@ public final class PhieuNhap1 extends JPanel implements ActionListener, KeyListe
         main.add(scrollTablePhieuNhap);
     }
 
-    public void loadDataTalbe(ArrayList<PhieuNhapDTO> listphieunhap) {
+     public void loadDataTable(ArrayList<KhuVucSach1DTO> result) {
         tblModel.setRowCount(0);
-        int size = listphieunhap.size();
-        for (int i = 0; i < size; i++) {
-            String trangthaiString = "";
-            switch (listphieunhap.get(i).getTT()) {
-                case 1 -> {
-                    trangthaiString = "Đã duyệt";
-                }
-                
-                case 2 -> {
-                    trangthaiString = "Chờ xử lý";
-                }
-            }
+        for (KhuVucSach1DTO kvk : result) {
             tblModel.addRow(new Object[]{
-                i + 1, (int) listphieunhap.get(i).getMP(),
-                nvBUS.getNameById(listphieunhap.get(i).getMNV()),
-                Formater.FormatTime(listphieunhap.get(i).getTG()),
-                Formater.FormatVND(listphieunhap.get(i).getTIEN()),
-                trangthaiString
+                kvk.getMLH(), kvk.getGhichu(), kvk.getNgay(),kvk.getTT()
             });
         }
     }
@@ -242,31 +233,31 @@ public final class PhieuNhap1 extends JPanel implements ActionListener, KeyListe
         return index;
     }
 
-    public void Fillter() throws ParseException {
-        if (validateSelectDate()) {
-            int type = search.cbxChoose.getSelectedIndex();
-            int manv = cbxNhanVien.getSelectedIndex() == 0 ? 0 : nvBUS.getByIndex(cbxNhanVien.getSelectedIndex() - 1).getMNV();
-            String input = search.txtSearchForm.getText() != null ? search.txtSearchForm.getText() : "";
-            Date time_start = dateStart.getDate() != null ? dateStart.getDate() : new Date(0);
-            Date time_end = dateEnd.getDate() != null ? dateEnd.getDate() : new Date(System.currentTimeMillis());
-            String min_price = moneyMin.getText();
-            String max_price = moneyMax.getText();
-            this.listPhieu = phieunhapBUS.fillerPhieuNhap(type, input, manv, time_start, time_end, min_price, max_price);
-            loadDataTalbe(listPhieu);
-        }
-    }
+//    public void Fillter() throws ParseException {
+//        if (validateSelectDate()) {
+//            int type = search.cbxChoose.getSelectedIndex();
+//            int manv = cbxNhanVien.getSelectedIndex() == 0 ? 0 : nvBUS.getByIndex(cbxNhanVien.getSelectedIndex() - 1).getMNV();
+//            String input = search.txtSearchForm.getText() != null ? search.txtSearchForm.getText() : "";
+//            Date time_start = dateStart.getDate() != null ? dateStart.getDate() : new Date(0);
+//            Date time_end = dateEnd.getDate() != null ? dateEnd.getDate() : new Date(System.currentTimeMillis());
+//            String min_price = moneyMin.getText();
+//            String max_price = moneyMax.getText();
+//            this.listPhieu = lohangdao.fillerPhieuNhap(type, input, manv, time_start, time_end, min_price, max_price);
+//            loadDataTalbe(listPhieu);
+//        }
+//    }
 
-    public void resetForm() {
-        cbxNhanVien.setSelectedIndex(0);
-        search.cbxChoose.setSelectedIndex(0);
-        search.txtSearchForm.setText("");
-        moneyMin.setText("");
-        moneyMax.setText("");
-        dateStart.getDateChooser().setCalendar(null);
-        dateEnd.getDateChooser().setCalendar(null);
-        this.listPhieu = phieunhapBUS.getAllList();
-        loadDataTalbe(listPhieu);
-    }
+//    public void resetForm() {
+//        cbxNhanVien.setSelectedIndex(0);
+//        search.cbxChoose.setSelectedIndex(0);
+//        search.txtSearchForm.setText("");
+//        moneyMin.setText("");
+//        moneyMax.setText("");
+//        dateStart.getDateChooser().setCalendar(null);
+//        dateEnd.getDateChooser().setCalendar(null);
+//        this.listPhieu = phieunhapBUS.getAllList();
+//        loadDataTalbe(listPhieu);
+//    }
 
     public boolean validateSelectDate() throws ParseException {
         Date time_start = dateStart.getDate();
@@ -302,10 +293,10 @@ public final class PhieuNhap1 extends JPanel implements ActionListener, KeyListe
             if (index != -1) {
 //                nhapKho = new TaoPhieuNhap(nv, "view", listPhieu.get(index), m);
 //                m.setPanel(nhapKho);
-                new ChiTietPhieuDialog(m, "Thông tin phiếu nhập", true, listPhieu.get(index));
+                new ChiTietPhieuDialog(m, "Thông tin lô hàng", true, listPhieu.get(index));
             }
         } else if (source == search.btnReset) {
-            resetForm();
+           // resetForm();
         } else if (source == mainFunction.btn.get("export")) {
             try {
                 JTableExporter.exportJTableToExcel(tablePhieuNhap);
@@ -325,30 +316,30 @@ public final class PhieuNhap1 extends JPanel implements ActionListener, KeyListe
 
     }
 
-    @Override
-    public void keyReleased(KeyEvent e) {
-        try {
-            Fillter();
-        } catch (ParseException ex) {
-            Logger.getLogger(PhieuNhap.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
+ //   @Override
+//    public void keyReleased(KeyEvent e) {
+//        try {
+//            Fillter();
+//        } catch (ParseException ex) {
+//            Logger.getLogger(PhieuNhap.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+//    }
 
-    @Override
-    public void propertyChange(PropertyChangeEvent evt) {
-        try {
-            Fillter();
-        } catch (ParseException ex) {
-            Logger.getLogger(PhieuNhap.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
+//    @Override
+   // public void propertyChange(PropertyChangeEvent evt) {
+//        try {
+//      //      Fillter();
+//        } catch (ParseException ex) {
+//            Logger.getLogger(PhieuNhap.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+   // }
 
-    @Override
-    public void itemStateChanged(ItemEvent e) {
-        try {
-            Fillter();
-        } catch (ParseException ex) {
-            Logger.getLogger(PhieuNhap.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
+    //@Override
+  //  public void itemStateChanged(ItemEvent e) {
+//        try {
+//         //   Fillter();
+//        } catch (ParseException ex) {
+//            Logger.getLogger(PhieuNhap.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+//    }
 }

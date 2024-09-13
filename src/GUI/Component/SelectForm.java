@@ -2,6 +2,7 @@ package GUI.Component;
 
 import java.awt.Color;
 import java.awt.GridLayout;
+import java.util.ArrayList;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
@@ -67,5 +68,12 @@ public class SelectForm extends JPanel{
     public void setDisable(){
         cbb.setEnabled(false);
     }
-    
+      public void setArr(ArrayList<String> list) {
+        // Chuyển đổi ArrayList<String> thành mảng String
+        String[] array = list.toArray(new String[0]);
+        this.cbb.setModel(new DefaultComboBoxModel<>(array));
+    }
+
+    // Phương thức cũ (nếu bạn vẫn muốn sử dụng)
+  
 }

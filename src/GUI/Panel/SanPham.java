@@ -79,7 +79,7 @@ public final class SanPham extends JPanel implements ActionListener {
         functionBar.setLayout(new GridLayout(1, 2, 50, 0));
         functionBar.setBorder(new EmptyBorder(10, 10, 10, 10));
 
-        String[] action = { "update", "delete", "detail", "export"};
+      String[] action = {"create", "update", "delete", "detail", "export"};
         mainFunction = new MainFunction(m.user.getMNQ(), "sanpham", action);
         for (String ac : action) {
             mainFunction.btn.get(ac).addActionListener(this);
@@ -124,8 +124,9 @@ public final class SanPham extends JPanel implements ActionListener {
 
     public void loadDataTalbe(ArrayList<DTO.SanPhamDTO> result) {
         tblModel.setRowCount(0);
-
+System.out.print("hello");
         for (DTO.SanPhamDTO sp : result) {
+            
             tblModel.addRow(new Object[]{sp.getMSP(), sp.getTEN(), sp.getSL(), sp.getTENTG(), sp.getDANHMUC(), sp.getNAMXB()
                 , NhaXuatBanDAO.getInstance().selectById(sp.getMNXB() + "").getTennxb()
                 , KhuVucSachDAO.getInstance().selectById(sp.getMKVS() + " ").getTenkhuvuc()
@@ -135,7 +136,10 @@ public final class SanPham extends JPanel implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == mainFunction.btn.get("update")) {
+                if (e.getSource() == mainFunction.btn.get("create")) {
+            new SanPhamDialog(this, owner, "Thêm sản phẩm mới", true, "create");
+        } else if (e.getSource() == mainFunction.btn.get("update")) {
+  
             int index = getRowSelected();
             if (index != -1) {
             new SanPhamDialog(this, owner, "Chỉnh sửa sản phẩm", true, "update", listSP.get(index));

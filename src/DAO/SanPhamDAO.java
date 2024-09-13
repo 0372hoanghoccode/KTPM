@@ -23,7 +23,7 @@ public class SanPhamDAO implements DAOinterface<SanPhamDTO> {
             Connection con = (Connection) JDBCUtil.getConnection();
             // `ISBN`
             String sql = "INSERT INTO `SANPHAM` (`MSP`, `TEN`, `HINHANH`, "
-                    + "`DANHMUC`, `NAMXB`, `MNXB`, `TENTG`, `MKVS`, `TIENX`, `TIENN`, `SL`, `TT`) VALUES (?,?,?,?,?,?,?,?,?,?,?,1)";
+                  + "`DANHMUC`, `NAMXB`, `MNXB`, `TENTG`, `MKVS`, `SL`,`GiaBan`,`TT`) VALUES (?,?,?,?,?,?,?,?,?,?,1)";
             PreparedStatement pst = (PreparedStatement) con.prepareStatement(sql);
             pst.setInt(1, t.getMSP());
             pst.setString(2, t.getTEN());
@@ -33,9 +33,9 @@ public class SanPhamDAO implements DAOinterface<SanPhamDTO> {
             pst.setInt(6, t.getMNXB());
             pst.setString(7, t.getTENTG());
             pst.setInt(8, t.getMKVS());
-            pst.setInt(9, t.getTIENX());
-            pst.setInt(10, t.getTIENN());
-            pst.setInt(11, t.getSL());
+          
+            pst.setInt(9, t.getSL());
+                      pst.setInt(10, t.getTIENX());
 //            pst.setString(12, t.getISBN());
             result = pst.executeUpdate();
             JDBCUtil.closeConnection(con);
@@ -94,7 +94,7 @@ public class SanPhamDAO implements DAOinterface<SanPhamDTO> {
 
     @Override
     public ArrayList<SanPhamDTO> selectAll() {
-        ArrayList<SanPhamDTO> result = new ArrayList<SanPhamDTO>();
+        ArrayList<SanPhamDTO> result = new ArrayList<>();
         try {
             Connection con = (Connection) JDBCUtil.getConnection();
             String sql = "SELECT * FROM SANPHAM WHERE `TT`= 1";
@@ -109,11 +109,11 @@ public class SanPhamDAO implements DAOinterface<SanPhamDTO> {
                 int MNXB = rs.getInt("MNXB");
                 String TENTG = rs.getString("TENTG");
                 int MKVS = rs.getInt("MKVS");
-                int TIENX = rs.getInt("TIENX");
-                int TIENN = rs.getInt("TIENN");
+                int TIENX = rs.getInt("GiaBan");
+              //  int TIENN = rs.getInt("TIENN");
                 int SL = rs.getInt("SL");
-                String ISBN = rs.getString("ISBN");
-                SanPhamDTO sp = new SanPhamDTO(madm, tendm, HINHANH, DANHMUC, NAMXB, MNXB, TENTG, MKVS, TIENX, TIENN, SL, ISBN);
+              //  String ISBN = rs.getString("ISBN");
+                SanPhamDTO sp = new SanPhamDTO(madm, tendm, HINHANH, DANHMUC, NAMXB, MNXB, TENTG, MKVS, TIENX, SL);
                 result.add(sp);
             }
             JDBCUtil.closeConnection(con);

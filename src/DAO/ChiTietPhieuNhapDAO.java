@@ -23,13 +23,13 @@ public class ChiTietPhieuNhapDAO implements ChiTietInterface<ChiTietPhieuNhapDTO
         for (int i = 0; i < t.size(); i++) {
             try {
                 Connection con = (Connection) JDBCUtil.getConnection();
-                String sql = "INSERT INTO `CTPHIEUNHAP` (`MPN`, `MSP`, `SL`, `TIENNHAP`, `HINHTHUC`) VALUES (?,?,?,?,?)";
+                String sql = "INSERT INTO `CTPHIEUNHAP` (`MPN`, `MSP`, `SL`, `TIENNHAP`, `MLH`) VALUES (?,?,?,?,?)";
                 PreparedStatement pst = (PreparedStatement) con.prepareStatement(sql);
                 pst.setInt(1, t.get(i).getMP());
                 pst.setInt(2, t.get(i).getMSP());
                 pst.setInt(3, t.get(i).getSL());
                 pst.setInt(4, t.get(i).getTIEN());
-                pst.setInt(5, t.get(i).getHINHTHUC());
+               pst.setInt(5, t.get(i).getMLH());
                 result = pst.executeUpdate();
                 JDBCUtil.closeConnection(con);
             } catch (SQLException ex) {
