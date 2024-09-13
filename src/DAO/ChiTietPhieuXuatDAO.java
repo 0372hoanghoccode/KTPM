@@ -31,9 +31,7 @@ public class ChiTietPhieuXuatDAO implements ChiTietInterface<ChiTietPhieuDTO> {
                 PreparedStatement pst = (PreparedStatement) con.prepareStatement(sql);
                 pst.setInt(1, t.get(i).getMP());
                 pst.setInt(2, t.get(i).getMSP());
-                int SL = -(t.get(i).getSL());
-                pst.setInt(3, t.get(i).getSL());
-                SanPhamDAO.getInstance().updateSoLuongTon(t.get(i).getMSP(), SL);
+                pst.setInt(3, t.get(i).getSL());        
                 pst.setInt(4, t.get(i).getTIEN());
                 result = pst.executeUpdate();
                 JDBCUtil.closeConnection(con);

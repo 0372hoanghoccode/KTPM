@@ -30,9 +30,12 @@ import BUS.KhachHangBUS;
 import BUS.MaKhuyenMaiBUS;
 import BUS.PhieuXuatBUS;
 import BUS.SanPhamBUS;
+import DAO.ChiTietLoHangDAO;
 import DAO.NhanVienDAO;
 import DAO.PhieuXuatDAO;
+import DTO.ChiTietLoHangDTO;
 import DTO.ChiTietPhieuDTO;
+import DTO.ChiTietPhieuXuatDTO;
 import DTO.KhachHangDTO;
 import DTO.MaKhuyenMaiDTO;
 import DTO.NhanVienDTO;
@@ -48,6 +51,9 @@ import GUI.Component.PanelBorderRadius;
 import GUI.Component.SelectForm;
 import GUI.Dialog.ListKhachHang;
 import helper.Formater;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public final class TaoPhieuXuat extends JPanel {
     JFrame owner = (JFrame) SwingUtilities.getWindowAncestor(this); //gọi phương thức compoment tổ tiên có kiểu window của compoment hiện tại
@@ -93,7 +99,7 @@ public final class TaoPhieuXuat extends JPanel {
         this.type = type;
         maphieu = phieuXuatBUS.getMPMAX() + 1;
         initComponent(type);
-        loadDataTalbeSanPham(listSP);
+        loadDataTableSanPham(listSP);
     }
 
     private void initComponent(String type) {
@@ -203,7 +209,7 @@ public final class TaoPhieuXuat extends JPanel {
             @Override
             public void keyReleased(KeyEvent event) { //chạy khi nhả phím trong tìm kiếm
                 ArrayList<SanPhamDTO> rs = spBUS.search(txtTimKiem.getText(), "Tất cả");
-                loadDataTalbeSanPham(rs);
+                loadDataTableSanPham(rs);
             }
         });
 
@@ -428,9 +434,13 @@ public final class TaoPhieuXuat extends JPanel {
         btnNhapHang.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                eventBtnNhapHang();
+                try {
+                    eventBtnNhapHang();
+                } catch (SQLException ex) {
+                    Logger.getLogger(TaoPhieuXuat.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
-        });;
+        });
         right_bottom.add(btnNhapHang);
 
         right.add(right_top, BorderLayout.NORTH);
@@ -495,8 +505,12 @@ public final class TaoPhieuXuat extends JPanel {
         masp = sp.getMSP();
         this.txtMaSp.setText(Integer.toString(sp.getMSP()));
         this.txtTenSp.setText(sp.getTEN());
-        this.txtMaISBN.setText(sp.getISBN());
-        this.txtGiaXuat.setText(Integer.toString(sp.getTIENX()));
+          ChiTietLoHangDAO chiTietLoHangDAO = new ChiTietLoHangDAO();
+          ArrayList<ChiTietLoHangDTO> loHangList = chiTietLoHangDAO.findLohangByMSP(sp.getMSP());
+        
+        // Tìm lô hàng có mã nhỏ nhất
+        ChiTietLoHangDTO minLohang = getLohangWithMinCode(loHangList);
+          this.txtGiaXuat.setText(minLohang.getGiaNhap()*2+"");
         cbxMaKM.setArr(getMaGiamGiaTable(sp.getMSP()));
         
     }
@@ -508,17 +522,72 @@ public final class TaoPhieuXuat extends JPanel {
         // ChiTietMaKhuyenMaiDTO ctmkm = mkmBUS.findCT(listctMKM, ctsp.getMSP());
         this.txtMaSp.setText(Integer.toString(ctsp.getMSP()));
         this.txtTenSp.setText(spBUS.getByMaSP(ctsp.getMSP()).getTEN());
-        this.txtGiaXuat.setText(Integer.toString(phieu.getTIEN()));
+                  ChiTietLoHangDAO chiTietLoHangDAO = new ChiTietLoHangDAO();
+          ArrayList<ChiTietLoHangDTO> loHangList = chiTietLoHangDAO.findLohangByMSP(phieu.getMSP());
+        
+        // Tìm lô hàng có mã nhỏ nhất
+        ChiTietLoHangDTO minLohang = getLohangWithMinCode(loHangList);
+            this.txtGiaXuat.setText(minLohang.getGiaNhap()*2+"");
         this.txtSoLuongSPxuat.setText(Integer.toString(phieu.getSL()));
         cbxMaKM.setArr(getMaGiamGiaTable(ctsp.getMSP()));
     }
 
-    public void loadDataTalbeSanPham(ArrayList<DTO.SanPhamDTO> result) {
-        tblModelSP.setRowCount(0);
-        for (SanPhamDTO sp : result) {
-            tblModelSP.addRow(new Object[]{sp.getMSP(), sp.getTEN(), sp.getSL()});
+// Hàm mới để tìm lô hàng có số lượng lớn nhất
+private ChiTietLoHangDTO getLohangWithMaxQuantity(ArrayList<ChiTietLoHangDTO> loHangList) {
+    ChiTietLoHangDTO maxLohang = null;
+    for (ChiTietLoHangDTO loHang : loHangList) {
+        if (maxLohang == null || loHang.getSoLuong() > maxLohang.getSoLuong()) {
+            maxLohang = loHang;
         }
     }
+    return maxLohang;
+}
+
+// Hàm tìm lô hàng có số lượng hợp lệ
+private ChiTietLoHangDTO getValidLohang(ArrayList<ChiTietLoHangDTO> loHangList) {
+    ChiTietLoHangDTO validLohang = getLohangWithMaxQuantity(loHangList);
+    // Nếu lô hàng có số lượng = 0, tìm lô hàng tiếp theo
+    while (validLohang != null && validLohang.getSoLuong() == 0) {
+        loHangList.remove(validLohang); // Loại bỏ lô hàng không hợp lệ
+        validLohang = getLohangWithMaxQuantity(loHangList);
+    }
+    return validLohang;
+}
+
+// Phương pháp loadDataTableSanPham đã được điều chỉnh
+public void loadDataTableSanPham(ArrayList<SanPhamDTO> result) {
+    tblModelSP.setRowCount(0); // Xóa tất cả các hàng hiện tại trong bảng
+    
+    ChiTietLoHangDAO chiTietLoHangDAO = new ChiTietLoHangDAO();
+    
+    for (SanPhamDTO sp : result) {
+        System.out.print(sp.getMSP());
+        ArrayList<ChiTietLoHangDTO> loHangList = chiTietLoHangDAO.findLohangByMSP(sp.getMSP());
+        
+        // Tìm lô hàng hợp lệ
+        ChiTietLoHangDTO validLohang = getValidLohang(loHangList);
+        
+        if (validLohang != null) {
+            // Cập nhật bảng với mã sản phẩm, tên sản phẩm và số lượng trong lô hợp lệ
+            tblModelSP.addRow(new Object[]{
+                sp.getMSP(), 
+                sp.getTEN(), 
+                validLohang.getSoLuong()  // Số lượng trong lô hợp lệ
+            });
+            // Cập nhật giá xuất
+            this.txtGiaXuat.setText(validLohang.getGiaNhap() * 2 + "");
+        }
+    }
+}
+
+
+public ChiTietLoHangDTO getLohangWithMinCode(ArrayList<ChiTietLoHangDTO> loHangList) {
+    // Tìm lô hàng có mã nhỏ nhất
+    return loHangList.stream()
+        .min((l1, l2) -> l1.getMLH().compareTo(l2.getMLH()))
+        .orElse(null);
+}
+
 
     public void loadDataTableChiTietPhieu(ArrayList<ChiTietPhieuDTO> ctPhieu) {
         tblModel.setRowCount(0);
@@ -544,21 +613,51 @@ public final class TaoPhieuXuat extends JPanel {
         return p != null;
     }
 
-    public boolean checkInfo() {
-        boolean check = true;
-        int index = tableSanPham.getSelectedRow();
-        if (txtMaSp.getText().equals("")) {
-            JOptionPane.showMessageDialog(null, "Vui lòng chọn sản phẩm","Cảnh báo !", JOptionPane.WARNING_MESSAGE);
-            check = false;
-        } else if (txtGiaXuat.getText().equals("")) {
-            JOptionPane.showMessageDialog(null, "Giá nhập không được để rỗng !", "Cảnh báo !", JOptionPane.WARNING_MESSAGE);
-            check = false;
-        } else if (txtSoLuongSPxuat.getText().equals("") || Integer.parseInt(txtSoLuongSPxuat.getText()) > listSP.get(index).getSL()) {
-            JOptionPane.showMessageDialog(null, "Số lượng không được để rỗng và không lớn hơn đang có!", "Cảnh báo !", JOptionPane.WARNING_MESSAGE);
-            check = false;
-        } 
-        return check;
+  public boolean checkInfo() {
+    boolean check = true;
+    int index = tableSanPham.getSelectedRow();  // Giả sử tableSanPham là bảng sản phẩm đã chọn
+    int availableQuantity = 0;  // Khai báo biến lưu số lượng có sẵn
+    System.out.println("Hello mã " + txtMaSp.getText());
+    if (txtMaSp.getText().trim().isEmpty()) {
+        JOptionPane.showMessageDialog(null, "Vui lòng chọn sản phẩm", "Cảnh báo!", JOptionPane.WARNING_MESSAGE);
+        check = false;
+    } else {
+      
+            ChiTietLoHangDAO chiTietLoHangDAO = new ChiTietLoHangDAO();
+            ArrayList<ChiTietLoHangDTO> loHangList = chiTietLoHangDAO.findLohangByMSP(Integer.parseInt(txtMaSp.getText()));
+            ChiTietLoHangDTO minLohang = getLohangWithMinCode(loHangList);
+//            for (ChiTietLoHangDTO loHang : loHangList) {
+//                System.out.println(loHang.getMLH());
+//                  System.out.println(loHang.getMSP());
+//                    System.out.println(loHang.getSoLuong());
+//        }
+            
+            if (minLohang != null) {
+                availableQuantity = minLohang.getSoLuong();
+                System.out.print("hello " + availableQuantity);
+            }
+
+            if (txtSoLuongSPxuat.getText().trim().isEmpty()) {
+                JOptionPane.showMessageDialog(null, "Số lượng không được để rỗng!", "Cảnh báo!", JOptionPane.WARNING_MESSAGE);
+                check = false;
+            } else {
+                try {
+                    int exportQuantity = Integer.parseInt(txtSoLuongSPxuat.getText());
+                    if (exportQuantity > availableQuantity) {
+                        JOptionPane.showMessageDialog(null, "Số lượng không được lớn hơn số lượng hiện có!", "Cảnh báo!", JOptionPane.WARNING_MESSAGE);
+                        check = false;
+                    }
+                } catch (NumberFormatException e) {
+                    JOptionPane.showMessageDialog(null, "Số lượng xuất phải là một số hợp lệ!", "Cảnh báo!", JOptionPane.WARNING_MESSAGE);
+                    check = false;
+                }
+            }
+        
     }
+
+    return check;
+}
+
 
     public void addCtPhieu() { // them sp vao chitietphieu
         int masp = Integer.parseInt(txtMaSp.getText());
@@ -582,33 +681,55 @@ public final class TaoPhieuXuat extends JPanel {
         }
     }
 
-    public void eventBtnNhapHang() {
-        if (chitietphieu.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Chưa có sản phẩm nào trong phiếu !", "Cảnh báo !", JOptionPane.ERROR_MESSAGE);
-        } else if (makh == -1) {
-            JOptionPane.showMessageDialog(null, "Vui lòng chọn khách hàng", "Cảnh báo !", JOptionPane.ERROR_MESSAGE);
-        } else {
-            int input = JOptionPane.showConfirmDialog(null, "Bạn có chắc chắn muốn tạo phiếu xuất !", "Xác nhận tạo phiếu", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
-            if (input == 0) {
-                if (!phieuXuatBUS.checkSLPx(chitietphieu)) {
-                    JOptionPane.showMessageDialog(null, "Không đủ số lượng để tạo phiếu!");
-                } else {
-                    long now = System.currentTimeMillis();
-                    Timestamp currenTime = new Timestamp(now);
-                    PhieuXuatDTO phieuXuat = new PhieuXuatDTO(makh, maphieu, tk.getMNV(), currenTime, sum, 1);
-                    phieuXuatBUS.insert(phieuXuat, chitietphieu); //update số lượng trong kho
-                    /// gọi BUS, BUS gọi DAO, DAO chỉnh trong sql 
-                    // SanPhamBUS.updateXuat(chitietsanpham); 
-                    JOptionPane.showMessageDialog(null, "Xuất hàng thành công !");
-                    mainChinh.setPanel(new PhieuXuat(mainChinh, tk));
-                }
+public void eventBtnNhapHang() throws SQLException {
+    if (chitietphieu.isEmpty()) {
+        JOptionPane.showMessageDialog(this, "Chưa có sản phẩm nào trong phiếu !", "Cảnh báo !", JOptionPane.ERROR_MESSAGE);
+    } else if (makh == -1) {
+        JOptionPane.showMessageDialog(null, "Vui lòng chọn khách hàng", "Cảnh báo !", JOptionPane.ERROR_MESSAGE);
+    } else {
+        int input = JOptionPane.showConfirmDialog(null, "Bạn có chắc chắn muốn tạo phiếu xuất !", "Xác nhận tạo phiếu", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
+        if (input == 0) {
+            long now = System.currentTimeMillis();
+            Timestamp currenTime = new Timestamp(now);
+            PhieuXuatDTO phieuXuat = new PhieuXuatDTO(makh, maphieu, tk.getMNV(), currenTime, sum, 1);
+            phieuXuatBUS.insert(phieuXuat, chitietphieu); // Insert phiếu xuất
+            
+            // Xác định lô hàng cần cập nhật
+            ChiTietLoHangDAO chiTietLoHangDAO = new ChiTietLoHangDAO();
+            ArrayList<ChiTietLoHangDTO> loHangList = chiTietLoHangDAO.findLohangByMSP(Integer.parseInt(txtMaSp.getText()));
+            ChiTietLoHangDTO minLohang = getLohangWithMinCode(loHangList);
+            
+            // Cập nhật số lượng lô hàng
+            if (minLohang != null) {
+                String maLoHang = minLohang.getMLH();
+                int soLuongXuat = getTotalQuantityFromPhieuXuat(chitietphieu); 
+                
+                // Cập nhật số lượng trong kho
+                chiTietLoHangDAO.updateQuantity(maLoHang, -soLuongXuat); // Trừ số lượng xuất bán
+                
+                JOptionPane.showMessageDialog(null, "Xuất hàng thành công !");
+            } else {
+                JOptionPane.showMessageDialog(null, "Không tìm thấy lô hàng hợp lệ.", "Cảnh báo !", JOptionPane.ERROR_MESSAGE);
             }
+            
+            mainChinh.setPanel(new PhieuXuat(mainChinh, tk));
         }
     }
+}
+
+private int getTotalQuantityFromPhieuXuat(ArrayList<ChiTietPhieuDTO> chitietphieu) {
+    int totalQuantity = 0;
+    for (ChiTietPhieuDTO chiTiet : chitietphieu) {
+        totalQuantity += chiTiet.getSL();
+    }
+    return totalQuantity;
+}
 
     public void setKhachHang(int index) {
         makh = index;
         KhachHangDTO khachhang = khachHangBUS.selectKh(makh);
         txtKh.setText(khachhang.getHoten());
     }
+
+   
 }

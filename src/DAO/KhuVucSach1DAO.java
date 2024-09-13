@@ -1,6 +1,7 @@
 package DAO;
 
 import DTO.ChiTietLoHangDTO;
+import DTO.ChiTietPhieuDTO;
 import DTO.KhuVucSach1DTO;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -20,10 +21,13 @@ public class KhuVucSach1DAO implements DAOinterface<KhuVucSach1DTO> {
     ArrayList<ChiTietLoHangDTO> chitiet = chitietlohang.selectAll();
     
     
-    public static KhuVucSach1DAO getInstance() {
-        return new KhuVucSach1DAO();
+    
+ public static ArrayList<ChiTietPhieuDTO> selectCTP(int maphieu) {
+        return ChiTietLoHangDAO.selectAll1(Integer.toString(maphieu));
     }
-
+ 
+ 
+ 
     
    public String[] getArrMLH() {
     int size = chitiet.size();

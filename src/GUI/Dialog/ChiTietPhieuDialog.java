@@ -56,7 +56,7 @@ public final class ChiTietPhieuDialog extends JDialog implements ActionListener 
     SanPhamBUS spBus = new SanPhamBUS();
     PhieuNhapBUS phieunhapBus;
     PhieuXuatBUS phieuxuatBus;
-    lohangBUS lohangBUS ; 
+    KhuVucSach1DAO lohangBUS ; 
     
     ButtonCustom btnPdf, btnDuyet;
 
@@ -98,7 +98,7 @@ public final class ChiTietPhieuDialog extends JDialog implements ActionListener 
         super(owner, title, modal);
         this.lohang = khuvucsach1DTO;
         
-        lohangBUS = new lohangBUS();
+        lohangBUS = new KhuVucSach1DAO();
         
         chitietphieu = lohangBUS.selectCTP(khuvucsach1DTO.getMLH());
         initComponent(title);

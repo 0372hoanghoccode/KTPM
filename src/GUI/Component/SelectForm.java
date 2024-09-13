@@ -2,6 +2,7 @@ package GUI.Component;
 
 import java.awt.Color;
 import java.awt.GridLayout;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
@@ -75,5 +76,9 @@ public class SelectForm extends JPanel{
     }
 
     // Phương thức cũ (nếu bạn vẫn muốn sử dụng)
+  public void addActionListener(ActionListener listener) {
+        cbb.addActionListener(listener);
+    }
+    
   
 }

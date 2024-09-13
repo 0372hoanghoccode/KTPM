@@ -1,7 +1,9 @@
 package GUI.Dialog;
 
-import DAO.KhuVucSachDAO;
-import DTO.KhuVucSachDTO;
+import DAO.ChiTietLoHangDAO;
+import DAO.KhuVucSach1DAO;
+import DTO.ChiTietLoHangDTO;
+import DTO.KhuVucSach1DTO;
 import GUI.Component.ButtonCustom;
 import GUI.Component.HeaderTitle;
 import GUI.Component.InputForm;
@@ -29,6 +31,9 @@ import javax.swing.JTable;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 
 //đây nè
 public final class KhuVucSach1Dialog extends JDialog implements ActionListener {
@@ -37,11 +42,12 @@ public final class KhuVucSach1Dialog extends JDialog implements ActionListener {
     private HeaderTitle titlePage;
     private JPanel pnmain,  pnmain_top,  pnmain_bottom, pnmain_btn;
     private ButtonCustom btnThem, btnCapNhat;
-    private InputForm txtMaPhieu, txtNhanVien, txtThoiGian;
-    private KhuVucSachDTO kvk;
+    private InputForm txtMaPhieu, txtThoiGian;
+    private KhuVucSach1DTO kvk;
     DefaultTableModel tblModel;
     JTable table, tblImei;
     JScrollPane scrollTable;
+  
    
 
 
@@ -51,7 +57,7 @@ public final class KhuVucSach1Dialog extends JDialog implements ActionListener {
         initComponents(title, type);
     }
 
-    public KhuVucSach1Dialog(KhuVucSach1 jpkvk, JFrame owner, String title, boolean modal, String type, KhuVucSachDTO kvk) {
+    public KhuVucSach1Dialog(KhuVucSach1 jpkvk, JFrame owner, String title, boolean modal, String type, KhuVucSach1DTO kvk) {
         super(owner, title, modal);
         this.jpkvk = jpkvk;
         this.kvk = kvk;
@@ -120,15 +126,15 @@ public final class KhuVucSach1Dialog extends JDialog implements ActionListener {
         // Tạo panel top với 3 input fields
         pnmain_top = new JPanel(new GridLayout(1, 4));
         txtMaPhieu = new InputForm("Mã phiếu");
-        txtNhanVien = new InputForm("Tên nhân viên");
+      
         txtThoiGian = new InputForm("Thời gian tạo");
     
         txtMaPhieu.setEditable(false);
-        txtNhanVien.setEditable(false);
+     
         txtThoiGian.setEditable(false);
     
         pnmain_top.add(txtMaPhieu);
-        pnmain_top.add(txtNhanVien);
+      
         pnmain_top.add(txtThoiGian);
     
         // Tạo panel bottom với các nút bấm
@@ -139,7 +145,7 @@ public final class KhuVucSach1Dialog extends JDialog implements ActionListener {
         table = new JTable();
         scrollTable = new JScrollPane();
         tblModel = new DefaultTableModel();
-        String[] header = new String[]{"STT", "Mã SP", "Tên SP", "Đơn giá", "Số lượng"};
+        String[] header = new String[]{"STT", "Mã Sản phẩm", "Giá Nhập", "Số lượng"};
         tblModel.setColumnIdentifiers(header);
         table.setModel(tblModel);
         table.setFocusable(false);
@@ -251,12 +257,30 @@ public final class KhuVucSach1Dialog extends JDialog implements ActionListener {
     // }
 
 
-
-     
-
     public void initInfo() {
-        txtMaPhieu.setText(kvk.getTenkhuvuc());
-        txtNhanVien.setText(kvk.getGhichu());
+       //  Timestamp kvk1 = new Timestamp(System.currentTimeMillis());
+    //java.util.Date date = new java.util.Date(kvk.getNgay());
+
+        // Chọn định dạng ngày giờ mong muốn
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+
+        // Chuyển đổi Date thành String
+    //    String formattedDate = sdf.format(date);
+        txtMaPhieu.setText(kvk.getMLH());
+      //  txtThoiGian.setText(formattedDate);
+      int i = 0 ; 
+      ArrayList <ChiTietLoHangDTO> chitietlohang = ChiTietLoHangDAO.getByMaLoHang(kvk.getMLH());
+       for (ChiTietLoHangDTO product : chitietlohang) {
+            tblModel.addRow(new Object[]{
+                    i , 
+                    product.getMSP(),
+                    product.getGiaNhap(),
+                    product.getSoLuong()
+                   
+            });
+            i++;
+        }
+      
     }
 
        boolean Validation(){

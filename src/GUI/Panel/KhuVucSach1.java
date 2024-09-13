@@ -1,13 +1,11 @@
 package GUI.Panel;
 
-import BUS.KhuVucSachBUS;
 import BUS.SanPhamBUS;
 import DAO.ChiTietLoHangDAO;
 import DAO.KhuVucSach1DAO;
-import DAO.KhuVucSachDAO;
 import DTO.ChiTietLoHangDTO;
 import DTO.KhuVucSach1DTO;
-import DTO.KhuVucSachDTO;
+
 import DTO.SanPhamDTO;
 import java.awt.*;
 import javax.swing.*;
@@ -22,6 +20,7 @@ import GUI.Component.MainFunction;
 import javax.swing.border.EmptyBorder;
 import GUI.Component.PanelBorderRadius;
 import GUI.Component.itemTaskbar;
+import GUI.Dialog.ChiTietPhieuDialog;
 import GUI.Dialog.KhuVucSachDialog;
 import com.formdev.flatlaf.extras.FlatSVGIcon;
 import com.formdev.flatlaf.fonts.roboto.FlatRobotoFont;
@@ -136,15 +135,15 @@ tableKhuvuc.addMouseListener(new MouseAdapter() {
 
         search = new IntegratedSearch(new String[]{"Tất cả", "Mã khu vực lô", "Tên khu vực lô"});
         search.cbxChoose.addItemListener(this);
-        search.txtSearchForm.addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyReleased(KeyEvent e) {
-                String type = (String) search.cbxChoose.getSelectedItem();
-                String txt = search.txtSearchForm.getText();
-                listKVK = lohangBUS.search(txt, type);
-                loadDataTable(listKVK);
-            }
-        });
+//        search.txtSearchForm.addKeyListener(new KeyAdapter() {
+//            @Override
+//            public void keyReleased(KeyEvent e) {
+//                String type = (String) search.cbxChoose.getSelectedItem();
+//                String txt = search.txtSearchForm.getText();
+//                listKVK = lohangBUS. (txt, type);
+//                loadDataTable(listKVK);
+//            }
+//        });
 
         search.btnReset.addActionListener(this);
         functionBar.add(search);
@@ -210,10 +209,10 @@ tableKhuvuc.addMouseListener(new MouseAdapter() {
                 XSSFSheet excelSheet = excelJTableImport.getSheetAt(0);
                 for (int row = 1; row <= excelSheet.getLastRowNum(); row++) {
                     XSSFRow excelRow = excelSheet.getRow(row);
-                    int id = KhuVucSachDAO.getInstance().getAutoIncrement();
+                 //   int id = KhuVucSachDAO.getInstance().getAutoIncrement();
                     String tenkvk = excelRow.getCell(0).getStringCellValue();
                     String ghichu = excelRow.getCell(1).getStringCellValue();
-                    lohangBUS.add(new KhuVucSachDTO(id, tenkvk, ghichu));
+          //          lohangBUS.add(new KhuVucSachDTO(id, tenkvk, ghichu));
                     tblModel.setRowCount(0);
                     loadDataTable(listKVK);
                 }
@@ -244,40 +243,40 @@ tableKhuvuc.addMouseListener(new MouseAdapter() {
         } else if (e.getSource() == mainFunction.btn.get("update")) {
             int index = getRowSelected();
             if (index != -1) {
-                new KhuVucSach1Dialog(this, owner, "Chỉnh sửa khu vực lô", true, "update", listKVK.get(index));
+                   new KhuVucSach1Dialog(this, owner, "Thêm khu vực lô", true, "create");
             }
         }
         
         else if (e.getSource() == mainFunction.btn.get("detail")) {
             int index = getRowSelected();
             if (index != -1) {
-                new KhuVucSach1Dialog(this, owner, "Chi tiết khu vực lô", false, "detail", listKVK.get(index));
+                      new KhuVucSach1Dialog(this, owner, "Thêm khu vực lô", true, "detail" ,listKVK.get(index) );
             }
         }
-        else if (e.getSource() == mainFunction.btn.get("delete")) {        
-            int index = getRowSelected();
-            if (index != -1) {
-                int input = JOptionPane.showConfirmDialog(null,
-                        "Bạn có chắc chắn muốn xóa khu vực!", "Xóa khu vực lô",
-                        JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
-                if (input == 0) {
-                    int check = 0;
-                    for (SanPhamDTO i : listSP) {
-                        if (listKVK.get(index).getMakhuvuc() == i.getMKVS()) {
-                            check++;
-                            break;
-                        }
-                    }
-                    if (check == 0) {
-                        lohangBUS.delete(listKVK.get(index), index);
-                        loadDataTable(listKVK);
-                    }
-                    else {
-                        JOptionPane.showMessageDialog(this, "Không thể xóa khu vực vì vẫn còn sản phẩm trong khu vực.");
-                    }
-                }
-            }
-        }
+//        else if (e.getSource() == mainFunction.btn.get("delete")) {        
+//            int index = getRowSelected();
+//            if (index != -1) {
+//                int input = JOptionPane.showConfirmDialog(null,
+//                        "Bạn có chắc chắn muốn xóa khu vực!", "Xóa khu vực lô",
+//                        JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
+//                if (input == 0) {
+//                    int check = 0;
+//                    for (SanPhamDTO i : listSP) {
+//                        if (listKVK.get(index).getMakhuvuc() == i.getMKVS()) {
+//                            check++;
+//                            break;
+//                        }
+//                    }
+//                    if (check == 0) {
+//                        lohangBUS.delete(listKVK.get(index), index);
+//                        loadDataTable(listKVK);
+//                    }
+//                    else {
+//                        JOptionPane.showMessageDialog(this, "Không thể xóa khu vực vì vẫn còn sản phẩm trong khu vực.");
+//                    }
+//                }
+//            }
+//        }
          else if (e.getSource() == search.btnReset) {
             search.txtSearchForm.setText("");
             listKVK = lohangBUS.getAll();

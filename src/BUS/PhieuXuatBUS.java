@@ -169,7 +169,8 @@ public class PhieuXuatBUS {
     public boolean checkSLPx(ArrayList <ChiTietPhieuDTO> listctpx) {
         SanPhamBUS spBus = new SanPhamBUS();
         ArrayList<SanPhamDTO> SP = new ArrayList<SanPhamDTO>();
-        for(ChiTietPhieuDTO i : listctpx) SP.add(spBus.spDAO.selectById(i.getMSP() + ""));
+        for(ChiTietPhieuDTO i : listctpx) 
+            SP.add(spBus.spDAO.selectById(i.getMSP() + ""));
         for (int i = 0; i < SP.size(); i++) {
             if(listctpx.get(i).getSL() > SP.get(i).getSL()){
                 return false;

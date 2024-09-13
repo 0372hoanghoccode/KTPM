@@ -26,9 +26,75 @@ public class ChiTietLoHangDAO implements ChiTietInterface<ChiTietLoHangDTO>{
     }
 
     
-    
+     public void updateQuantity(String maLoHang, int soLuongChange) throws SQLException {
+        // Câu lệnh SQL để cập nhật số lượng lô hàng
+        String updateQuantitySQL = "UPDATE ctlohang SET SoLuong = SoLuong + ? WHERE MLH = ?";
 
- public ArrayList<ChiTietLoHangDTO> getByMaLoHang(String maLoHang) {
+        PreparedStatement pstmt = null;
+
+        try {
+           Connection con = JDBCUtil.getConnection(); 
+            pstmt = con.prepareStatement(updateQuantitySQL);
+            pstmt.setInt(1, soLuongChange); // Thay đổi số lượng (âm hoặc dương)
+            pstmt.setString(2, maLoHang);   // Mã lô hàng
+
+            // Thực thi câu lệnh
+            int affectedRows = pstmt.executeUpdate();
+            if (affectedRows == 0) {
+                throw new SQLException("Cập nhật không thành công, không có lô hàng với mã: " + maLoHang);
+            }
+        } catch (SQLException e) {
+            // Xử lý lỗi
+            e.printStackTrace();
+            throw e;
+        } 
+    }
+    
+    public static int getProductQuantityInLot(String lotCode, int productCode) {
+    String sql = "SELECT soLuong FROM ctlohang WHERE MLH = ? AND MSP = ?";
+    int quantity = 0;
+
+    try (Connection con = JDBCUtil.getConnection(); 
+         PreparedStatement pstmt = con.prepareStatement(sql)) {
+        
+        pstmt.setString(1, lotCode); // Mã lô hàng
+        pstmt.setInt(2, productCode); // Mã sản phẩm
+        
+        ResultSet rs = pstmt.executeQuery();
+        if (rs.next()) {
+            quantity = rs.getInt("soLuong");
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+
+    return quantity; // Trả về số lượng sản phẩm trong lô
+}
+    
+        
+    public static int TuMaLayGiaNhap(String lotCode, int productCode) {
+    String sql = "SELECT GiaNhap FROM ctlohang WHERE MLH = ? AND MSP = ?";
+    int quantity = 0;
+
+    try (Connection con = JDBCUtil.getConnection(); 
+         PreparedStatement pstmt = con.prepareStatement(sql)) {
+        
+        pstmt.setString(1, lotCode); // Mã lô hàng
+        pstmt.setInt(2, productCode); // Mã sản phẩm
+        
+        ResultSet rs = pstmt.executeQuery();
+        if (rs.next()) {
+            quantity = rs.getInt("GiaNhap");
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+
+    return quantity; // Trả về số lượng sản phẩm trong lô
+}
+
+
+ public static ArrayList<ChiTietLoHangDTO> getByMaLoHang(String maLoHang) {
         ArrayList<ChiTietLoHangDTO> list = new ArrayList<>();
         String sql = "SELECT * FROM ctlohang WHERE MLH = ?";
 
@@ -60,7 +126,7 @@ public class ChiTietLoHangDAO implements ChiTietInterface<ChiTietLoHangDTO>{
     
     
 public static   boolean addProductToLot(ChiTietLoHangDTO productDetail) {
-        String sql = "INSERT INTO ChiTietLoHang (maLoHang, maSanPham, soLuong, giaNhap) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO ctlohang (MLH, MSP, soLuong, giaNhap) VALUES (?, ?, ?, ?)";
 
         try 
             (
@@ -82,29 +148,31 @@ public static   boolean addProductToLot(ChiTietLoHangDTO productDetail) {
     }
 
 
-  public static int getProductQuantityInLot(String lotCode, int productCode) {
-        String sql = "SELECT soLuong FROM ctlohang WHERE MLH = ? AND MSP = ?";
-        int quantity = 0;
-
-        try (Connection con = JDBCUtil.getConnection(); 
-             PreparedStatement pstmt = con.prepareStatement(sql)) {
-            
-            // Thiết lập các tham số cho truy vấn
-            pstmt.setString(1, lotCode); // Mã lô hàng
-            pstmt.setInt(2, productCode); // Mã sản phẩm
-            
-            // Thực hiện truy vấn
-            ResultSet rs = pstmt.executeQuery();
-            if (rs.next()) {
-                // Lấy số lượng từ kết quả truy vấn
-                quantity = rs.getInt("soLuong");
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
+// Trong ChiTietLoHangDAO
+public ArrayList<ChiTietLoHangDTO> findLohangByMSP(int msp) {
+    ArrayList<ChiTietLoHangDTO> list = new ArrayList<>();
+    String sql = "SELECT * FROM ctlohang WHERE MSP = ?";
+    
+    try (Connection con = JDBCUtil.getConnection();
+         PreparedStatement pstmt = con.prepareStatement(sql)) {
+        
+        pstmt.setInt(1, msp);
+        ResultSet rs = pstmt.executeQuery();
+        
+        while (rs.next()) {
+            String mlh = rs.getString("MLH");
+            int soLuong = rs.getInt("soLuong");
+            int giaNhap = rs.getInt("giaNhap");
+            ChiTietLoHangDTO dto = new ChiTietLoHangDTO(mlh, msp, giaNhap, soLuong);
+            list.add(dto);
         }
-
-        return quantity; // Trả về số lượng sản phẩm trong lô
+    } catch (SQLException e) {
+        e.printStackTrace();
     }
+    
+    return list;
+}
+
 
 
  public static boolean updateProductInLot(ChiTietLoHangDTO productDetail) {
@@ -127,27 +195,7 @@ public static   boolean addProductToLot(ChiTietLoHangDTO productDetail) {
             return false; // Trả về false nếu có lỗi xảy ra
         }
     }
-    @Override
-    public int insert(ArrayList<ChiTietLoHangDTO> t) {
-        
-        String sql = "INSERT INTO ctlohang (maLoHang, maSanPham, soLuong, giaNhap) VALUES (?, ?, ?, ?)";
-
-        try (
-               Connection con = (Connection) JDBCUtil.getConnection();PreparedStatement pstmt = con.prepareStatement(sql)) {
-            // Thiết lập các tham số cho truy vấn
-            pstmt.setString(1, t.get(0)); // Mã lô hàng
-            pstmt.setString(2, t.getMaSanPham()); // Mã sản phẩm
-            pstmt.setInt(3, t.getSoLuong()); // Số lượng sản phẩm
-            pstmt.setDouble(4, t.getGiaNhap()); // Giá nhập sản phẩm
-
-            // Thực hiện truy vấn và kiểm tra số hàng bị ảnh hưởng
-            int rowsAffected = pstmt.executeUpdate();
-            return rowsAffected > 0; // Trả về true nếu ít nhất 1 hàng bị ảnh hưởng
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false; // Trả về false nếu có lỗi xảy ra
-        }
-    }
+ 
     
 
     @Override
@@ -160,7 +208,7 @@ public static   boolean addProductToLot(ChiTietLoHangDTO productDetail) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
-  public ArrayList<ChiTietLoHangDTO> selectAll() {
+  public static ArrayList<ChiTietLoHangDTO> selectAll() {
         ArrayList<ChiTietLoHangDTO> result = new ArrayList<>();
         Connection con = null;
         PreparedStatement pst = null;
@@ -221,7 +269,7 @@ public static   boolean addProductToLot(ChiTietLoHangDTO productDetail) {
 
   
      
-    public ArrayList<ChiTietPhieuDTO> selectAll1(String t) {
+    public static ArrayList<ChiTietPhieuDTO> selectAll1(String t) {
             ArrayList<ChiTietPhieuDTO> result = new ArrayList<>();
         try {
             Connection con = (Connection) JDBCUtil.getConnection();
@@ -269,6 +317,11 @@ public static   boolean addProductToLot(ChiTietLoHangDTO productDetail) {
             e.printStackTrace();
         }
         return false;
+    }
+
+    @Override
+    public int insert(ArrayList<ChiTietLoHangDTO> t) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
     
     

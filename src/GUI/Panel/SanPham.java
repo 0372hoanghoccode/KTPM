@@ -3,6 +3,7 @@ package GUI.Panel;
 import BUS.SanPhamBUS;
 import DAO.KhuVucSachDAO;
 import DAO.NhaXuatBanDAO;
+import DTO.SanPhamDTO;
 import GUI.Component.IntegratedSearch;
 import GUI.Component.MainFunction;
 import GUI.Main;
@@ -155,9 +156,13 @@ System.out.print("hello");
             }
         } else if (e.getSource() == mainFunction.btn.get("detail")) {
             int index = getRowSelected();
-            if (index != -1) {
-                new SanPhamDialog(this, owner, "Xem chi tiết sản phẩm", true, "view", listSP.get(index));
-            }
+             if (index != -1) {
+            // Lấy sản phẩm từ danh sách bằng chỉ số
+            SanPhamDTO selectedProduct = listSP.get(index);
+            
+            // Tạo và hiển thị dialog chi tiết sản phẩm
+            new SanPhamDialog(this, owner ,  "Xem chi tiết sản phẩm", true, "view", selectedProduct);
+        }
         } else if (e.getSource() == mainFunction.btn.get("export")) {
             try {
                 JTableExporter.exportJTableToExcel(tableSanPham);

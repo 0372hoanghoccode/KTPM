@@ -37,7 +37,7 @@ public class PhieuNhapBUS {
     }
     
     
-      public int getProductQuantityInLot(String lotCode, int productCode) {
+      public static int getProductQuantityInLot(String lotCode, int productCode) {
         return ChiTietLoHangDAO.getProductQuantityInLot(lotCode, productCode);
     }
     
