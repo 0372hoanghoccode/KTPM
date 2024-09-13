@@ -1,5 +1,6 @@
 package BUS;
 
+import DAO.ChiTietLoHangDAO;
 import DAO.ChiTietPhieuNhapDAO;
 import DAO.PhieuNhapDAO;
 import DTO.ChiTietPhieuDTO;
@@ -32,6 +33,11 @@ public class PhieuNhapBUS {
 
     public ArrayList<PhieuNhapDTO> getAllList() {
         return this.listPhieuNhap;
+    }
+    
+    
+     public static boolean checkProductInLot(String lotCode, int productCode) {
+        return ChiTietLoHangDAO.checkProductInLot(lotCode, productCode);
     }
 
     public ArrayList<SanPhamDTO> convertHashMapToArray(HashMap<Integer, ArrayList<SanPhamDTO>> chitietsanpham) {

@@ -28,7 +28,9 @@ import com.formdev.flatlaf.fonts.roboto.FlatRobotoFont;
 
 import BUS.PhieuNhapBUS;
 import BUS.SanPhamBUS;
+import DAO.ChiTietLoHangDAO;
 import DAO.KhuVucSach1DAO;
+import DTO.ChiTietLoHangDTO;
 import DTO.ChiTietPhieuNhapDTO;
 import DTO.NhanVienDTO;
 import DTO.PhieuNhapDTO;
@@ -41,6 +43,7 @@ import GUI.Component.PanelBorderRadius;
 import GUI.Component.SelectForm;
 import helper.Formater;
 import helper.Validation;
+import java.util.Map;
 
 
 public final class TaoPhieuNhap extends JPanel implements ItemListener, ActionListener {
@@ -490,16 +493,64 @@ public final class TaoPhieuNhap extends JPanel implements ItemListener, ActionLi
         } 
     }
     
-    public void eventBtnNhapHang() {
-        if (chitietphieu.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Chưa có sản phẩm nào trong phiếu !", "Cảnh báo !", JOptionPane.ERROR_MESSAGE);
-        } else {
-            int input = JOptionPane.showConfirmDialog(null, "Bạn có chắc chắn muốn tạo phiếu nhập !", "Xác nhận tạo phiếu", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
-            if (input == 0) {
+public void eventBtnNhapHang() {
+    if (chitietphieu.isEmpty()) {
+        JOptionPane.showMessageDialog(this, "Chưa có sản phẩm nào trong phiếu !", "Cảnh báo !", JOptionPane.ERROR_MESSAGE);
+    } else {
+        int input = JOptionPane.showConfirmDialog(null, "Bạn có chắc chắn muốn tạo phiếu nhập !", "Xác nhận tạo phiếu", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
+        if (input == 0) {
+            // Lấy mã lô từ ComboBox
+            String selectedLotCode = (String) cbbLoHang.getSelectedItem();
+
+            // Cập nhật danh sách sản phẩm trong mã lô
+            boolean allProductsUpdated = true;
+
+            // Lặp qua từng mã lô trong chitietsanpham
+            for (Map.Entry<Integer, ArrayList<SanPhamDTO>> entry : chitietsanpham.entrySet()) {
+                int lotCode = entry.getKey(); // Mã lô hàng
+                ArrayList<SanPhamDTO> productList = entry.getValue(); // Danh sách sản phẩm
+
+                // So sánh mã lô hiện tại với mã lô được chọn
+                if (lotCode == Integer.parseInt(selectedLotCode)) {
+                    // Lặp qua danh sách sản phẩm
+                    for (SanPhamDTO product : productList) {
+                        int productCode = product.getMSP(); // Mã sản phẩm
+                        int quantity = product.getSL(); // Số lượng sản phẩm
+                        int gianhap = Integer.parseInt(txtDongia.getText());
+
+                        // Kiểm tra xem sản phẩm đã có trong mã lô chưa
+                        boolean productExistsInLot = phieunhapBus.checkProductInLot(selectedLotCode, productCode);
+                        
+                        if (productExistsInLot) {
+                            // Nếu sản phẩm đã có, cập nhật số lượng và giá nhập
+                              ChiTietLoHangDTO productDetail = new ChiTietLoHangDTO(lotCode, productCode, quantity, gianhap);
+                            boolean updateResult = phieunhapBus.updateProductInLot(selectedLotCode, productCode, quantity, gianhap);
+                            if (!updateResult) {
+                                allProductsUpdated = false;
+                                break;
+                            }
+                        } else {
+                            // Nếu sản phẩm chưa có, thêm sản phẩm vào mã lô
+                            ChiTietLoHangDAO chitietlohangdao = new ChiTietLoHangDAO();
+                              ChiTietLoHangDTO  productDetail1 = new ChiTietLoHangDTO(lotCode, productCode, quantity, gianhap);
+                            boolean addResult = chitietlohangdao.addProductToLot(productDetail1);
+                            if (!addResult) {
+                                allProductsUpdated = false;
+                                break;
+                            }
+                        }
+                    }
+
+                    if (!allProductsUpdated) break;
+                }
+            }
+            if (allProductsUpdated) {
+                // Tạo phiếu nhập
                 long now = System.currentTimeMillis();
                 Timestamp currenTime = new Timestamp(now);
                 PhieuNhapDTO pn = new PhieuNhapDTO(maphieunhap, nvDto.getMNV(), currenTime, phieunhapBus.getTIEN(chitietphieu), 1);
                 boolean result = phieunhapBus.add(pn, chitietphieu, chitietsanpham);
+                
                 if (result) {
                     JOptionPane.showMessageDialog(this, "Nhập hàng thành công !");
                     PhieuNhap pnlPhieu = new PhieuNhap(m, nvDto);
@@ -507,9 +558,14 @@ public final class TaoPhieuNhap extends JPanel implements ItemListener, ActionLi
                 } else {
                     JOptionPane.showMessageDialog(this, "Nhập hàng không thành công !", "Cảnh báo !", JOptionPane.ERROR_MESSAGE);
                 }
+            } else {
+                JOptionPane.showMessageDialog(this, "Cập nhật sản phẩm không thành công !", "Cảnh báo !", JOptionPane.ERROR_MESSAGE);
             }
         }
     }
+}
+
+
 }
 
 

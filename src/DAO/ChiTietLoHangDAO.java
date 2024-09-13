@@ -26,11 +26,49 @@ public class ChiTietLoHangDAO implements ChiTietInterface<ChiTietLoHangDTO>{
     }
 
     
+public boolean addProductToLot(ChiTietLoHangDTO productDetail) {
+        String sql = "INSERT INTO ChiTietLoHang (maLoHang, maSanPham, soLuong, giaNhap) VALUES (?, ?, ?, ?)";
 
+        try 
+            (
+                   Connection con = (Connection) JDBCUtil.getConnection();
+                PreparedStatement pstmt = con.prepareStatement(sql)) {
+            // Thiết lập các tham số cho truy vấn
+            pstmt.setString(1, productDetail.getMLH()); // Mã lô hàng
+            pstmt.setInt(2, productDetail.getMSP()); // Mã sản phẩm
+            pstmt.setInt(3, productDetail.getSoLuong()); // Số lượng sản phẩm
+            pstmt.setDouble(4, productDetail.getGiaNhap()); // Giá nhập sản phẩm
+
+            // Thực hiện truy vấn và kiểm tra số hàng bị ảnh hưởng
+            int rowsAffected = pstmt.executeUpdate();
+            return rowsAffected > 0; // Trả về true nếu ít nhất 1 hàng bị ảnh hưởng
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false; // Trả về false nếu có lỗi xảy ra
+        }
+    }
     @Override
     public int insert(ArrayList<ChiTietLoHangDTO> t) {
-      throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        
+        String sql = "INSERT INTO ChiTietLoHang (maLoHang, maSanPham, soLuong, giaNhap) VALUES (?, ?, ?, ?)";
+
+        try (
+               Connection con = (Connection) JDBCUtil.getConnection();PreparedStatement pstmt = con.prepareStatement(sql)) {
+            // Thiết lập các tham số cho truy vấn
+            pstmt.setString(1, t.get(0)); // Mã lô hàng
+            pstmt.setString(2, t.getMaSanPham()); // Mã sản phẩm
+            pstmt.setInt(3, t.getSoLuong()); // Số lượng sản phẩm
+            pstmt.setDouble(4, t.getGiaNhap()); // Giá nhập sản phẩm
+
+            // Thực hiện truy vấn và kiểm tra số hàng bị ảnh hưởng
+            int rowsAffected = pstmt.executeUpdate();
+            return rowsAffected > 0; // Trả về true nếu ít nhất 1 hàng bị ảnh hưởng
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false; // Trả về false nếu có lỗi xảy ra
+        }
     }
+    
 
     @Override
     public int delete(String t) {
@@ -133,7 +171,25 @@ public class ChiTietLoHangDAO implements ChiTietInterface<ChiTietLoHangDTO>{
     
     
     
-    
+      public static boolean checkProductInLot(String lotCode, int productCode) {
+        String query = "SELECT COUNT(*) FROM ctlohang WHERE ma_lohang = ? AND ma_sanpham = ?";
+        try (
+                Connection con = (Connection) JDBCUtil.getConnection();
+                PreparedStatement preparedStatement = con.prepareStatement(query)) {
+            preparedStatement.setString(1, lotCode);
+            preparedStatement.setInt(2, productCode);
+
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    // Nếu số lượng sản phẩm trong kết quả lớn hơn 0 thì sản phẩm đã tồn tại
+                    return resultSet.getInt(1) > 0;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
     
     
     
