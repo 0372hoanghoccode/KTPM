@@ -129,8 +129,9 @@ public final class ChiTietPhieuDialog extends JDialog implements ActionListener 
         tblModel.setRowCount(0);
         for (int i = 0; i < ctPhieu.size(); i++) {
             SanPhamDTO sp = spBus.getByMaSP(ctPhieu.get(i).getMSP());
+            System.out.print("Mã sản phẩm là " + sp.getMSP()) ; 
             tblModel.addRow(new Object[]{
-                i + 1, sp.getMSP(), SanPhamDAO.getInstance().selectById(sp.getMSP()+"").getTEN(), 
+                i + 1, sp.getMSP(),sp.getTEN(), 
                 Formater.FormatVND(ctPhieu.get(i).getTIEN()), ctPhieu.get(i).getSL()
             });
         }
