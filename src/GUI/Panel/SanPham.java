@@ -1,8 +1,10 @@
 package GUI.Panel;
 
 import BUS.SanPhamBUS;
+import DAO.ChiTietPhieuNhapDAO;
 import DAO.KhuVucSachDAO;
 import DAO.NhaXuatBanDAO;
+import DTO.ChiTietPhieuNhapDTO;
 import DTO.SanPhamDTO;
 import GUI.Component.IntegratedSearch;
 import GUI.Component.MainFunction;
@@ -50,7 +52,7 @@ public final class SanPham extends JPanel implements ActionListener {
         tableSanPham.setBackground(new Color(245, 250, 250));  
         scrollTableSanPham = new JScrollPane();
         tblModel = new DefaultTableModel();
-        String[] header = new String[]{"Mã SP", "Tên sản phẩm", "Số lượng tồn", "Tên tác giả", "Danh mục", "Năm xuất bản", "Nhà xuất bản", "Khu vực sách"};
+        String[] header = new String[]{"Mã SP", "Tên sản phẩm", "Tổng Số Lượng", "Tên tác giả", "Danh mục", "Năm xuất bản", "Nhà xuất bản", "Khu vực sách"};
         tblModel.setColumnIdentifiers(header);
         tableSanPham.setModel(tblModel);
         scrollTableSanPham.setViewportView(tableSanPham);
@@ -125,10 +127,12 @@ public final class SanPham extends JPanel implements ActionListener {
 
     public void loadDataTalbe(ArrayList<DTO.SanPhamDTO> result) {
         tblModel.setRowCount(0);
-System.out.print("hello");
+        ChiTietPhieuNhapDAO chitietphieunhap = new ChiTietPhieuNhapDAO();
+        ArrayList<ChiTietPhieuNhapDTO> chitietphieunhapDTO = chitietphieunhap.selectAll();
         for (DTO.SanPhamDTO sp : result) {
-            
-            tblModel.addRow(new Object[]{sp.getMSP(), sp.getTEN(), sp.getSL(), sp.getTENTG(), sp.getDANHMUC(), sp.getNAMXB()
+            int tongSoLuong = chitietphieunhap.calculateTotalQuantityForProduct(chitietphieunhapDTO, sp.getMSP());
+            sp.setSL(tongSoLuong);
+            tblModel.addRow(new Object[]{sp.getMSP(), sp.getTEN(), tongSoLuong, sp.getTENTG(), sp.getDANHMUC(), sp.getNAMXB()
                 , NhaXuatBanDAO.getInstance().selectById(sp.getMNXB() + "").getTennxb()
                 , KhuVucSachDAO.getInstance().selectById(sp.getMKVS() + " ").getTenkhuvuc()
             });

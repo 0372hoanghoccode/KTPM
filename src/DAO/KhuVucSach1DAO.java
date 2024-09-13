@@ -25,7 +25,23 @@ public class KhuVucSach1DAO implements DAOinterface<KhuVucSach1DTO> {
     }
  
  
- 
+ public static int getNextMaPhieu() {
+    int maxMaPhieu = 0;
+    try {
+        Connection con = (Connection) JDBCUtil.getConnection();
+        String sql = "SELECT MAX(MLH) AS maxMaPhieu FROM lohang";
+        PreparedStatement pst = (PreparedStatement) con.prepareStatement(sql);
+        ResultSet rs = (ResultSet) pst.executeQuery();
+        if (rs.next()) {
+            maxMaPhieu = rs.getInt("maxMaPhieu");
+        }
+        JDBCUtil.closeConnection(con);
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+    return maxMaPhieu + 1; // Trả về giá trị lớn nhất cộng thêm 1
+}
+
     
    public String[] getArrMLH() {
     int size = chitiet.size();
@@ -43,19 +59,19 @@ public class KhuVucSach1DAO implements DAOinterface<KhuVucSach1DTO> {
 }
     
     @Override
-  public int insert(KhuVucSach1DTO t) {
+  public  int insert(KhuVucSach1DTO t) {
     int result = 0;
     Connection con = null;
     PreparedStatement pst = null;
     
     try {
         con = JDBCUtil.getConnection();
-        String sql = "INSERT INTO `lohang`(`MLH`, `GhiChu`, `Ngay`, `TT`) VALUES (?, ?, ?, 1)";
+        String sql = "INSERT INTO `lohang`(`MLH`, `Ngay`, `TT`) VALUES (?, ?, 1)";
         pst = con.prepareStatement(sql);
         
         pst.setString(1, t.getMLH()); // Mã lô hàng
-        pst.setString(2, t.getGhichu()); // Ghi chú
-        pst.setTimestamp(3, t.getNgay()); // Ngày là kiểu Timestamp
+      
+        pst.setTimestamp(2, t.getNgay()); // Ngày là kiểu Timestamp
         
         result = pst.executeUpdate();
     } catch (SQLException ex) {
@@ -64,6 +80,28 @@ public class KhuVucSach1DAO implements DAOinterface<KhuVucSach1DTO> {
     
     return result;
 }
+    public static int insert1(KhuVucSach1DTO t) {
+    int result = 0;
+    Connection con = null;
+    PreparedStatement pst = null;
+    
+    try {
+        con = JDBCUtil.getConnection();
+        String sql = "INSERT INTO `lohang`(`MLH`, `Ngay`, `TT`) VALUES (?, ?, 1)";
+        pst = con.prepareStatement(sql);
+        
+        pst.setString(1, t.getMLH()); // Mã lô hàng
+      
+        pst.setTimestamp(2, t.getNgay()); // Ngày là kiểu Timestamp
+        
+        result = pst.executeUpdate();
+    } catch (SQLException ex) {
+        Logger.getLogger(KhuVucSachDAO.class.getName()).log(Level.SEVERE, null, ex);
+    } 
+    
+    return result;
+}
+  
 
     @Override
     public int update(KhuVucSach1DTO t) {
@@ -113,19 +151,19 @@ public ArrayList<KhuVucSach1DTO> getAll() {
             con = JDBCUtil.getConnection();
             
             // Truy vấn SQL để lấy tất cả các lô hàng có TT = 1
-            String sql = "SELECT MLH, GHICHU, NGAY, TT FROM lohang WHERE TT = 1";
+            String sql = "SELECT MLH, NGAY, TT FROM lohang WHERE TT = 1";
             pst = con.prepareStatement(sql);
             rs = pst.executeQuery();
             
             // Xử lý kết quả truy vấn
             while (rs.next()) {
                 String MLH = rs.getString("MLH"); // Lấy dữ liệu kiểu String
-                String GHICHU = rs.getString("GHICHU"); // Lấy dữ liệu kiểu String
+                
                 java.sql.Timestamp NGAY = rs.getTimestamp("NGAY"); // Lấy dữ liệu kiểu Timestamp
                 int TT = rs.getInt("TT"); // Lấy dữ liệu kiểu int
                 
                 // Tạo đối tượng KhuVucSach1DTO và thêm vào danh sách kết quả
-                KhuVucSach1DTO kvk = new KhuVucSach1DTO(MLH, GHICHU, NGAY, TT);
+                KhuVucSach1DTO kvk = new KhuVucSach1DTO(MLH, NGAY, TT);
                 result.add(kvk);
             }
         } catch (Exception e) {

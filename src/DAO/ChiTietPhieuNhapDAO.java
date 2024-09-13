@@ -89,5 +89,41 @@ public class ChiTietPhieuNhapDAO implements ChiTietInterface<ChiTietPhieuNhapDTO
         }
         return result;
     }
+    
+    public ArrayList<ChiTietPhieuNhapDTO> selectAll() {
+        ArrayList<ChiTietPhieuNhapDTO> result = new ArrayList<>();
+        try {
+            Connection con = JDBCUtil.getConnection();
+            String sql = "SELECT * FROM CTPHIEUNHAP";
+            PreparedStatement pst = con.prepareStatement(sql);
+            ResultSet rs = pst.executeQuery();
+            while (rs.next()) {
+                int maphieu = rs.getInt("MPN");
+                int masp = rs.getInt("MSP");
+                int soluong = rs.getInt("SL");
+                int tiennhap = rs.getInt("TIENNHAP");
+                int hinhthucnhap = rs.getInt("MLH");
+                ChiTietPhieuNhapDTO ctphieu = new ChiTietPhieuNhapDTO(maphieu, masp, soluong, tiennhap, hinhthucnhap);
+                result.add(ctphieu);
+            }
+            JDBCUtil.closeConnection(con);
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+        return result;
+    }
+    
+     public int calculateTotalQuantityForProduct(ArrayList<ChiTietPhieuNhapDTO> chitietphieu, int maSp) {
+        int totalQuantity = 0;
 
+        // Lặp qua danh sách chi tiết phiếu nhập
+        for (ChiTietPhieuNhapDTO detail : chitietphieu) {
+            if (detail.getMSP() == maSp) {
+                totalQuantity += detail.getSL();
+            }
+        }
+
+        // Trả về tổng số lượng của sản phẩm có mã sản phẩm cụ thể
+        return totalQuantity;
+    }
 }

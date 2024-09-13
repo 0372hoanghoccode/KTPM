@@ -6,7 +6,6 @@ import java.util.Objects;
 public class KhuVucSach1DTO {
 
     private String MLH;    // Mã lô hàng
-    private String ghichu; // Ghi chú
     private Timestamp ngay; // Ngày được thay đổi thành Timestamp
     private int TT;        // Trạng thái
 
@@ -15,9 +14,8 @@ public class KhuVucSach1DTO {
     }
 
     // Constructor với tất cả các tham số
-    public KhuVucSach1DTO(String MLH, String ghichu, Timestamp ngay, int TT) {
+    public KhuVucSach1DTO(String MLH, Timestamp ngay, int TT) {
         this.MLH = MLH;
-        this.ghichu = ghichu;
         this.ngay = ngay;
         this.TT = TT;
     }
@@ -29,15 +27,6 @@ public class KhuVucSach1DTO {
 
     public void setMLH(String MLH) {
         this.MLH = MLH;
-    }
-
-    // Getter và Setter cho ghichu
-    public String getGhichu() {
-        return ghichu;
-    }
-
-    public void setGhichu(String ghichu) {
-        this.ghichu = ghichu;
     }
 
     // Getter và Setter cho ngay
@@ -62,7 +51,6 @@ public class KhuVucSach1DTO {
     public int hashCode() {
         int hash = 7;
         hash = 97 * hash + Objects.hashCode(this.MLH);
-        hash = 97 * hash + Objects.hashCode(this.ghichu);
         hash = 97 * hash + Objects.hashCode(this.ngay);
         hash = 97 * hash + this.TT;
         return hash;
@@ -86,9 +74,6 @@ public class KhuVucSach1DTO {
         if (!Objects.equals(this.MLH, other.MLH)) {
             return false;
         }
-        if (!Objects.equals(this.ghichu, other.ghichu)) {
-            return false;
-        }
         return Objects.equals(this.ngay, other.ngay);
     }
 
@@ -96,7 +81,6 @@ public class KhuVucSach1DTO {
     public String toString() {
         return "KhuVucSach1DTO{" +
                 "MLH='" + MLH + '\'' +
-                ", ghichu='" + ghichu + '\'' +
                 ", ngay=" + ngay +
                 ", TT=" + TT +
                 '}';

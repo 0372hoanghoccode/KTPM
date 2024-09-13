@@ -4,6 +4,7 @@ import DAO.ChiTietLoHangDAO;
 import DAO.KhuVucSach1DAO;
 import DTO.ChiTietLoHangDTO;
 import DTO.KhuVucSach1DTO;
+import DTO.KhuVucSachDTO;
 import GUI.Component.ButtonCustom;
 import GUI.Component.HeaderTitle;
 import GUI.Component.InputForm;
@@ -42,7 +43,7 @@ public final class KhuVucSach1Dialog extends JDialog implements ActionListener {
     private HeaderTitle titlePage;
     private JPanel pnmain,  pnmain_top,  pnmain_bottom, pnmain_btn;
     private ButtonCustom btnThem, btnCapNhat;
-    private InputForm txtMaPhieu, txtThoiGian;
+    private InputForm txtMaPhieu, txtThoiGian ,      malohang ,ghichu;
     private KhuVucSach1DTO kvk;
     DefaultTableModel tblModel;
     JTable table, tblImei;
@@ -55,6 +56,7 @@ public final class KhuVucSach1Dialog extends JDialog implements ActionListener {
         super(owner, title, modal);
         this.jpkvk = jpkvk;
         initComponents(title, type);
+        
     }
 
     public KhuVucSach1Dialog(KhuVucSach1 jpkvk, JFrame owner, String title, boolean modal, String type, KhuVucSach1DTO kvk) {
@@ -62,6 +64,7 @@ public final class KhuVucSach1Dialog extends JDialog implements ActionListener {
         this.jpkvk = jpkvk;
         this.kvk = kvk;
         initComponents(title, type);
+       
     }
 
     // public void initComponents(String title, String type) {
@@ -116,82 +119,110 @@ public final class KhuVucSach1Dialog extends JDialog implements ActionListener {
 
     // }
 
-    public void initComponents(String title, String type) {
-        this.setSize(new Dimension(1100, 500));
-        this.setLayout(new BorderLayout(0, 0));
-        titlePage = new HeaderTitle(title.toUpperCase());
-    
-        pnmain = new JPanel(new BorderLayout());
-    
-        // Tạo panel top với 3 input fields
-        pnmain_top = new JPanel(new GridLayout(1, 4));
-        txtMaPhieu = new InputForm("Mã phiếu");
-      
-        txtThoiGian = new InputForm("Thời gian tạo");
-    
-        txtMaPhieu.setEditable(false);
-     
-        txtThoiGian.setEditable(false);
-    
-        pnmain_top.add(txtMaPhieu);
-      
-        pnmain_top.add(txtThoiGian);
-    
-        // Tạo panel bottom với các nút bấm
-        pnmain_bottom = new JPanel(new GridLayout(1, 5));
-        pnmain_bottom.setBorder(new EmptyBorder(5, 5, 5, 5));
-        pnmain_bottom.setBackground(Color.WHITE);
-    
-        table = new JTable();
-        scrollTable = new JScrollPane();
-        tblModel = new DefaultTableModel();
-        String[] header = new String[]{"STT", "Mã Sản phẩm", "Giá Nhập", "Số lượng"};
-        tblModel.setColumnIdentifiers(header);
-        table.setModel(tblModel);
-        table.setFocusable(false);
-        scrollTable.setViewportView(table);
-        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
-        centerRenderer.setHorizontalAlignment(JLabel.CENTER);
-        table.setDefaultRenderer(Object.class, centerRenderer);
-        table.getColumnModel().getColumn(2).setPreferredWidth(200);
-    
-        pnmain_bottom.add(scrollTable);
-    
-        // Panel chứa các nút bấm bên dưới
-        pnmain_btn = new JPanel(new FlowLayout());
-        pnmain_btn.setBorder(new EmptyBorder(10, 0, 10, 0));
-        pnmain_btn.setBackground(Color.white);
-        btnThem = new ButtonCustom("Thêm khu vực sách", "success", 14);
-        btnCapNhat = new ButtonCustom("Lưu thông tin", "success", 14);
-        // btnHuyBo = new ButtonCustom("Huỷ bỏ", "danger", 14);
-    
-        // Thêm ActionListener cho các nút
-        btnThem.addActionListener(this);
-        btnCapNhat.addActionListener(this);
-        // btnHuyBo.addActionListener(this);
-    
-        switch (type) {
-            case "create" -> pnmain_btn.add(btnThem);
-            case "detail" -> initInfo();
-            case "update" -> {
-                pnmain_btn.add(btnCapNhat);
-                initInfo();
-            }
-            default -> throw new AssertionError();
-        }
-    
-        // Thêm panel vào layout chính
-        pnmain.add(pnmain_top, BorderLayout.NORTH);
-        pnmain.add(pnmain_bottom, BorderLayout.CENTER);
-        pnmain.add(pnmain_btn, BorderLayout.SOUTH);
-    
-        this.add(titlePage, BorderLayout.NORTH);
-        this.add(pnmain, BorderLayout.CENTER);
-        this.setLocationRelativeTo(null);
-        this.setVisible(true);
-    }
-    
+public void initComponents(String title, String type) {
+    this.setSize(new Dimension(1100, 500));
+    this.setLayout(new BorderLayout(0, 0));
+    titlePage = new HeaderTitle(title.toUpperCase());
 
+    pnmain = new JPanel(new BorderLayout());
+
+    // Tạo panel top với 2 input fields
+    pnmain_top = new JPanel(new GridLayout(1, 2));
+    txtMaPhieu = new InputForm("Mã phiếu");
+    txtThoiGian = new InputForm("Thời gian tạo");
+
+    txtMaPhieu.setEditable(false);
+    txtThoiGian.setEditable(false);
+
+    pnmain_top.add(txtMaPhieu);
+    pnmain_top.add(txtThoiGian);
+
+    // Tạo panel bottom với các nút bấm
+    pnmain_bottom = new JPanel(new GridLayout(1, 1));  // Chỉ chứa bảng nếu cần
+    pnmain_bottom.setBorder(new EmptyBorder(5, 5, 5, 5));
+    pnmain_bottom.setBackground(Color.WHITE);
+
+    table = new JTable();
+    scrollTable = new JScrollPane();
+    tblModel = new DefaultTableModel();
+    String[] header = new String[]{"STT", "Mã Sản phẩm", "Giá Nhập", "Số lượng"};
+    tblModel.setColumnIdentifiers(header);
+    table.setModel(tblModel);
+    table.setFocusable(false);
+    scrollTable.setViewportView(table);
+    DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+    centerRenderer.setHorizontalAlignment(JLabel.CENTER);
+    table.setDefaultRenderer(Object.class, centerRenderer);
+    table.getColumnModel().getColumn(2).setPreferredWidth(200);
+
+    // Panel chứa các nút bấm bên dưới
+    pnmain_btn = new JPanel(new FlowLayout());
+    pnmain_btn.setBorder(new EmptyBorder(10, 0, 10, 0));
+    pnmain_btn.setBackground(Color.white);
+    btnThem = new ButtonCustom("Thêm khu vực sách", "success", 14);
+    btnCapNhat = new ButtonCustom("Lưu thông tin", "success", 14);
+    // btnHuyBo = new ButtonCustom("Huỷ bỏ", "danger", 14);
+
+    // Thêm ActionListener cho các nút
+    btnThem.addActionListener(this);
+    btnCapNhat.addActionListener(this);
+    // btnHuyBo.addActionListener(this);
+
+    // Tùy thuộc vào loại, cấu hình giao diện
+    switch (type) {
+        case "create":
+            updateLayoutForCreate(); // Cập nhật layout cho loại "create"
+            pnmain_btn.add(btnThem); // Thêm nút "Thêm khu vực sách" khi tạo mới
+            break;
+        case "detail":
+            pnmain_bottom.add(scrollTable); // Hiển thị bảng khi xem chi tiết
+            pnmain_btn.add(btnCapNhat); // Thêm nút "Lưu thông tin" khi xem chi tiết
+            initInfo(); // Phương thức để khởi tạo thông tin chi tiết
+            break;
+        case "update":
+            pnmain_bottom.add(scrollTable); // Hiển thị bảng khi cập nhật
+            pnmain_btn.add(btnCapNhat); // Thêm nút "Lưu thông tin" khi cập nhật
+            initInfo(); // Phương thức để khởi tạo thông tin chi tiết
+            break;
+        default:
+            throw new AssertionError();
+    }
+
+    // Thêm panel vào layout chính
+    pnmain.add(pnmain_top, BorderLayout.NORTH);
+    pnmain.add(pnmain_bottom, BorderLayout.CENTER);
+    pnmain.add(pnmain_btn, BorderLayout.SOUTH);
+
+    this.add(titlePage, BorderLayout.NORTH);
+    this.add(pnmain, BorderLayout.CENTER);
+    this.setLocationRelativeTo(null);
+    this.setVisible(true);
+}
+private void updateLayoutForCreate() {
+    // Cập nhật layout cho loại "create"
+    pnmain_top.setLayout(new GridLayout(2, 1)); // Đổi layout thành GridLayout với 2 hàng và 1 cột
+
+    // Cập nhật các trường để hiển thị đúng theo layout mới
+    pnmain_top.removeAll();
+    pnmain_top.add(txtMaPhieu);
+    pnmain_top.add(txtThoiGian);
+
+    // Ẩn bảng và các thành phần khác nếu có
+    pnmain_bottom.removeAll(); // Xóa tất cả các thành phần trong pnmain_bottom
+        // Lấy giá trị mã lô hàng lớn nhất hiện tại và cộng thêm 1
+    int newMaPhieu = KhuVucSach1DAO.getNextMaPhieu();
+    
+    // Hiển thị thời gian hiện tại
+    Timestamp currentTime = new Timestamp(System.currentTimeMillis());
+    txtThoiGian.setText(currentTime.toString()); // Hiển thị thời gian hiện tại
+    
+    // Cập nhật ô nhập liệu mã lô hàng
+    txtMaPhieu.setText(String.valueOf(newMaPhieu));
+}
+
+
+
+    
 
 
     // public void initComponent(String title) {
@@ -293,35 +324,49 @@ public final class KhuVucSach1Dialog extends JDialog implements ActionListener {
     @Override
  public void actionPerformed(ActionEvent e) {
   
-    if (e.getSource() == btnThem && Validation()) {
-        String tenkhuvuc1 = this.txtMaPhieu.getText();
-        
-        // Check for duplicate name
-        if (dao.doesNameExist(tenkhuvuc1)) {
-            JOptionPane.showMessageDialog(this, "Tên khu vực đã tồn tại. Vui lòng chọn tên khác.");
-            return;
-        }
-        
-        int makhuvuc = dao.getAutoIncrement();
-        System.out.println("Adding new khu vuc: " + makhuvuc);
-        String ghichu1 = this.txtNhanVien.getText();
-        KhuVucSachDTO newKhuVuc = new KhuVucSachDTO(makhuvuc, tenkhuvuc1, ghichu1);
+if (e.getSource() == btnThem && Validation()) {
 
-        // Adding new khu vuc
-        jpkvk.kvkBUS.add(newKhuVuc);
-        System.out.println("New khu vuc added: " + newKhuVuc);
+    // Lấy dữ liệu từ các ô nhập liệu
+    String maPhieuText = txtMaPhieu.getText();
+    String thoiGianText = txtThoiGian.getText();
 
-        // Reload data table
-        jpkvk.loadDataTable(jpkvk.listKVK);
-        System.out.println("Data table reloaded.");
-
-        // Close the window
-        dispose();
+    // Kiểm tra dữ liệu từ các ô nhập liệu
+    if (maPhieuText.isEmpty() || thoiGianText.isEmpty()) {
+        JOptionPane.showMessageDialog(this, "Vui lòng nhập đầy đủ thông tin.", "Lỗi", JOptionPane.ERROR_MESSAGE);
+        return;
     }
-    //  else if (e.getSource() == btnHuyBo) {
-    //     System.out.println("Operation cancelled.");
-    //     dispose();
-    // }
+
+   
+    Timestamp thoiGian;
+   
+    int maPhieu = Integer.parseInt(maPhieuText); // Chuyển đổi mã phiếu thành số nguyên
+        thoiGian = Timestamp.valueOf(thoiGianText); // Chuyển đổi chuỗi thời gian thành Timestamp
+   
+
+    // Tạo đối tượng DTO mới
+    KhuVucSach1DTO newKhuVuc = new KhuVucSach1DTO(
+        maPhieuText, // Mã lô hàng mới
+        thoiGian,    // Thời gian hiện tại
+        1            // Trạng thái
+    );
+
+    // Thực hiện thêm dữ liệu vào cơ sở dữ liệu
+    int result = KhuVucSach1DAO.insert1(newKhuVuc);
+
+    // Kiểm tra kết quả và thông báo thành công
+    if (result > 0) {
+        JOptionPane.showMessageDialog(this, "Thêm lô sách thành công!", "Thành công", JOptionPane.INFORMATION_MESSAGE);
+        this.dispose();
+          jpkvk.loadDataTable(jpkvk.listKVK);
+        
+    } else {
+        JOptionPane.showMessageDialog(this, "Thêm lô sách không thành công!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+    }
+     
+}
+
+
+
      else if (e.getSource() == btnCapNhat && Validation()) {
         String tenkhuvuc1 = this.txtMaPhieu.getText();
         
