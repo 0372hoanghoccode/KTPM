@@ -7,10 +7,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import config.JDBCUtil;
-import java.security.Timestamp;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -45,22 +43,27 @@ public class KhuVucSach1DAO implements DAOinterface<KhuVucSach1DTO> {
 }
     
     @Override
-    public int insert(KhuVucSach1DTO t) {
-        int result = 0;
-        try {
-            Connection con = (Connection) JDBCUtil.getConnection();
-            String sql = "INSERT INTO `lohang`(`MLH`, `TEN`,`GHICHU`,`TT`) VALUES (?,?,?,1)";
-            PreparedStatement pst = (PreparedStatement) con.prepareStatement(sql);
-            pst.setInt(1, t.getMakhuvuc());
-            pst.setString(2, t.getTenkhuvuc());
-            pst.setString(3, t.getGhichu());
-            result = pst.executeUpdate();
-            JDBCUtil.closeConnection(con);
-        } catch (SQLException ex) {
-            Logger.getLogger(KhuVucSachDAO.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return result;
-    }
+  public int insert(KhuVucSach1DTO t) {
+    int result = 0;
+    Connection con = null;
+    PreparedStatement pst = null;
+    
+    try {
+        con = JDBCUtil.getConnection();
+        String sql = "INSERT INTO `lohang`(`MLH`, `GhiChu`, `Ngay`, `TT`) VALUES (?, ?, ?, 1)";
+        pst = con.prepareStatement(sql);
+        
+        pst.setString(1, t.getMLH()); // Mã lô hàng
+        pst.setString(2, t.getGhichu()); // Ghi chú
+        pst.setTimestamp(3, t.getNgay()); // Ngày là kiểu Timestamp
+        
+        result = pst.executeUpdate();
+    } catch (SQLException ex) {
+        Logger.getLogger(KhuVucSachDAO.class.getName()).log(Level.SEVERE, null, ex);
+    } 
+    
+    return result;
+}
 
     @Override
     public int update(KhuVucSach1DTO t) {

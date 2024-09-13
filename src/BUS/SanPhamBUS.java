@@ -149,9 +149,9 @@ public class SanPhamBUS {
         return result;
     }
 
-    public SanPhamDTO getSp(int danhmuc) {
-        return spDAO.selectByDanhMuc(danhmuc + "");
-    }
+//    public SanPhamDTO getSp(int danhmuc) {
+//        return spDAO.selectByDanhMuc(danhmuc + "");
+//    }
 
     public int getQuantity() {
         int n = 0;

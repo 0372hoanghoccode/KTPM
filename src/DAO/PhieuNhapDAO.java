@@ -178,25 +178,25 @@ public class PhieuNhapDAO implements DAOinterface<PhieuNhapDTO> {
         return true;
     }
     
-    public int cancelPhieuNhap(int maphieu){
-        int result = 0;
-        ArrayList<ChiTietPhieuNhapDTO> arrCt = ChiTietPhieuNhapDAO.getInstance().selectAll(Integer.toString(maphieu));
-        for (ChiTietPhieuNhapDTO chiTietPhieuNhapDTO : arrCt) {
-            SanPhamDAO.getInstance().updateSoLuongTon(chiTietPhieuNhapDTO.getMSP(), -(chiTietPhieuNhapDTO.getSL()));
-        }
-        ChiTietPhieuNhapDAO.getInstance().delete(Integer.toString(maphieu));
-        try {
-            Connection con = (Connection) JDBCUtil.getConnection();
-            String sql = "DELETE FROM PHIEUNHAP WHERE MPN = ?";
-            PreparedStatement pst = con.prepareStatement(sql);
-            pst.setInt(1, maphieu);
-            result = pst.executeUpdate();
-            JDBCUtil.closeConnection(con);
-        } catch (SQLException ex) {
-            Logger.getLogger(PhieuNhapDAO.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return result;
-    }
+//    public int cancelPhieuNhap(int maphieu){
+//        int result = 0;
+//        ArrayList<ChiTietPhieuNhapDTO> arrCt = ChiTietPhieuNhapDAO.getInstance().selectAll(Integer.toString(maphieu));
+//        for (ChiTietPhieuNhapDTO chiTietPhieuNhapDTO : arrCt) {
+//            SanPhamDAO.getInstance().updateSoLuongTon(chiTietPhieuNhapDTO.getMSP(), -(chiTietPhieuNhapDTO.getSL()));
+//        }
+//        ChiTietPhieuNhapDAO.getInstance().delete(Integer.toString(maphieu));
+//        try {
+//            Connection con = (Connection) JDBCUtil.getConnection();
+//            String sql = "DELETE FROM PHIEUNHAP WHERE MPN = ?";
+//            PreparedStatement pst = con.prepareStatement(sql);
+//            pst.setInt(1, maphieu);
+//            result = pst.executeUpdate();
+//            JDBCUtil.closeConnection(con);
+//        } catch (SQLException ex) {
+//            Logger.getLogger(PhieuNhapDAO.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+//        return result;
+//    }
 
     @Override
     public int getAutoIncrement() {

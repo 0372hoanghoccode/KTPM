@@ -31,6 +31,7 @@ import BUS.MaKhuyenMaiBUS;
 import BUS.PhieuXuatBUS;
 import BUS.SanPhamBUS;
 import DAO.ChiTietLoHangDAO;
+import DAO.ChiTietPhieuXuatDAO;
 import DAO.NhanVienDAO;
 import DAO.PhieuXuatDAO;
 import DTO.ChiTietLoHangDTO;
@@ -98,6 +99,7 @@ public final class TaoPhieuXuat extends JPanel {
         this.tk = tk;
         this.type = type;
         maphieu = phieuXuatBUS.getMPMAX() + 1;
+        System.out.print("mã lớn nhất +1 nè : " + maphieu);
         initComponent(type);
         loadDataTableSanPham(listSP);
     }
@@ -238,25 +240,25 @@ public final class TaoPhieuXuat extends JPanel {
         PlainDocument soluong = (PlainDocument) txtSoLuongSPxuat.getTxtForm().getDocument();
         soluong.setDocumentFilter((new NumericDocumentFilter())); //chỉ cho nhập số
         // txtMaGiamGia = new InputForm("Mã giảm giá");
-        String[] maGiamGia = {"Chọn"};
-        cbxMaKM = new SelectForm("Mã giảm giá", maGiamGia);
-        txtGiaGiam = new InputForm("Giá giảm");
-        txtGiaGiam.setText(" ");
-        txtGiaGiam.setEditable(false);
-        cbxMaKM.cbb.addItemListener((ItemListener) new ItemListener() {
-            @Override
-            public void itemStateChanged(ItemEvent e) {
-                int index = cbxMaKM.cbb.getSelectedIndex();
-                if(index != 0)
-                {
-                    double giaxuat = Integer.parseInt(txtGiaXuat.getText());
-                    double phantramgiam = (double) listctMKM.get(index - 1).getPTG();
-                    int giagiam = (int) (giaxuat * (1 - phantramgiam/100));
-                    txtGiaGiam.setText(Integer.toString(giagiam));
-                }
-            }
-            
-        });
+//        String[] maGiamGia = {"Chọn"};
+//        cbxMaKM = new SelectForm("Mã giảm giá", maGiamGia);
+//        txtGiaGiam = new InputForm("Giá giảm");
+//        txtGiaGiam.setText(" ");
+//        txtGiaGiam.setEditable(false);
+//        cbxMaKM.cbb.addItemListener((ItemListener) new ItemListener() {
+//            @Override
+//            public void itemStateChanged(ItemEvent e) {
+//                int index = cbxMaKM.cbb.getSelectedIndex();
+//                if(index != 0)
+//                {
+//                    double giaxuat = Integer.parseInt(txtGiaXuat.getText());
+//                    //double phantramgiam = (double) listctMKM.get(index - 1).getPTG();
+//                   // int giagiam = (int) (giaxuat * (1 - phantramgiam/100));
+//                   // txtGiaGiam.setText(Integer.toString(giagiam));
+//                }
+//            }
+//            
+//        });
         // txtMaGiamGia.getTxtForm().addKeyListener(new KeyAdapter() {
         //         @Override
         //         public void keyReleased(java.awt.event.KeyEvent evt) {
@@ -276,8 +278,8 @@ public final class TaoPhieuXuat extends JPanel {
         merge2.add(txtGiaXuat);
         merge2.add(txtSoLuongSPxuat);
         // merge2.add(txtMaGiamGia);
-        merge2.add(cbxMaKM);
-        merge2.add(txtGiaGiam);
+//        merge2.add(cbxMaKM);
+//        merge2.add(txtGiaGiam);
 
         content_right_top.add(txtTenSp, BorderLayout.NORTH);
         content_right_top.add(merge1, BorderLayout.CENTER);
@@ -377,7 +379,7 @@ public final class TaoPhieuXuat extends JPanel {
         txtMaphieu.setEditable(false);
         txtNhanVien = new InputForm("Nhân viên xuất");
         txtNhanVien.setEditable(false);
-        maphieu = PhieuXuatDAO.getInstance().getAutoIncrement();
+        //maphieu = PhieuXuatDAO.getInstance().getAutoIncrement();
         manv = tk.getMNV();
         txtMaphieu.setText("PX" + maphieu);
         NhanVienDTO nhanvien = NhanVienDAO.getInstance().selectById(tk.getMNV() + "");
@@ -464,11 +466,11 @@ public final class TaoPhieuXuat extends JPanel {
     public void resetForm() {
         this.txtTenSp.setText("");
         this.txtMaSp.setText("");
-        this.txtMaISBN.setText("");
+       // this.txtMaISBN.setText("");
         this.txtGiaXuat.setText("");
         this.txtSoLuongSPxuat.setText("");
         // this.txtMaGiamGia.setText("");
-        this.txtGiaGiam.setText(" ");
+//        this.txtGiaGiam.setText(" ");
     }
 
     public String[] getMaGiamGiaTable(int masp) {
@@ -511,7 +513,7 @@ public final class TaoPhieuXuat extends JPanel {
         // Tìm lô hàng có mã nhỏ nhất
         ChiTietLoHangDTO minLohang = getLohangWithMinCode(loHangList);
           this.txtGiaXuat.setText(minLohang.getGiaNhap()*2+"");
-        cbxMaKM.setArr(getMaGiamGiaTable(sp.getMSP()));
+//        cbxMaKM.setArr(getMaGiamGiaTable(sp.getMSP()));
         
     }
 
@@ -582,11 +584,29 @@ public void loadDataTableSanPham(ArrayList<SanPhamDTO> result) {
 
 
 public ChiTietLoHangDTO getLohangWithMinCode(ArrayList<ChiTietLoHangDTO> loHangList) {
-    // Tìm lô hàng có mã nhỏ nhất
-    return loHangList.stream()
-        .min((l1, l2) -> l1.getMLH().compareTo(l2.getMLH()))
-        .orElse(null);
+    ChiTietLoHangDTO minLohang = null;
+    int minCode = Integer.MAX_VALUE; // Khởi tạo mã nhỏ nhất với giá trị lớn nhất
+
+    for (ChiTietLoHangDTO loHang : loHangList) {
+        // Chỉ xem xét các lô hàng có số lượng lớn hơn 0
+        if (loHang.getSoLuong() > 0) {
+            try {
+                int currentCode = Integer.parseInt(loHang.getMLH()); // Chuyển đổi mã lô hàng từ String sang int
+                if (currentCode < minCode) {
+                    minCode = currentCode; // Cập nhật mã lô hàng nhỏ nhất
+                    minLohang = loHang; // Cập nhật lô hàng nhỏ nhất
+                }
+            } catch (NumberFormatException e) {
+                // Xử lý trường hợp mã lô hàng không thể chuyển đổi sang int
+                System.err.println("Mã lô hàng không phải là số hợp lệ: " + loHang.getMLH());
+            }
+        }
+    }
+
+    return minLohang; // Trả về lô hàng nhỏ nhất hoặc null nếu không tìm thấy lô hàng hợp lệ
 }
+
+
 
 
     public void loadDataTableChiTietPhieu(ArrayList<ChiTietPhieuDTO> ctPhieu) {
@@ -662,9 +682,9 @@ public ChiTietLoHangDTO getLohangWithMinCode(ArrayList<ChiTietLoHangDTO> loHangL
     public void addCtPhieu() { // them sp vao chitietphieu
         int masp = Integer.parseInt(txtMaSp.getText());
         int giaxuat;
-        if(!txtGiaGiam.getText().equals(" ")) 
-            giaxuat = Integer.parseInt(txtGiaGiam.getText());
-        else
+//        if(!txtGiaGiam.getText().equals(" ")) 
+//            giaxuat = Integer.parseInt(txtGiaGiam.getText());
+//        else
             giaxuat = Integer.parseInt(txtGiaXuat.getText());
         int soluong = Integer.parseInt(txtSoLuongSPxuat.getText());
         ChiTietPhieuDTO ctphieu = new ChiTietPhieuDTO(maphieu, masp, soluong, giaxuat);
@@ -692,30 +712,44 @@ public void eventBtnNhapHang() throws SQLException {
             long now = System.currentTimeMillis();
             Timestamp currenTime = new Timestamp(now);
             PhieuXuatDTO phieuXuat = new PhieuXuatDTO(makh, maphieu, tk.getMNV(), currenTime, sum, 1);
-            phieuXuatBUS.insert(phieuXuat, chitietphieu); // Insert phiếu xuất
-            
+            System.out.print("hehe" + maphieu);
+                    
+            // Thêm phiếu xuất vào cơ sở dữ liệu
+            phieuXuatBUS.insert(phieuXuat); // Thêm phiếu xuất
+          
             // Xác định lô hàng cần cập nhật
             ChiTietLoHangDAO chiTietLoHangDAO = new ChiTietLoHangDAO();
-            ArrayList<ChiTietLoHangDTO> loHangList = chiTietLoHangDAO.findLohangByMSP(Integer.parseInt(txtMaSp.getText()));
-            ChiTietLoHangDTO minLohang = getLohangWithMinCode(loHangList);
+            ChiTietPhieuXuatDAO chiTietPhieuXuatDAO = new ChiTietPhieuXuatDAO(); // Tạo đối tượng DAO cho chi tiết phiếu xuất
             
-            // Cập nhật số lượng lô hàng
-            if (minLohang != null) {
-                String maLoHang = minLohang.getMLH();
-                int soLuongXuat = getTotalQuantityFromPhieuXuat(chitietphieu); 
+            for (ChiTietPhieuDTO chiTiet : chitietphieu) {
+                int maSp = chiTiet.getMSP();
+                int tien = chiTiet.getTIEN();
+                ArrayList<ChiTietLoHangDTO> loHangList = chiTietLoHangDAO.findLohangByMSP(maSp);
+                ChiTietLoHangDTO minLohang = getLohangWithMinCode(loHangList);
                 
-                // Cập nhật số lượng trong kho
-                chiTietLoHangDAO.updateQuantity(maLoHang, -soLuongXuat); // Trừ số lượng xuất bán
-                
-                JOptionPane.showMessageDialog(null, "Xuất hàng thành công !");
-            } else {
-                JOptionPane.showMessageDialog(null, "Không tìm thấy lô hàng hợp lệ.", "Cảnh báo !", JOptionPane.ERROR_MESSAGE);
+                System.out.print(chiTiet.getMP());
+                if (minLohang != null) {
+                    String maLoHang = minLohang.getMLH();
+                    int soLuongXuat = chiTiet.getSL(); 
+                    
+                    // Cập nhật số lượng trong kho
+                    chiTietLoHangDAO.updateQuantity(maLoHang, -soLuongXuat); // Trừ số lượng xuất bán
+                    
+                    // Thêm chi tiết phiếu xuất vào cơ sở dữ liệu
+                    ChiTietPhieuXuatDTO chiTietPhieuXuat = new ChiTietPhieuXuatDTO(chiTiet.getMP(), maSp, soLuongXuat, tien, 0); // Mã khuyến mãi là 0 nếu không có
+                    chiTietPhieuXuatDAO.insert(chiTietPhieuXuat);
+                } else {
+                    JOptionPane.showMessageDialog(null, "Không tìm thấy lô hàng hợp lệ cho sản phẩm mã " + maSp, "Cảnh báo !", JOptionPane.ERROR_MESSAGE);
+                }
             }
             
+            JOptionPane.showMessageDialog(null, "Xuất hàng thành công !");
             mainChinh.setPanel(new PhieuXuat(mainChinh, tk));
         }
     }
 }
+
+
 
 private int getTotalQuantityFromPhieuXuat(ArrayList<ChiTietPhieuDTO> chitietphieu) {
     int totalQuantity = 0;

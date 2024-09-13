@@ -92,18 +92,17 @@ public class PhieuNhapBUS {
         return check;
     }
 
-    public ChiTietPhieuNhapDTO findCT(ArrayList<ChiTietPhieuNhapDTO> ctphieu, int masp) {
-        ChiTietPhieuNhapDTO p = null;
-        int i = 0;
-        while (i < ctphieu.size() && p == null) {
-            if (ctphieu.get(i).getMSP() == masp) {
-                p = ctphieu.get(i);
-            } else {
-                i++;
-            }
+public ChiTietPhieuNhapDTO findCT(ArrayList<ChiTietPhieuNhapDTO> ctphieu, int masp, int mlh) {
+    // Duyệt qua từng đối tượng trong danh sách chi tiết phiếu nhập
+    for (ChiTietPhieuNhapDTO item : ctphieu) {
+        // Kiểm tra nếu mã sản phẩm và mã lô đều khớp
+        if (item.getMSP() == masp && item.getMLH() == mlh) {
+            return item; // Trả về đối tượng tìm thấy
         }
-        return p;
     }
+    return null; // Nếu không tìm thấy, trả về null
+}
+
 
     public long getTIEN(ArrayList<ChiTietPhieuNhapDTO> ctphieu) {
         long result = 0;
@@ -166,8 +165,8 @@ public class PhieuNhapBUS {
         return phieunhapDAO.checkSLPn(maphieu);
     }
 
-    public int cancelPhieuNhap(int maphieu) {
-        return phieunhapDAO.cancelPhieuNhap(maphieu);
-    }
+//    public int cancelPhieuNhap(int maphieu) {
+//        return phieunhapDAO.cancelPhieuNhap(maphieu);
+//    }
 
 }

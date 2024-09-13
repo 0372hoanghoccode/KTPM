@@ -470,9 +470,9 @@ public final class GioHang extends JPanel {
         masp = sp.getMSP();
         this.txtMaSp.setText(Integer.toString(sp.getMSP()));
         this.txtTenSp.setText(sp.getTEN());
-        this.txtMaISBN.setText(sp.getISBN());
+      //  this.txtMaISBN.setText(sp.getISBN());
         this.txtGiaXuat.setText(Integer.toString(sp.getTIENX()));
-        getMaGiamGiaTable(sp.getMSP());
+       // getMaGiamGiaTable(sp.getMSP());
         
     }
 

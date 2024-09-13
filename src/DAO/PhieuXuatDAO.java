@@ -29,18 +29,21 @@ public class PhieuXuatDAO implements DAOinterface<PhieuXuatDTO> {
         int result = 0;
         try {
             Connection con = (Connection) JDBCUtil.getConnection();
-            String sql = "INSERT INTO `PHIEUXUAT` (`MNV`, `MKH`, `TIEN`, `TG`, `TT`) VALUES (?,?,?,?,?)";
+            String sql = "INSERT INTO `PHIEUXUAT` (`MPX` , `MNV`, `MKH`, `TIEN`, `TG`, `TT`) VALUES (?,?,?,?,?,?)";
             PreparedStatement pst = con.prepareStatement(sql);
-            pst.setInt(1, t.getMNV());
-            pst.setInt(2, t.getMKH());
-            pst.setInt(3, (int) t.getTIEN());
-            pst.setTimestamp(4, t.getTG());
-            pst.setInt(5, t.getTT());
+            pst.setInt(1, t.getMP());
+            pst.setInt(2, t.getMNV());
+            pst.setInt(3, t.getMKH());
+            pst.setInt(4, (int) t.getTIEN());
+            pst.setTimestamp(5, t.getTG());
+            pst.setInt(6, t.getTT());
+     
             result = pst.executeUpdate();
             JDBCUtil.closeConnection(con);
         } catch (SQLException ex) {
             Logger.getLogger(PhieuXuatDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
+        System.out.print("Xuất thành công DAO phiếu xuất ");
         return result;
     }
 
@@ -229,25 +232,7 @@ public class PhieuXuatDAO implements DAOinterface<PhieuXuatDTO> {
         }
         return result;
     }
-    public int cancelPhieuXuat(int maphieu){
-        int result = 0;
-        ArrayList<ChiTietPhieuDTO> arrCt = ChiTietPhieuXuatDAO.getInstance().selectAll(Integer.toString(maphieu));
-        for (ChiTietPhieuDTO chiTietPhieuNhapDTO : arrCt) {
-            SanPhamDAO.getInstance().updateSoLuongTon(chiTietPhieuNhapDTO.getMSP(), -(chiTietPhieuNhapDTO.getSL()));
-        }
-        ChiTietPhieuNhapDAO.getInstance().delete(Integer.toString(maphieu));
-        try {
-            Connection con = (Connection) JDBCUtil.getConnection();
-            String sql = "DELETE FROM PHIEUXUAT WHERE MPX = ?";
-            PreparedStatement pst = con.prepareStatement(sql);
-            pst.setInt(1, maphieu);
-            result = pst.executeUpdate();
-            JDBCUtil.closeConnection(con);
-        } catch (SQLException ex) {
-            Logger.getLogger(PhieuNhapDAO.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return result;
-    }
+
 
     public boolean checkSLPx(int maphieu) {
         SanPhamBUS spBus = new SanPhamBUS();

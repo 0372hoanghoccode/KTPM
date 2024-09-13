@@ -100,7 +100,7 @@ public final class TaoPhieuNhap extends JPanel implements ItemListener, ActionLi
         tablePhieuNhap.setBackground(new Color(245, 250, 250));
         scrollTablePhieuNhap = new JScrollPane();
         tblModel = new DefaultTableModel();
-        String[] header = new String[]{"STT", "Mã SP", "Tên sản phẩm", "Đơn giá", "Số lượng"};
+        String[] header = new String[]{"STT", "Mã SP", "Tên sản phẩm", "Đơn giá", "Số lượng" , "Nhập Vào Lô"};
         tblModel.setColumnIdentifiers(header); //thiết lập tiêu đề cột, nhận một tham số là một mảng các chuỗi
         tablePhieuNhap.setModel(tblModel);
         scrollTablePhieuNhap.setViewportView(tablePhieuNhap);//thiết lập thành phần hiển thị cho viewport. Thành phần hiển thị là một component có thể cuộn (scrollable)
@@ -125,7 +125,7 @@ public final class TaoPhieuNhap extends JPanel implements ItemListener, ActionLi
                     tableSanPham.setSelectionMode(index);
                     setFormChiTietPhieu(chitietphieu.get(index));
                     rowPhieuSelect = index;
-                    actionbtn("update");
+                  //  actionbtn("update");
                 }
             }
         });
@@ -307,6 +307,17 @@ public final class TaoPhieuNhap extends JPanel implements ItemListener, ActionLi
         right_top.add(txtMaphieu);
         right_top.add(txtNhanVien);
         right_top.add(cbbLoHang);
+        
+         cbbLoHang.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Gọi hàm resetForm khi chọn mục trong JComboBox
+                resetForm();
+                 tableSanPham.setRowSelectionInterval(0, 0);
+            // Tự động click vào dòng đầu tiên để kích hoạt sự kiện chọn hàng
+            tableSanPham.scrollRectToVisible(tableSanPham.getCellRect(0, 0, true));
+            }
+        });
 
         right_center = new JPanel();
         right_center.setPreferredSize(new Dimension(100, 100));
@@ -390,8 +401,9 @@ public final class TaoPhieuNhap extends JPanel implements ItemListener, ActionLi
         // int soluong = ctSP.size();
         // chitietsanpham.put(masp, getChiTietSanPham());
         int soluong = Integer.parseInt(txtSoLuongSPnhap.getText());
-        
-        ChiTietPhieuNhapDTO ctphieu = new ChiTietPhieuNhapDTO(maphieunhap, masp, soluong, gianhap, 1);
+         String selectedLotCode = (String) cbbLoHang.getSelectedItem();
+          int lotCodeInt = Integer.parseInt(selectedLotCode);
+        ChiTietPhieuNhapDTO ctphieu = new ChiTietPhieuNhapDTO(maphieunhap, masp, soluong, gianhap, lotCodeInt);
         return ctphieu;
     }
 
@@ -410,7 +422,7 @@ public final class TaoPhieuNhap extends JPanel implements ItemListener, ActionLi
             SanPhamDTO pb = spBUS.getByMaSP(ctPhieu.get(i).getMSP());
             tblModel.addRow(new Object[]{
                 i + 1, pb.getMSP(), spBUS.getByMaSP(pb.getMSP()).getTEN(), 
-                Formater.FormatVND(ctPhieu.get(i).getTIEN()), ctPhieu.get(i).getSL()
+                Formater.FormatVND(ctPhieu.get(i).getTIEN()), ctPhieu.get(i).getSL() , ctPhieu.get(i).getMLH()
             });
         }
         lbltongtien.setText(Formater.FormatVND(phieunhapBus.getTIEN(ctPhieu)));
@@ -447,25 +459,43 @@ public final class TaoPhieuNhap extends JPanel implements ItemListener, ActionLi
     }
 
     public ChiTietPhieuNhapDTO checkTonTai() {
-        ChiTietPhieuNhapDTO p = phieunhapBus.findCT(chitietphieu, Integer.parseInt(txtMaSp.getText())); 
+       
+         String selectedLotCode = (String) cbbLoHang.getSelectedItem();
+          int lotCodeInt = Integer.parseInt(selectedLotCode);
+        ChiTietPhieuNhapDTO p = phieunhapBus.findCT(chitietphieu, Integer.parseInt(txtMaSp.getText()) , lotCodeInt); 
             //kiểm tra coi masp này có trong chitietphieu này chưa 
         return p;
     }
 
-    public void addCtPhieu() { // them sp vao chitietphieu
-        ChiTietPhieuNhapDTO ctphieu = getInfoChiTietPhieu();
-        ChiTietPhieuNhapDTO p = phieunhapBus.findCT(chitietphieu, ctphieu.getMSP());
-        if (p == null) {
-            chitietphieu.add(ctphieu);
-            loadDataTableChiTietPhieu(chitietphieu);
-            resetForm();
-        } else {
-            int input = JOptionPane.showConfirmDialog(this, "Sản phẩm đã tồn tại trong phiếu !\nBạn có muốn chỉnh sửa không ?", "Sản phẩm đã tồn tại !", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
-            if (input == 0) {
-                setFormChiTietPhieu(ctphieu);
-            }
+  public void addCtPhieu() {
+    // Lấy thông tin chi tiết phiếu nhập từ form
+    ChiTietPhieuNhapDTO ctphieu = getInfoChiTietPhieu();
+
+    // Tìm sản phẩm trong danh sách chi tiết phiếu nhập dựa trên cả MSP và MLH
+    ChiTietPhieuNhapDTO existingProduct = phieunhapBus.findCT(chitietphieu, ctphieu.getMSP(), ctphieu.getMLH());
+
+    if (existingProduct == null) {
+        // Nếu sản phẩm không tồn tại trong chi tiết phiếu, thêm sản phẩm vào danh sách
+        chitietphieu.add(ctphieu);
+        // Tải lại dữ liệu vào bảng để cập nhật danh sách sản phẩm
+        loadDataTableChiTietPhieu(chitietphieu);
+        // Đặt lại form để chuẩn bị cho thông tin tiếp theo
+        resetForm();
+    } else {
+        // Nếu sản phẩm đã tồn tại trong chi tiết phiếu, thông báo cho người dùng và hỏi xem có muốn chỉnh sửa không
+        int input = JOptionPane.showConfirmDialog(this,
+                "Sản phẩm với mã sản phẩm và mã lô đã tồn tại trong phiếu.\nBạn có muốn chỉnh sửa không?",
+                "Sản phẩm đã tồn tại",
+                JOptionPane.OK_CANCEL_OPTION,
+                JOptionPane.INFORMATION_MESSAGE);
+        
+        if (input == JOptionPane.OK_OPTION) {
+            // Nếu người dùng chọn "OK", gọi hàm để chỉnh sửa thông tin sản phẩm
+            setFormChiTietPhieu(ctphieu);
         }
     }
+}
+
 
     @Override
     public void itemStateChanged(ItemEvent e) {
@@ -485,7 +515,7 @@ public final class TaoPhieuNhap extends JPanel implements ItemListener, ActionLi
         } else if (source == btnDelete) {
             int index = tablePhieuNhap.getSelectedRow();
             chitietphieu.remove(index);
-            actionbtn("add");
+          //  actionbtn("add");
             loadDataTableChiTietPhieu(chitietphieu);
             resetForm();
         } else if (source == btnNhapHang) {

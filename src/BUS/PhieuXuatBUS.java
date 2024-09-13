@@ -46,15 +46,15 @@ public class PhieuXuatBUS {
         listPhieuXuat.remove(px);
     }
 
-    public void update(PhieuXuatDTO px) {
-    phieuXuatDAO.update(px);  
-    chiTietPhieuXuatDAO.updateSL(px.getMP() + ""); 
-}
+//    public void update(PhieuXuatDTO px) {
+//    phieuXuatDAO.update(px);  
+//    chiTietPhieuXuatDAO.updateSL(px.getMP() + ""); 
+//}
 
 
-    public void insert(PhieuXuatDTO px, ArrayList<ChiTietPhieuDTO> ct) {
+    public void insert(PhieuXuatDTO px) {
         phieuXuatDAO.insert(px); //ghi phieu xuat vao sql
-        chiTietPhieuXuatDAO.insert(ct); //goi updatesoluongTon cua sanphamDAO để chỉnh số lượng trong kho -> ghi váo sql
+     
     }
 
     public void insertGH(PhieuXuatDTO px, ArrayList<ChiTietPhieuDTO> ct) {
@@ -183,8 +183,8 @@ public class PhieuXuatBUS {
         return phieuXuatDAO.checkSLPx(maphieu);
     }
 
-    public int cancelPhieuNhap(int maphieu) {
-        return phieuXuatDAO.cancelPhieuXuat(maphieu);
-    }
+//    public int cancelPhieuNhap(int maphieu) {
+//        return phieuXuatDAO.cancelPhieuXuat(maphieu);
+//    }
 
 }

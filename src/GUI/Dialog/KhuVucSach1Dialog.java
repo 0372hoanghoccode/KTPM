@@ -292,8 +292,7 @@ public final class KhuVucSach1Dialog extends JDialog implements ActionListener {
     }
     @Override
  public void actionPerformed(ActionEvent e) {
-    KhuVucSachDAO dao = KhuVucSachDAO.getInstance();
-    
+  
     if (e.getSource() == btnThem && Validation()) {
         String tenkhuvuc1 = this.txtMaPhieu.getText();
         

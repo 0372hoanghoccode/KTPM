@@ -46,35 +46,52 @@ public class SanPhamDAO implements DAOinterface<SanPhamDTO> {
     }
 
     @Override
-    public int update(SanPhamDTO t) {
-        int result = 0;
-        try {
-            Connection con = (Connection) JDBCUtil.getConnection();
-      //      , `ISBN` = ?
-            String sql = "UPDATE `SANPHAM` SET `TEN` = ?, `HINHANH` = ?, `DANHMUC` = ?,"
-                    + " `NAMXB` = ?, `MNXB` = ?, `TENTG` = ?, `MKVS` = ?,"
-                    + " `TIENX` = ?, `TIENN` = ?, `SL` = ? WHERE `MSP`=?";
-            PreparedStatement pst = (PreparedStatement) con.prepareStatement(sql);
-            pst.setString(1, t.getTEN());
-            pst.setString(2, t.getHINHANH());
-            pst.setString(3, t.getDANHMUC());
-            pst.setInt(4, t.getNAMXB());
-            pst.setInt(5, t.getMNXB());
-            pst.setString(6, t.getTENTG());
-            pst.setInt(7, t.getMKVS());
-            pst.setInt(8, t.getTIENX());
-            pst.setInt(9, t.getTIENN());
-            pst.setInt(10, t.getSL());
-          //  pst.setString(11, t.getISBN());
-            pst.setInt(11, t.getMSP());
+   public int update(SanPhamDTO t) {
+    int result = 0;
+    Connection con = null;
+    PreparedStatement pst = null;
 
-            result = pst.executeUpdate();
-            JDBCUtil.closeConnection(con);
-        } catch (SQLException ex) {
-            Logger.getLogger(SanPhamDAO.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return result;
+    try {
+        // Lấy kết nối cơ sở dữ liệu
+        con = JDBCUtil.getConnection();
+        
+        // Câu lệnh SQL để cập nhật thông tin sản phẩm
+        String sql = "UPDATE SANPHAM SET "
+                + "TEN = ?, "
+                + "HINHANH = ?, "
+                + "DANHMUC = ?, "
+                + "NAMXB = ?, "
+                + "MNXB = ?, "
+                + "TENTG = ?, "
+                + "MKVS = ?, "
+                + "SL = ?, "
+                + "GiaBan = ? "
+                + "WHERE MSP = ?";
+
+        // Tạo đối tượng PreparedStatement
+        pst = con.prepareStatement(sql);
+
+        // Gán giá trị cho các tham số của câu lệnh SQL
+        pst.setString(1, t.getTEN());
+        pst.setString(2, t.getHINHANH());
+        pst.setString(3, t.getDANHMUC());
+        pst.setInt(4, t.getNAMXB());
+        pst.setInt(5, t.getMNXB());
+        pst.setString(6, t.getTENTG());
+        pst.setInt(7, t.getMKVS());
+        pst.setInt(8, t.getSL());
+        pst.setInt(9, t.getTIENX());
+        pst.setInt(10, t.getMSP()); // Đặt giá trị cho điều kiện WHERE
+
+        // Thực thi câu lệnh SQL
+        result = pst.executeUpdate();
+    } catch (SQLException ex) {
+        Logger.getLogger(SanPhamDAO.class.getName()).log(Level.SEVERE, null, ex);
     }
+
+    return result;
+}
+
 
     @Override
     public int delete(String t) {
@@ -151,35 +168,7 @@ public class SanPhamDAO implements DAOinterface<SanPhamDTO> {
         return result;
     }
     
-    public SanPhamDTO selectByDanhMuc(String t) {
-        SanPhamDTO result = null;
-        try {
-            Connection con = (Connection) JDBCUtil.getConnection();
-            String sql = "SELECT * FROM SANPHAM WHERE DANHMUC = ?";
-            PreparedStatement pst = (PreparedStatement) con.prepareStatement(sql);
-            pst.setString(1, t);
-            ResultSet rs = (ResultSet) pst.executeQuery();
-            while (rs.next()) {
-                int madm = rs.getInt("MSP");
-                String tendm = rs.getString("TEN");
-                String HINHANH = rs.getString("HINHANH");
-                String DANHMUC = rs.getString("DANHMUC");
-                int NAMXB = rs.getInt("NAMXB");
-                int MNXB = rs.getInt("MNXB");
-                String TENTG = rs.getString("TENTG");
-                int MKVS = rs.getInt("MKVS");
-                int TIENX = rs.getInt("TIENX");
-                int TIENN = rs.getInt("TIENN");
-                int SL = rs.getInt("SL");
-                String ISBN = rs.getString("ISBN");
-                result = new SanPhamDTO(madm, tendm, HINHANH, DANHMUC, NAMXB, MNXB, TENTG, MKVS, TIENX, TIENN, SL, ISBN);
-            }
-            JDBCUtil.closeConnection(con);
-        } catch (SQLException e) {
-            System.out.println(e);
-        }
-        return result;
-    }
+  
 
     @Override
     public int getAutoIncrement() {
