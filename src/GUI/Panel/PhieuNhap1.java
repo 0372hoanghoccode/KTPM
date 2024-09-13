@@ -82,8 +82,14 @@ public final class PhieuNhap1 extends JPanel implements ActionListener, KeyListe
         this.m = m;
         this.nv = nv;
         initComponent();
-        this.listPhieu = lohangdao.selectAll();
-        loadDataTalbe(this.listPhieu);
+        this.listPhieu = lohangdao.getAll();
+         for (KhuVucSach1DTO khuVuc : listPhieu) {
+            System.out.println("Mã Khu Vực: " + khuVuc.getMLH());
+            System.out.println("Tên Khu Vực: " + khuVuc.getTT());
+           
+            System.out.println("------------------------------");
+        }
+        loadDataTable(this.listPhieu);
     }
 
     public void initPadding() {
@@ -342,4 +348,19 @@ public final class PhieuNhap1 extends JPanel implements ActionListener, KeyListe
 //            Logger.getLogger(PhieuNhap.class.getName()).log(Level.SEVERE, null, ex);
 //        }
 //    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @Override
+    public void itemStateChanged(ItemEvent e) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
 }

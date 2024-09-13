@@ -3,6 +3,7 @@ package BUS;
 import DAO.ChiTietLoHangDAO;
 import DAO.ChiTietPhieuNhapDAO;
 import DAO.PhieuNhapDAO;
+import DTO.ChiTietLoHangDTO;
 import DTO.ChiTietPhieuDTO;
 import DTO.ChiTietPhieuNhapDTO;
 import DTO.SanPhamDTO;
@@ -36,9 +37,22 @@ public class PhieuNhapBUS {
     }
     
     
+      public int getProductQuantityInLot(String lotCode, int productCode) {
+        return ChiTietLoHangDAO.getProductQuantityInLot(lotCode, productCode);
+    }
+    
      public static boolean checkProductInLot(String lotCode, int productCode) {
         return ChiTietLoHangDAO.checkProductInLot(lotCode, productCode);
     }
+     
+     public boolean updateProductInLot(ChiTietLoHangDTO productDetail) {
+    return ChiTietLoHangDAO.updateProductInLot(productDetail);
+}
+     
+     public boolean addProductToLot(ChiTietLoHangDTO productDetail) {
+    return ChiTietLoHangDAO.addProductToLot(productDetail);
+}
+
 
     public ArrayList<SanPhamDTO> convertHashMapToArray(HashMap<Integer, ArrayList<SanPhamDTO>> chitietsanpham) {
         ArrayList<SanPhamDTO> result = new ArrayList<>();

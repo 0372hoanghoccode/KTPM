@@ -92,26 +92,7 @@ public class KhuVucSach1DAO implements DAOinterface<KhuVucSach1DTO> {
         return result;
     }
 
-    @Override
-    public ArrayList<KhuVucSach1DTO> selectAll() {
-        ArrayList<KhuVucSach1DTO> result = new ArrayList<KhuVucSach1DTO>();
-        try {
-            Connection con = (Connection) JDBCUtil.getConnection();
-            String sql = "SELECT * FROM lohang WHERE TT = 1";
-            PreparedStatement pst = (PreparedStatement) con.prepareStatement(sql);
-            ResultSet rs = (ResultSet) pst.executeQuery();
-            while (rs.next()) {
-                int MLH = rs.getInt("MLH");
-                String TEN = rs.getString("TEN");
-                String GHICHU = rs.getString("GHICHU");
-                KhuVucSach1DTO kvk = new KhuVucSach1DTO(MLH, TEN, GHICHU);
-                result.add(kvk);
-            }
-            JDBCUtil.closeConnection(con);
-        } catch (Exception e) {
-        }
-        return result;
-    }
+
     
     
 public ArrayList<KhuVucSach1DTO> getAll() {
@@ -250,6 +231,11 @@ public String[] getAll1() {
             e.printStackTrace();
         }
         return false;
+    }
+
+    @Override
+    public ArrayList<KhuVucSach1DTO> selectAll() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
     
 }

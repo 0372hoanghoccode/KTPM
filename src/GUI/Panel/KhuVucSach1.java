@@ -2,8 +2,10 @@ package GUI.Panel;
 
 import BUS.KhuVucSachBUS;
 import BUS.SanPhamBUS;
+import DAO.ChiTietLoHangDAO;
 import DAO.KhuVucSach1DAO;
 import DAO.KhuVucSachDAO;
+import DTO.ChiTietLoHangDTO;
 import DTO.KhuVucSach1DTO;
 import DTO.KhuVucSachDTO;
 import DTO.SanPhamDTO;
@@ -43,7 +45,7 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import GUI.Dialog.KhuVucSach1Dialog;
 
-public class KhuVucSach1 extends JPanel implements ActionListener, ItemListener {
+public final class KhuVucSach1 extends JPanel implements ActionListener, ItemListener {
 
     PanelBorderRadius main, functionBar;
     JPanel contentCenter;
@@ -60,6 +62,7 @@ public class KhuVucSach1 extends JPanel implements ActionListener, ItemListener 
     public SanPhamBUS spBUS = new SanPhamBUS();
 
     public ArrayList<KhuVucSach1DTO> listKVK = lohangBUS.getAll();
+    
     public ArrayList<SanPhamDTO> listSP = spBUS.getAll();
 
     private void initComponent() {
@@ -79,18 +82,32 @@ public class KhuVucSach1 extends JPanel implements ActionListener, ItemListener 
         columnModel.getColumn(2).setPreferredWidth(300);
         columnModel.getColumn(1).setCellRenderer(centerRenderer);
         columnModel.getColumn(2).setCellRenderer(centerRenderer);
-        // tableKhuvuc.setFocusable(false);
+        tableKhuvuc.setFocusable(false);
+tableKhuvuc.addMouseListener(new MouseAdapter() {
+    @Override
+    public void mousePressed(MouseEvent e) {
+        int index = tableKhuvuc.getSelectedRow();
+        if (index != -1) {
+            // Lấy mã lô hàng từ hàng được chọn
+            String maLoHang = tableKhuvuc.getValueAt(index, 0).toString(); // Giả định mã lô hàng nằm ở cột 0
 
-        // tableKhuvuc.addMouseListener(new MouseAdapter() {
-        //     @Override
-        //     public void mousePressed(MouseEvent e) {
-        //         int index = tableKhuvuc.getSelectedRow();
-        //         if (index != -1) {
-        //             ArrayList<SanPhamDTO> listSP = spBUS.getByMakhuvuc(listKVK.get(index).getMakhuvuc());
-        //             ListCustomersInDePot(listSP);
-        //         }
-        //     }
-        // });
+       
+            ChiTietLoHangDAO chiTietLoHangBUS = new ChiTietLoHangDAO();
+            ArrayList<ChiTietLoHangDTO> listChiTietLoHang = chiTietLoHangBUS.getByMaLoHang(maLoHang);
+
+            if (listChiTietLoHang != null && !listChiTietLoHang.isEmpty()) {
+                // Xử lý hoặc hiển thị chi tiết lô hàng
+                // Ví dụ: ListCustomersInDePot(listChiTietLoHang);
+                // Hiển thị chi tiết lô hàng (ví dụ: hiển thị trong bảng, dialog, v.v.)
+            ///    showChiTietLoHang(listChiTietLoHang);
+            } else {
+                // Xử lý nếu không có chi tiết lô hàng cho mã lô hàng này
+                JOptionPane.showMessageDialog(null, "Không tìm thấy chi tiết lô hàng cho mã lô hàng: " + maLoHang);
+            }
+        }
+    }
+});
+
 
         this.setBackground(BackgroundColor);
         this.setLayout(new GridLayout(1, 1));
@@ -159,6 +176,12 @@ public class KhuVucSach1 extends JPanel implements ActionListener, ItemListener 
         initComponent();
         tableKhuvuc.setDefaultEditor(Object.class, null);
         loadDataTable(listKVK);
+            for (KhuVucSach1DTO khuVuc : listKVK) {
+            System.out.println("Mã Khu Vực: " + khuVuc.getMLH());
+            System.out.println("Tên Khu Vực: " + khuVuc.getTT());
+           
+            System.out.println("------------------------------");
+        }
     }
 
     public void loadDataTable(ArrayList<KhuVucSach1DTO> result) {
@@ -205,34 +228,6 @@ public class KhuVucSach1 extends JPanel implements ActionListener, ItemListener 
         loadDataTable(listKVK);
     }
 
-    // public void ListCustomersInDePot(ArrayList<SanPhamDTO> result) {
-    //     right.removeAll();
-    //     JLabel tit = new JLabel("Danh sách sản phẩm đang có ở khu vực");
-    //     tit.setFont(new java.awt.Font(FlatRobotoFont.FAMILY, 1, 16));
-    //     right.add(tit);
-    //     itemTaskbar listItem[] = new itemTaskbar[result.size()];
-    //     int i = 0;
-    //     for (SanPhamDTO sp : result) {
-    //         if (sp.getSL() != 0) {
-    //             listItem[i] = new itemTaskbar(sp.getHINHANH(), sp.getTEN(), sp.getSL());
-    //             right.add(listItem[i]);
-    //             i++;
-    //         }
-    //     }
-
-    //     if (i == 0) {
-    //         if (result.isEmpty()) {
-    //             JLabel lblIcon = new JLabel("Không có sản phẩm");
-    //             lblIcon.setPreferredSize(new Dimension(380, 300));
-    //             lblIcon.setIcon(new FlatSVGIcon("./icon/null.svg"));
-    //             lblIcon.setHorizontalTextPosition(SwingConstants.CENTER);
-    //             lblIcon.setVerticalTextPosition(SwingConstants.TOP);
-    //             right.add(lblIcon);
-    //         }
-    //     }
-    //     right.repaint();
-    //     right.validate();
-    // }
 
     public int getRowSelected() {
         int index = tableKhuvuc.getSelectedRow();

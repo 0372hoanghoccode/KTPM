@@ -35,7 +35,7 @@ public class ChiTietPhieuNhapDAO implements ChiTietInterface<ChiTietPhieuNhapDTO
             } catch (SQLException ex) {
                 Logger.getLogger(ChiTietPhieuNhapDAO.class.getName()).log(Level.SEVERE, null, ex);
             }
-            SanPhamDAO.getInstance().updateSoLuongTon(t.get(i).getMSP(), t.get(i).getSL());
+       //     SanPhamDAO.getInstance().updateSoLuongTon(t.get(i).getMSP(), t.get(i).getSL());
         }
         return result;
     }
@@ -79,7 +79,7 @@ public class ChiTietPhieuNhapDAO implements ChiTietInterface<ChiTietPhieuNhapDTO
                 int masp = rs.getInt("MSP");
                 int soluong = rs.getInt("SL");
                 int tiennhap = rs.getInt("TIENNHAP");
-                int hinhthucnhap = rs.getInt("HINHTHUC");
+                int hinhthucnhap = rs.getInt("MLH");
                 ChiTietPhieuNhapDTO ctphieu = new ChiTietPhieuNhapDTO(maphieu, masp,  soluong, tiennhap, hinhthucnhap);
                 result.add(ctphieu);
             }

@@ -141,10 +141,9 @@ public class SanPhamDAO implements DAOinterface<SanPhamDTO> {
                 String TENTG = rs.getString("TENTG");
                 int MKVS = rs.getInt("MKVS");
                 int TIENX = rs.getInt("TIENX");
-                int TIENN = rs.getInt("TIENN");
                 int SL = rs.getInt("SL");
-                String ISBN = rs.getString("ISBN");
-                result = new SanPhamDTO(madm, tendm, HINHANH, DANHMUC, NAMXB, MNXB, TENTG, MKVS, TIENX, TIENN, SL, ISBN);
+              
+                result = new SanPhamDTO(madm, tendm, HINHANH, DANHMUC, NAMXB, MNXB, TENTG, MKVS, TIENX, SL);
             }
             JDBCUtil.closeConnection(con);
         } catch (SQLException e) {
@@ -204,26 +203,26 @@ public class SanPhamDAO implements DAOinterface<SanPhamDTO> {
         return result;
     }
 
-    public int updateSoLuongTon(int MSP, int soluong) {
-        int quantity_current = this.selectById(Integer.toString(MSP)).getSL();
-//        System.out.print("Còn nhiêu sau khi bán:" + quantity_current);
-//        System.out.println("Số lượng trả nè: " + soluong);
-        
-        int result = 0;
-        int quantity_change = quantity_current + soluong;
-        try {
-            Connection con = (Connection) JDBCUtil.getConnection();
-            String sql = "UPDATE `SANPHAM` SET `SL`=? WHERE MSP = ?";
-            PreparedStatement pst = (PreparedStatement) con.prepareStatement(sql);
-            pst.setInt(1, quantity_change);
-            pst.setInt(2, MSP);
-            result = pst.executeUpdate();
-            JDBCUtil.closeConnection(con);
-        } catch (SQLException ex) {
-            Logger.getLogger(SanPhamDAO.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return result;
-    }
+//    public int updateSoLuongTon(int MSP, int soluong) {
+//        int quantity_current = this.selectById(Integer.toString(MSP)).getSL();
+////        System.out.print("Còn nhiêu sau khi bán:" + quantity_current);
+////        System.out.println("Số lượng trả nè: " + soluong);
+//        
+//        int result = 0;
+//        int quantity_change = quantity_current + soluong;
+//        try {
+//            Connection con = (Connection) JDBCUtil.getConnection();
+//            String sql = "UPDATE `SANPHAM` SET `SL`=? WHERE MSP = ?";
+//            PreparedStatement pst = (PreparedStatement) con.prepareStatement(sql);
+//            pst.setInt(1, quantity_change);
+//            pst.setInt(2, MSP);
+//            result = pst.executeUpdate();
+//            JDBCUtil.closeConnection(con);
+//        } catch (SQLException ex) {
+//            Logger.getLogger(SanPhamDAO.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+//        return result;
+//    }
        public int updateSoLuongTonSauKhiTraHang(int MSP, int soluong) {
         int quantity_current = this.selectById(Integer.toString(MSP)).getSL();
 //        System.out.print("Còn nhiêu sau khi bán:" + quantity_current);

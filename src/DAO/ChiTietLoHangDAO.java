@@ -26,7 +26,40 @@ public class ChiTietLoHangDAO implements ChiTietInterface<ChiTietLoHangDTO>{
     }
 
     
-public boolean addProductToLot(ChiTietLoHangDTO productDetail) {
+    
+
+ public ArrayList<ChiTietLoHangDTO> getByMaLoHang(String maLoHang) {
+        ArrayList<ChiTietLoHangDTO> list = new ArrayList<>();
+        String sql = "SELECT * FROM ctlohang WHERE MLH = ?";
+
+        try (Connection con = JDBCUtil.getConnection(); 
+             PreparedStatement pstmt = con.prepareStatement(sql)) {
+            
+            // Thiết lập tham số cho truy vấn
+            pstmt.setString(1, maLoHang);
+            
+            // Thực hiện truy vấn
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                // Tạo đối tượng DTO từ dữ liệu kết quả
+                ChiTietLoHangDTO dto = new ChiTietLoHangDTO(
+                    rs.getString("MLH"),
+                    rs.getInt("MSP"),
+                    rs.getInt("soLuong"),
+                    rs.getInt("giaNhap")
+                );
+                // Thêm đối tượng vào danh sách
+                list.add(dto);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        
+        return list; // Trả về danh sách chi tiết lô hàng
+    }
+    
+    
+public static   boolean addProductToLot(ChiTietLoHangDTO productDetail) {
         String sql = "INSERT INTO ChiTietLoHang (maLoHang, maSanPham, soLuong, giaNhap) VALUES (?, ?, ?, ?)";
 
         try 
@@ -47,10 +80,57 @@ public boolean addProductToLot(ChiTietLoHangDTO productDetail) {
             return false; // Trả về false nếu có lỗi xảy ra
         }
     }
+
+
+  public static int getProductQuantityInLot(String lotCode, int productCode) {
+        String sql = "SELECT soLuong FROM ctlohang WHERE MLH = ? AND MSP = ?";
+        int quantity = 0;
+
+        try (Connection con = JDBCUtil.getConnection(); 
+             PreparedStatement pstmt = con.prepareStatement(sql)) {
+            
+            // Thiết lập các tham số cho truy vấn
+            pstmt.setString(1, lotCode); // Mã lô hàng
+            pstmt.setInt(2, productCode); // Mã sản phẩm
+            
+            // Thực hiện truy vấn
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                // Lấy số lượng từ kết quả truy vấn
+                quantity = rs.getInt("soLuong");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return quantity; // Trả về số lượng sản phẩm trong lô
+    }
+
+
+ public static boolean updateProductInLot(ChiTietLoHangDTO productDetail) {
+        // Câu lệnh SQL để cập nhật thông tin sản phẩm
+        String sql = "UPDATE ctlohang SET soluong = ?, giaNhap = ? WHERE MLH = ? AND MSP = ?";
+
+        try (
+                Connection con = (Connection) JDBCUtil.getConnection();PreparedStatement pstmt = con.prepareStatement(sql)) {
+            // Thiết lập các tham số cho truy vấn
+            pstmt.setInt(1, productDetail.getSoLuong()); // Cập nhật số lượng sản phẩm
+            pstmt.setDouble(2, productDetail.getGiaNhap()); // Cập nhật giá nhập sản phẩm
+            pstmt.setString(3, productDetail.getMLH()); // Mã lô hàng
+            pstmt.setInt(4, productDetail.getMSP()); // Mã sản phẩm
+
+            // Thực hiện truy vấn và kiểm tra số hàng bị ảnh hưởng
+            int rowsAffected = pstmt.executeUpdate();
+            return rowsAffected > 0; // Trả về true nếu ít nhất 1 hàng bị ảnh hưởng
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false; // Trả về false nếu có lỗi xảy ra
+        }
+    }
     @Override
     public int insert(ArrayList<ChiTietLoHangDTO> t) {
         
-        String sql = "INSERT INTO ChiTietLoHang (maLoHang, maSanPham, soLuong, giaNhap) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO ctlohang (maLoHang, maSanPham, soLuong, giaNhap) VALUES (?, ?, ?, ?)";
 
         try (
                Connection con = (Connection) JDBCUtil.getConnection();PreparedStatement pstmt = con.prepareStatement(sql)) {
@@ -172,7 +252,7 @@ public boolean addProductToLot(ChiTietLoHangDTO productDetail) {
     
     
       public static boolean checkProductInLot(String lotCode, int productCode) {
-        String query = "SELECT COUNT(*) FROM ctlohang WHERE ma_lohang = ? AND ma_sanpham = ?";
+        String query = "SELECT COUNT(*) FROM ctlohang WHERE MLH = ? AND MSP = ?";
         try (
                 Connection con = (Connection) JDBCUtil.getConnection();
                 PreparedStatement preparedStatement = con.prepareStatement(query)) {
