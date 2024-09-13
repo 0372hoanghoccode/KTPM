@@ -38,7 +38,7 @@ import helper.Formater;
 import helper.writePDF;
 
 public final class ChiTietPhieuDialog extends JDialog implements ActionListener {
-
+// đây nè
     HeaderTitle titlePage;
     JPanel pnmain, pnmain_top, pnmain_bottom, pnmain_btn; //bỏ pnmain_bottom_right, pnmain_bottom_left 
     InputForm txtMaPhieu, txtNhanVien, txtThoiGian;

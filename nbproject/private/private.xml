@@ -3,8 +3,13 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/D:/HoangHoan/KTPM/QLThuVien/src/BUS/NhomQuyenBUS.java</file>
-            <file>file:/D:/HoangHoan/KTPM/QLThuVien/src/BUS/PhieuNhapBUS.java</file>
+            <file>file:/C:/Users/Admin/Desktop/KTPM/KTPM/src/GUI/Main.java</file>
+            <file>file:/C:/Users/Admin/Desktop/KTPM/KTPM/src/GUI/Dialog/ChiTietPhieuDialog.java</file>
+            <file>file:/C:/Users/Admin/Desktop/KTPM/KTPM/src/GUI/login_page.java</file>
+            <file>file:/C:/Users/Admin/Desktop/KTPM/KTPM/src/GUI/Panel/SanPham.java</file>
+            <file>file:/C:/Users/Admin/Desktop/KTPM/KTPM/src/GUI/MainKH.java</file>
+            <file>file:/C:/Users/Admin/Desktop/KTPM/KTPM/src/DAO/ChiTietQuyenDAO.java</file>
+            <file>file:/C:/Users/Admin/Desktop/KTPM/KTPM/src/config/JDBCUtil.java</file>
         </group>
     </open-files>
 </project-private>
