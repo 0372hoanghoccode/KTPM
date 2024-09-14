@@ -122,7 +122,7 @@ public class TaiKhoanKH extends JPanel implements ActionListener, ItemListener {
         }
 
         functionBar.add(mainFunction);
-        search = new IntegratedSearch(new String[]{"Tất cả", "Mã khách hàng", "Tên đăng nhập"});
+        search = new IntegratedSearch(new String[]{"Tất cả","Tên đăng nhập"});
         search.cbxChoose.addItemListener(this);
         functionBar.add(search);
         search.txtSearchForm.addKeyListener(new KeyAdapter() {

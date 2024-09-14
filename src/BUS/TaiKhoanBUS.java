@@ -163,13 +163,14 @@ public int getTaiKhoanByMaKH(int manv) {
                     }
                 }
             }
-            case "Username" -> {
+            case "Tên đăng nhập" -> {
                 for (TaiKhoanDTO i : listTaiKhoan) {
                     if (i.getTDN().toLowerCase().contains(txt)) {
                         result.add(i);
                     }
                 }
             }
+            
         }
         return result;
     }
@@ -180,19 +181,12 @@ public int getTaiKhoanByMaKH(int manv) {
         switch (type) {
             case "Tất cả" -> {
                 for (TaiKhoanDTO i : listTaikhoanKH) {
-                    if (Integer.toString(i.getMNV()).contains(txt) || i.getTDN().contains(txt) ) {
+                    if ( i.getTDN().contains(txt) ) {
                         result.add(i);
                     }
                 }
             }
-            case "Mã nhân viên" -> {
-                for (TaiKhoanDTO i : listTaikhoanKH) {
-                    if (Integer.toString(i.getMNV()).contains(txt)) {
-                        result.add(i);
-                    }
-                }
-            }
-            case "Username" -> {
+            case "Tên đăng nhập" -> {
                 for (TaiKhoanDTO i : listTaikhoanKH) {
                     if (i.getTDN().toLowerCase().contains(txt)) {
                         result.add(i);
