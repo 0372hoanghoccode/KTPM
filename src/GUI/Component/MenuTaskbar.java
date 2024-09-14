@@ -31,7 +31,7 @@ import javax.swing.border.EmptyBorder;
 import GUI.Dialog.MyAccount;
 import GUI.Panel.ThongKe.ThongKe;
 import GUI.Panel.KhuVucSach1;
-import GUI.Panel.PhieuNhap1;
+// import GUI.Panel.PhieuNhap1;
 public class MenuTaskbar extends JPanel {
 
     TrangChu trangChu;
@@ -274,7 +274,7 @@ public class MenuTaskbar extends JPanel {
 //            }
 //        });
 
-        listitem.get(8).addMouseListener(new MouseAdapter() {
+        listitem.get(9).addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent evt) {
                 phieuXuat = new PhieuXuat(main, user);

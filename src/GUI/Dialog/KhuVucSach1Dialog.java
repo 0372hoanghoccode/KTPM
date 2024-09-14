@@ -367,29 +367,29 @@ if (e.getSource() == btnThem && Validation()) {
 
 
 
-     else if (e.getSource() == btnCapNhat && Validation()) {
-        String tenkhuvuc1 = this.txtMaPhieu.getText();
+    //  else if (e.getSource() == btnCapNhat && Validation()) {
+    //     String tenkhuvuc1 = this.txtMaPhieu.getText();
         
-        // Check for duplicate name, but skip if it's the same as the current one
-        if (dao.doesNameExist(tenkhuvuc1) && !tenkhuvuc1.equals(kvk.getTenkhuvuc())) {
-            JOptionPane.showMessageDialog(this, "Tên khu vực đã tồn tại. Vui lòng chọn tên khác.");
-            return;
-        }
+    //     // Check for duplicate name, but skip if it's the same as the current one
+    //     if (dao.doesNameExist(tenkhuvuc1) && !tenkhuvuc1.equals(kvk.getTenkhuvuc())) {
+    //         JOptionPane.showMessageDialog(this, "Tên khu vực đã tồn tại. Vui lòng chọn tên khác.");
+    //         return;
+    //     }
         
-        String ghichu1 = this.txtNhanVien.getText();
-        KhuVucSachDTO updatedKhuVuc = new KhuVucSachDTO(kvk.getMakhuvuc(), tenkhuvuc1, ghichu1);
+    //     String ghichu1 = this.txtNhanVien.getText();
+    //     KhuVucSachDTO updatedKhuVuc = new KhuVucSachDTO(kvk.getMakhuvuc(), tenkhuvuc1, ghichu1);
 
-        // Update khu vuc
-        jpkvk.kvkBUS.update(updatedKhuVuc);
-        System.out.println("Khu vuc updated: " + updatedKhuVuc);
+    //     // Update khu vuc
+    //     jpkvk.kvkBUS.update(updatedKhuVuc);
+    //     System.out.println("Khu vuc updated: " + updatedKhuVuc);
 
-        // Reload data table
-        jpkvk.loadDataTable(jpkvk.listKVK);
-        System.out.println("Data table reloaded.");
+    //     // Reload data table
+    //     jpkvk.loadDataTable(jpkvk.listKVK);
+    //     System.out.println("Data table reloaded.");
 
-        // Close the window
-        dispose();
-    }
+    //     // Close the window
+    //     dispose();
+    // }
 }
 
 

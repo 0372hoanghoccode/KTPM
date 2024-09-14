@@ -1,30 +1,44 @@
-///*
+// /*
 // * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
 // * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
 // */
-//package BUS;
-//
-//import DAO.ChiTietLoHangDAO;
-//
-//import DAO.KhuVucSach1DAO;
-//
-//import DTO.ChiTietPhieuDTO;
-//import DTO.PhieuXuatDTO;
-//import java.util.ArrayList;
-//
-///**
+// package BUS;
+
+// import DAO.ChiTietLoHangDAO;
+
+// import DAO.KhuVucSach1DAO;
+
+// import DTO.ChiTietPhieuDTO;
+// import DTO.KhuVucSach1DTO;
+// import DTO.PhieuXuatDTO;
+// import java.util.ArrayList;
+
+// /**
 // *
 // * @author ASUS Vivobook
 // */
-//public class lohangBUS {
-//    
-//      private final KhuVucSach1DAO KhuVucSach1DAO = KhuVucSach1DAO.getInstance();
-//
-//    private final ChiTietLoHangDAO ChiTietLoHangDAO = ChiTietLoHangDAO.getInstance();
-//    private ArrayList<PhieuXuatDTO> listPhieuXuat;
-//    
-//    public ArrayList<ChiTietPhieuDTO> selectCTP(int maphieu) {
-//        return ChiTietLoHangDAO.selectAll(Integer.toString(maphieu));
-//    }
-//    
-//}
+// public class lohangBUS {
+//         private ArrayList<KhuVucSach1DTO> listLH;
+
+//         public ArrayList<KhuVucSach1DTO> search(String txt, String type) {
+//         ArrayList<KhuVucSach1DTO> result = new ArrayList<>();
+//         txt = txt.toLowerCase();
+//         switch (type) {
+//             case "Tất cả" -> {
+//                 for (KhuVucSach1DTO i : listLH) {
+//                     if (i.getMLH().toLowerCase().contains(txt) ) {
+//                         result.add(i);
+//                     }
+//                 }
+//             }
+//             case "Mã khu vực lô" -> {
+//                 for (KhuVucSach1DTO i : listLH) {
+//                     if (i.getMLH().toLowerCase().contains(txt)) {
+//                         result.add(i);
+//                     }
+//                 }
+//             }
+//         }
+//         return result;
+//     }
+// }

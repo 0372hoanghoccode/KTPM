@@ -56,7 +56,7 @@ public class PhanQuyen extends JPanel implements ActionListener {
         functionBar.setLayout(new GridLayout(1, 2, 50, 0));
         functionBar.setBorder(new EmptyBorder(10, 10, 10, 10));
 
-        String[] action = {"create", "update", "delete", "detail", "export"};
+        String[] action = {"create", "update", "detail", "export"};
         mainFunction = new MainFunction(m.user.getMNQ(), "nhomquyen", action);
         for (String ac : action) {
             mainFunction.btn.get(ac).addActionListener(this);
@@ -130,16 +130,18 @@ public class PhanQuyen extends JPanel implements ActionListener {
             if (index >= 0) {
                 new PhanQuyenDialog(nhomquyenBUS,this, owner, "Chi tiết nhóm quyền", true, "view", listnhomquyen.get(index));
             }
-        } else if (e.getSource() == mainFunction.btn.get("delete")) {
-            int index = this.getRowSelected();
-            if (index >= 0) {
-                int input = JOptionPane.showConfirmDialog(null,"Bạn có chắc chắn muốn xóa nhóm quyền!", "Xóa nhóm quyền",JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
-                if (input == 0) {
-                    nhomquyenBUS.delete(listnhomquyen.get(index));
-                    loadDataTalbe(listnhomquyen);
-                }
-            }
-        } else if (e.getSource() == mainFunction.btn.get("export")) {
+        } 
+        // else if (e.getSource() == mainFunction.btn.get("delete")) {
+        //     int index = this.getRowSelected();
+        //     if (index >= 0) {
+        //         int input = JOptionPane.showConfirmDialog(null,"Bạn có chắc chắn muốn xóa nhóm quyền!", "Xóa nhóm quyền",JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
+        //         if (input == 0) {
+        //             nhomquyenBUS.delete(listnhomquyen.get(index));
+        //             loadDataTalbe(listnhomquyen);
+        //         }
+        //     }
+        // } 
+        else if (e.getSource() == mainFunction.btn.get("export")) {
             try {
                 JTableExporter.exportJTableToExcel(tblNhomQuyen);
             } catch (IOException ex) {

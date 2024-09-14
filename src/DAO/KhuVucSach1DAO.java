@@ -3,11 +3,14 @@ package DAO;
 import DTO.ChiTietLoHangDTO;
 import DTO.ChiTietPhieuDTO;
 import DTO.KhuVucSach1DTO;
+import DTO.TaiKhoanDTO;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import config.JDBCUtil;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -17,7 +20,6 @@ public class KhuVucSach1DAO implements DAOinterface<KhuVucSach1DTO> {
 
     private final  ChiTietLoHangDAO chitietlohang = new ChiTietLoHangDAO();
     ArrayList<ChiTietLoHangDTO> chitiet = chitietlohang.selectAll();
-    
     
     
  public static ArrayList<ChiTietPhieuDTO> selectCTP(int maphieu) {
@@ -110,9 +112,9 @@ public class KhuVucSach1DAO implements DAOinterface<KhuVucSach1DTO> {
             Connection con = (Connection) JDBCUtil.getConnection();
             String sql = "UPDATE `lohang` SET `TEN`=?,`GHICHU`=? WHERE `MLH`=?";
             PreparedStatement pst = (PreparedStatement) con.prepareStatement(sql);
-            pst.setString(1, t.getTenkhuvuc());
-            pst.setString(2, t.getGhichu());
-            pst.setInt(3, t.getMakhuvuc());
+            pst.setString(1, t.getMLH());
+            pst.setTimestamp(2, t.getNgay());
+            pst.setInt(3, t.getTT());
             result = pst.executeUpdate();
             JDBCUtil.closeConnection(con);
         } catch (SQLException ex) {
@@ -223,19 +225,24 @@ public String[] getAll1() {
     public KhuVucSach1DTO selectById(String t) {
         KhuVucSach1DTO result = null;
         try {
-            Connection con = (Connection) JDBCUtil.getConnection();
+            Connection con = JDBCUtil.getConnection();
             String sql = "SELECT * FROM lohang WHERE MLH=?";
-            PreparedStatement pst = (PreparedStatement) con.prepareStatement(sql);
+            PreparedStatement pst = con.prepareStatement(sql);
             pst.setString(1, t);
-            ResultSet rs = (ResultSet) pst.executeQuery();
+            ResultSet rs = pst.executeQuery();
+            
             while (rs.next()) {
-                int MLH = rs.getInt("MLH");
-                String TEN = rs.getString("TEN");
-                String GHICHU = rs.getString("GHICHU");
-                result = new KhuVucSach1DTO(MLH, TEN, GHICHU);
+                String MLH = rs.getString("MLH");    // Get MLH as String
+                Timestamp Ngay = rs.getTimestamp("Ngay"); // Get Ngay as Timestamp
+                int TT = rs.getInt("TT"); // Get TT as int
+    
+                // Pass values to the KhuVucSach1DTO constructor
+                result = new KhuVucSach1DTO(MLH, Ngay, TT);
             }
+            
             JDBCUtil.closeConnection(con);
         } catch (Exception e) {
+            e.printStackTrace(); // Log any errors
         }
         return result;
     }
@@ -283,4 +290,6 @@ public String[] getAll1() {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
     
+
 }
+

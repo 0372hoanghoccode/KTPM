@@ -69,7 +69,7 @@ public final class KhuVucSach1 extends JPanel implements ActionListener, ItemLis
         tableKhuvuc = new JTable();
         tblModel = new DefaultTableModel();
         tableKhuvuc.setBackground(new Color(245, 250, 250)); 
-        String[] header = new String[]{"Mã lô", "Ghi Chú " , "Thời gian", "Trang thái"};
+        String[] header = new String[]{"Mã lô","Thời gian", "Trang thái"};
         tblModel.setColumnIdentifiers(header);
         tableKhuvuc.setModel(tblModel);
         scrollTableSanPham.setViewportView(tableKhuvuc);
@@ -133,7 +133,7 @@ tableKhuvuc.addMouseListener(new MouseAdapter() {
         }
         functionBar.add(mainFunction);
 
-        search = new IntegratedSearch(new String[]{"Tất cả", "Mã khu vực lô", "Tên khu vực lô"});
+        search = new IntegratedSearch(new String[]{"Tất cả", "Mã khu vực lô"});
         search.cbxChoose.addItemListener(this);
 //        search.txtSearchForm.addKeyListener(new KeyAdapter() {
 //            @Override
