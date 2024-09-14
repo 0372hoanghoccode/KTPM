@@ -219,14 +219,14 @@ public final class TaoPhieuNhap extends JPanel implements ItemListener, ActionLi
         txtMaISBN.setEditable(false);
         txtMaISBN.setVisible(false);
         // cái này dùng để nhập isbn dô khung txtMaISBN có thể search đc sp, nhưng disable ko dùng ròi
-        txtMaISBN.getTxtForm().addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                ArrayList<SanPhamDTO> rs = spBUS.search(txtMaISBN.getText(), "ISBN");
-                loadDataTalbeSanPham(rs);
-            //thêm load lại inputform
-            }
-        });
+//        txtMaISBN.getTxtForm().addKeyListener(new KeyAdapter() {
+//            @Override
+//            public void keyReleased(java.awt.event.KeyEvent evt) {
+//                ArrayList<SanPhamDTO> rs = spBUS.search(txtMaISBN.getText(), "ISBN");
+//                loadDataTalbeSanPham(rs);
+//            //thêm load lại inputform
+//            }
+//        });
 
         txtDongia = new InputForm("Giá nhập");
         PlainDocument dongia = (PlainDocument) txtDongia.getTxtForm().getDocument();
