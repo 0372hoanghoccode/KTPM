@@ -3,21 +3,11 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/ASUS%20Vivobook/Desktop/KTPM/src/DTO/PhieuXuatDTO.java</file>
-            <file>file:/C:/Users/ASUS%20Vivobook/Desktop/KTPM/src/DAO/ChiTietPhieuNhapDAO.java</file>
-            <file>file:/C:/Users/ASUS%20Vivobook/Desktop/KTPM/src/GUI/Panel/KhuVucSach1.java</file>
-            <file>file:/C:/Users/ASUS%20Vivobook/Desktop/KTPM/src/BUS/PhieuNhapBUS.java</file>
-            <file>file:/C:/Users/ASUS%20Vivobook/Desktop/KTPM/src/DTO/ChiTietPhieuNhapDTO.java</file>
-            <file>file:/C:/Users/ASUS%20Vivobook/Desktop/KTPM/src/GUI/Panel/TaoPhieuXuat.java</file>
-            <file>file:/C:/Users/ASUS%20Vivobook/Desktop/KTPM/src/DAO/PhieuXuatDAO.java</file>
-            <file>file:/C:/Users/ASUS%20Vivobook/Desktop/KTPM/src/DAO/KhuVucSach1DAO.java</file>
-            <file>file:/C:/Users/ASUS%20Vivobook/Desktop/KTPM/src/GUI/Panel/TaoPhieuNhap.java</file>
-            <file>file:/C:/Users/ASUS%20Vivobook/Desktop/KTPM/src/GUI/Panel/TaoMaKhuyenMai.java</file>
-            <file>file:/C:/Users/ASUS%20Vivobook/Desktop/KTPM/src/BUS/PhieuXuatBUS.java</file>
+            <file>file:/C:/Users/ASUS%20Vivobook/Desktop/KTPM/src/DAO/ChiTietLoHangDAO.java</file>
+            <file>file:/C:/Users/ASUS%20Vivobook/Desktop/KTPM/src/GUI/Dialog/SanPhamDialog.java</file>
             <file>file:/C:/Users/ASUS%20Vivobook/Desktop/KTPM/src/GUI/Panel/SanPham.java</file>
-            <file>file:/C:/Users/ASUS%20Vivobook/Desktop/KTPM/src/GUI/Panel/PhieuXuat.java</file>
-            <file>file:/C:/Users/ASUS%20Vivobook/Desktop/KTPM/src/GUI/Panel/GioHang.java</file>
-            <file>file:/C:/Users/ASUS%20Vivobook/Desktop/KTPM/src/DAO/ChiTietPhieuXuatDAO.java</file>
+            <file>file:/C:/Users/ASUS%20Vivobook/Desktop/KTPM/src/GUI/Panel/TaoPhieuXuat.java</file>
+            <file>file:/C:/Users/ASUS%20Vivobook/Desktop/KTPM/src/DAO/SanPhamDAO.java</file>
         </group>
     </open-files>
 </project-private>

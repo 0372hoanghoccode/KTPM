@@ -23,6 +23,7 @@ import javax.swing.table.DefaultTableModel;
 import BUS.PhieuNhapBUS;
 import BUS.PhieuXuatBUS;
 import BUS.SanPhamBUS;
+import BUS.lohangBUS;
 import DAO.KhachHangDAO;
 import DAO.KhuVucSach1DAO;
 import DAO.NhanVienDAO;
@@ -98,12 +99,8 @@ public final class ChiTietPhieuDialog extends JDialog implements ActionListener 
         this.lohang = khuvucsach1DTO;
         
         lohangBUS = new KhuVucSach1DAO();
-        String mlhString = khuvucsach1DTO.getMLH();
-
-// Chuyển đổi giá trị từ String thành int
-int 
-    mlhInt = Integer.parseInt(mlhString);
-        chitietphieu = lohangBUS.selectCTP(mlhInt);
+        
+        chitietphieu = lohangBUS.selectCTP(khuvucsach1DTO.getMLH());
         initComponent(title);
 //        if(phieuxuatDTO.getTT() != 2) {
 //            btnDuyet.setEnabled(false);
@@ -222,7 +219,7 @@ int
                 if(!phieuxuatBus.checkSLPx(phieuxuat.getMP())) JOptionPane.showMessageDialog(null, "Không đủ số lượng để tạo phiếu!");
                 else {
                     phieuxuat.setTT(1);
-                 //   phieuxuatBus.update(phieuxuat);
+                    phieuxuatBus.update(phieuxuat);
                 }
             }
             if (this.phieunhap != null) {
