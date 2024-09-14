@@ -473,18 +473,18 @@ public final class TaoPhieuXuat extends JPanel {
 //        this.txtGiaGiam.setText(" ");
     }
 
-    public String[] getMaGiamGiaTable(int masp) {
-        listctMKM = mkmBUS.Getctmkm(masp);
-        int size = listctMKM.size();
-        ArrayList<String> arr = new ArrayList<>();
-        for (int i = 0; i < size; i++) {
-            if(!validateSelectDate(listctMKM.get(i))) arr.add(listctMKM.get(i).getMKM());
-        }
-        String[] tmp = new String[arr.size()];
-        for (int i = 0; i < tmp.length; i++) tmp[i] = arr.get(i);
-        tmp = Stream.concat(Stream.of("Chọn"), Arrays.stream(tmp)).toArray(String[]::new);
-        return tmp;
-    }
+//    public String[] getMaGiamGiaTable(int masp) {
+//        listctMKM = mkmBUS.Getctmkm(masp);
+//        int size = listctMKM.size();
+//        ArrayList<String> arr = new ArrayList<>();
+//        for (int i = 0; i < size; i++) {
+//            if(!validateSelectDate(listctMKM.get(i))) arr.add(listctMKM.get(i).getMKM());
+//        }
+//        String[] tmp = new String[arr.size()];
+//        for (int i = 0; i < tmp.length; i++) tmp[i] = arr.get(i);
+//        tmp = Stream.concat(Stream.of("Chọn"), Arrays.stream(tmp)).toArray(String[]::new);
+//        return tmp;
+//    }
 
     public boolean validateSelectDate(DTO.ChiTietMaKhuyenMaiDTO tmp) {
         MaKhuyenMaiDTO a = mkmBUS.selectMkm(tmp.getMKM());
@@ -531,54 +531,74 @@ public final class TaoPhieuXuat extends JPanel {
         ChiTietLoHangDTO minLohang = getLohangWithMinCode(loHangList);
             this.txtGiaXuat.setText(minLohang.getGiaNhap()*2+"");
         this.txtSoLuongSPxuat.setText(Integer.toString(phieu.getSL()));
-        cbxMaKM.setArr(getMaGiamGiaTable(ctsp.getMSP()));
+     //   cbxMaKM.setArr(getMaGiamGiaTable(ctsp.getMSP()));
     }
 
-// Hàm mới để tìm lô hàng có số lượng lớn nhất
-private ChiTietLoHangDTO getLohangWithMaxQuantity(ArrayList<ChiTietLoHangDTO> loHangList) {
-    ChiTietLoHangDTO maxLohang = null;
+
+
+
+
+  public ChiTietLoHangDTO findMinLohangWithValidQuantity(int maSP) {
+    // Lấy danh sách các chi tiết lô hàng từ DAO
+    ArrayList<ChiTietLoHangDTO> loHangList = new ChiTietLoHangDAO().findLohangByMSP(maSP);
+    
+    // Khởi tạo biến để lưu đối tượng lô hàng nhỏ nhất
+    ChiTietLoHangDTO minLohang = null;
+    int minCode = Integer.MAX_VALUE; // Giá trị lớn nhất để tìm mã nhỏ nhất
+    
+    // Duyệt qua danh sách các chi tiết lô hàng
     for (ChiTietLoHangDTO loHang : loHangList) {
-        if (maxLohang == null || loHang.getSoLuong() > maxLohang.getSoLuong()) {
-            maxLohang = loHang;
+        String mlh = loHang.getMLH(); // Mã lô hàng
+        int soLuong = loHang.getSoLuong(); // Số lượng lô hàng
+        
+        // Kiểm tra số lượng lô hàng
+        if (soLuong > 0) {
+            try {
+                int currentCode = Integer.parseInt(mlh); // Chuyển đổi mã lô hàng từ String sang int
+                
+                // Nếu chưa tìm thấy lô hàng hợp lệ nào hoặc mã hiện tại nhỏ hơn mã đã tìm thấy
+                if (minLohang == null || currentCode < minCode) {
+                    minCode = currentCode;
+                    minLohang = loHang; // Cập nhật đối tượng lô hàng nhỏ nhất
+                }
+            } catch (NumberFormatException e) {
+                // Xử lý trường hợp mã lô hàng không phải là số hợp lệ
+                System.err.println("Mã lô hàng không phải là số hợp lệ: " + mlh);
+            }
         }
     }
-    return maxLohang;
+    
+    // Trả về đối tượng lô hàng nhỏ nhất hoặc null nếu không tìm thấy lô hàng hợp lệ
+    return minLohang;
 }
 
-// Hàm tìm lô hàng có số lượng hợp lệ
-private ChiTietLoHangDTO getValidLohang(ArrayList<ChiTietLoHangDTO> loHangList) {
-    ChiTietLoHangDTO validLohang = getLohangWithMaxQuantity(loHangList);
-    // Nếu lô hàng có số lượng = 0, tìm lô hàng tiếp theo
-    while (validLohang != null && validLohang.getSoLuong() == 0) {
-        loHangList.remove(validLohang); // Loại bỏ lô hàng không hợp lệ
-        validLohang = getLohangWithMaxQuantity(loHangList);
-    }
-    return validLohang;
-}
+
 
 // Phương pháp loadDataTableSanPham đã được điều chỉnh
 public void loadDataTableSanPham(ArrayList<SanPhamDTO> result) {
     tblModelSP.setRowCount(0); // Xóa tất cả các hàng hiện tại trong bảng
-    
+    int soluong ; 
     ChiTietLoHangDAO chiTietLoHangDAO = new ChiTietLoHangDAO();
     
     for (SanPhamDTO sp : result) {
         System.out.print(sp.getMSP());
-        ArrayList<ChiTietLoHangDTO> loHangList = chiTietLoHangDAO.findLohangByMSP(sp.getMSP());
-        
-        // Tìm lô hàng hợp lệ
-        ChiTietLoHangDTO validLohang = getValidLohang(loHangList);
-        
-        if (validLohang != null) {
-            // Cập nhật bảng với mã sản phẩm, tên sản phẩm và số lượng trong lô hợp lệ
+              ChiTietLoHangDTO string= findMinLohangWithValidQuantity(sp.getMSP());
+               if (string == null)
+                    soluong = 0 ; 
+               else 
+                    soluong = string.getSoLuong();
             tblModelSP.addRow(new Object[]{
                 sp.getMSP(), 
                 sp.getTEN(), 
-                validLohang.getSoLuong()  // Số lượng trong lô hợp lệ
+               soluong  // Số lượng trong lô hợp lệ
             });
             // Cập nhật giá xuất
-            this.txtGiaXuat.setText(validLohang.getGiaNhap() * 2 + "");
-        }
+            if (string != null )
+              this.txtGiaXuat.setText(string.getGiaNhap() * 2 + "");
+            else {
+                this.txtGiaXuat.setText( "");
+            }
+        
     }
 }
 
@@ -730,11 +750,13 @@ public void eventBtnNhapHang() throws SQLException {
                 System.out.print(chiTiet.getMP());
                 if (minLohang != null) {
                     String maLoHang = minLohang.getMLH();
+                    
                     int soLuongXuat = chiTiet.getSL(); 
+                    System.out.print("Số lượng xuất " + soLuongXuat);
                     
                     // Cập nhật số lượng trong kho
-                    chiTietLoHangDAO.updateQuantity(maLoHang, -soLuongXuat); // Trừ số lượng xuất bán
-                    
+                    chiTietLoHangDAO.updateQuantity(maSp ,maLoHang, -soLuongXuat); // Trừ số lượng xuất bán
+                       
                     // Thêm chi tiết phiếu xuất vào cơ sở dữ liệu
                     ChiTietPhieuXuatDTO chiTietPhieuXuat = new ChiTietPhieuXuatDTO(chiTiet.getMP(), maSp, soLuongXuat, tien, 0); // Mã khuyến mãi là 0 nếu không có
                     chiTietPhieuXuatDAO.insert(chiTietPhieuXuat);

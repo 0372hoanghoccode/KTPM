@@ -245,20 +245,20 @@ public final class GioHang extends JPanel {
         txtGiaGiam.setPreferredSize(new Dimension(130, 20));
         
         // Xử lý sự kiện khi mã giảm giá thay đổi
-        txtMaKM.addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyReleased(KeyEvent e) {
-                String txt = txtMaKM.getText();
-                for (ChiTietMaKhuyenMaiDTO i : listctMKM) {
-                    if (i.getMKM().equals(txt)) {
-                        double giaxuat = Integer.parseInt(txtGiaXuat.getText());
-                        double phantramgiam = i.getPTG();
-                        int giagiam = (int) (giaxuat * (1 - phantramgiam / 100));
-                        txtGiaGiam.setText(Integer.toString(giagiam));
-                    }
-                }
-            }
-        });
+//        txtMaKM.addKeyListener(new KeyAdapter() {
+//            @Override
+//            public void keyReleased(KeyEvent e) {
+//                String txt = txtMaKM.getText();
+//                for (ChiTietMaKhuyenMaiDTO i : listctMKM) {
+//                    if (i.getMKM().equals(txt)) {
+//                        double giaxuat = Integer.parseInt(txtGiaXuat.getText());
+//                        double phantramgiam = i.getPTG();
+//                        int giagiam = (int) (giaxuat * (1 - phantramgiam / 100));
+//                        txtGiaGiam.setText(Integer.toString(giagiam));
+//                    }
+//                }
+//            }
+//        });
         
         // Tạo JPanel cho tất cả các thành phần
         JPanel formPanel = new JPanel(new GridLayout(6, 2, 5, 5)); // 6 hàng, 2 cột

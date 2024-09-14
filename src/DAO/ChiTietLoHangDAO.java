@@ -24,31 +24,59 @@ public class ChiTietLoHangDAO implements ChiTietInterface<ChiTietLoHangDTO>{
     public ChiTietLoHangDAO() {
        
     }
-
     
-     public void updateQuantity(String maLoHang, int soLuongChange) throws SQLException {
-        // Câu lệnh SQL để cập nhật số lượng lô hàng
-        String updateQuantitySQL = "UPDATE ctlohang SET SoLuong = SoLuong + ? WHERE MLH = ?";
+      public static  int getTotalQuantityByProduct(int maSP) throws SQLException {
+        String sql = "SELECT SUM(SoLuong) AS TotalQuantity FROM ctlohang WHERE MSP = ?";
+        int totalQuantity = 0;
 
-        PreparedStatement pstmt = null;
+        try (Connection con = JDBCUtil.getConnection();
+             PreparedStatement pstmt = con.prepareStatement(sql)) {
 
-        try {
-           Connection con = JDBCUtil.getConnection(); 
-            pstmt = con.prepareStatement(updateQuantitySQL);
-            pstmt.setInt(1, soLuongChange); // Thay đổi số lượng (âm hoặc dương)
-            pstmt.setString(2, maLoHang);   // Mã lô hàng
+            pstmt.setInt(1, maSP);
 
-            // Thực thi câu lệnh
-            int affectedRows = pstmt.executeUpdate();
-            if (affectedRows == 0) {
-                throw new SQLException("Cập nhật không thành công, không có lô hàng với mã: " + maLoHang);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    totalQuantity = rs.getInt("TotalQuantity");
+                }
             }
         } catch (SQLException e) {
             // Xử lý lỗi
             e.printStackTrace();
             throw e;
-        } 
+        }
+
+        return totalQuantity;
     }
+
+    
+  public void updateQuantity(int maSP, String maLoHang, int soLuongChange) throws SQLException {
+    // Câu lệnh SQL để cập nhật số lượng lô hàng
+    String updateQuantitySQL = "UPDATE ctlohang SET SoLuong = SoLuong + ? WHERE MSP = ? AND MLH = ?";
+
+    PreparedStatement pstmt = null;
+
+    try {
+        // Kết nối với cơ sở dữ liệu
+        Connection con = JDBCUtil.getConnection();
+        pstmt = con.prepareStatement(updateQuantitySQL);
+
+        // Thiết lập các tham số cho câu lệnh SQL
+        pstmt.setInt(1, soLuongChange); // Thay đổi số lượng (âm hoặc dương)
+        pstmt.setInt(2, maSP);           // Mã sản phẩm
+        pstmt.setString(3, maLoHang);   // Mã lô hàng
+
+        // Thực thi câu lệnh
+        int affectedRows = pstmt.executeUpdate();
+        if (affectedRows == 0) {
+            throw new SQLException("Cập nhật không thành công, không có lô hàng với mã: " + maLoHang + " và mã sản phẩm: " + maSP);
+        }
+    } catch (SQLException e) {
+        // Xử lý lỗi
+        e.printStackTrace();
+        throw e;
+    } 
+}
+
     
     public static int getProductQuantityInLot(String lotCode, int productCode) {
     String sql = "SELECT soLuong FROM ctlohang WHERE MLH = ? AND MSP = ?";

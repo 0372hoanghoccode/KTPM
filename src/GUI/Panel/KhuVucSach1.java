@@ -187,7 +187,7 @@ tableKhuvuc.addMouseListener(new MouseAdapter() {
         tblModel.setRowCount(0);
         for (KhuVucSach1DTO kvk : result) {
             tblModel.addRow(new Object[]{
-                kvk.getMLH(), kvk.getGhichu(), kvk.getNgay(),kvk.getTT()
+                kvk.getMLH(),  kvk.getNgay(),kvk.getTT()
             });
         }
     }

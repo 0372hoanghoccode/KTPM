@@ -566,39 +566,40 @@ public void eventBtnNhapHang() {
 
         // Lặp qua tất cả các sản phẩm trong chi tiết phiếu
         for (ChiTietPhieuNhapDTO product : chitietphieu) { // Giả sử chitietphieu là một danh sách sản phẩm
+            
             int productCode = product.getMSP(); // Mã sản phẩm
             int quantity = product.getSL(); // Số lượng sản phẩm
-            int price = product.getSL(); // Giá nhập sản phẩm
+            int price = product.getTIEN(); // Giá nhập sản phẩm
 
             System.out.println("Sản phẩm mã: " + productCode);
             System.out.println("Số lượng sản phẩm: " + quantity);
             System.out.println("Giá nhập sản phẩm: " + price);
 
             // Kiểm tra xem sản phẩm đã có trong mã lô chưa
-            boolean productExistsInLot = phieunhapBus.checkProductInLot(selectedLotCode, productCode);
+           // boolean productExistsInLot = phieunhapBus.checkProductInLot(selectedLotCode, productCode);
 
-            if (productExistsInLot) {
-                // Nếu sản phẩm đã có, cập nhật số lượng và giá nhập
-                int existingQuantity = phieunhapBus.getProductQuantityInLot(selectedLotCode, productCode);
-                 System.out.println("Số lượng  sản phẩm trong lô : " + existingQuantity);
-                int updatedQuantity = existingQuantity + quantity; // Cộng số lượng mới vào số lượng cũ
- System.out.println("Số lượng tổng sản phẩm trong lô : " + updatedQuantity);
-                // Cập nhật thông tin sản phẩm trong lô
-                ChiTietLoHangDTO productDetail = new ChiTietLoHangDTO(selectedLotCode, productCode, price , updatedQuantity);
-                boolean updateResult = phieunhapBus.updateProductInLot(productDetail);
-                if (!updateResult) {
-                    allProductsUpdated = false;
-                    break; // Thoát khỏi vòng lặp sản phẩm nếu có lỗi
-                }
-            } else {
+//           if (productExistsInLot) {
+//                // Nếu sản phẩm đã có, cập nhật số lượng và giá nhập
+//                int existingQuantity = phieunhapBus.getProductQuantityInLot(selectedLotCode, productCode);
+//                 System.out.println("Số lượng  sản phẩm trong lô : " + existingQuantity);
+//                int updatedQuantity = existingQuantity + quantity; // Cộng số lượng mới vào số lượng cũ
+// System.out.println("Số lượng tổng sản phẩm trong lô : " + updatedQuantity);
+//                // Cập nhật thông tin sản phẩm trong lô
+//                ChiTietLoHangDTO productDetail = new ChiTietLoHangDTO(selectedLotCode, productCode, price , updatedQuantity);
+//                boolean updateResult = phieunhapBus.updateProductInLot(productDetail);
+//                if (!updateResult) {
+//                    allProductsUpdated = false;
+//                    break; // Thoát khỏi vòng lặp sản phẩm nếu có lỗi
+//                }
+//           } else 
                 // Nếu sản phẩm chưa có, thêm sản phẩm vào mã lô
-                ChiTietLoHangDTO productDetail = new ChiTietLoHangDTO(selectedLotCode, productCode, price, quantity);
+                ChiTietLoHangDTO productDetail = new ChiTietLoHangDTO(product.getMLH()+"", productCode, price, quantity);
                 boolean addResult = phieunhapBus.addProductToLot(productDetail);
                 if (!addResult) {
                     allProductsUpdated = false;
                     break; // Thoát khỏi vòng lặp sản phẩm nếu có lỗi
                 }
-            }
+            
         }
 
         // Kiểm tra kết quả cập nhật hoặc thêm sản phẩm

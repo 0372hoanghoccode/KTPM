@@ -1,6 +1,7 @@
 package GUI.Panel;
 
 import BUS.SanPhamBUS;
+import DAO.ChiTietLoHangDAO;
 import DAO.KhuVucSachDAO;
 import DAO.NhaXuatBanDAO;
 import DTO.SanPhamDTO;
@@ -19,6 +20,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -127,8 +129,13 @@ public final class SanPham extends JPanel implements ActionListener {
         tblModel.setRowCount(0);
 System.out.print("hello");
         for (DTO.SanPhamDTO sp : result) {
-            
-            tblModel.addRow(new Object[]{sp.getMSP(), sp.getTEN(), sp.getSL(), sp.getTENTG(), sp.getDANHMUC(), sp.getNAMXB()
+            int tongsoluong = 0;
+            try {
+                tongsoluong = ChiTietLoHangDAO.getTotalQuantityByProduct(sp.getMSP());
+            } catch (SQLException ex) {
+                Logger.getLogger(SanPham.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            tblModel.addRow(new Object[]{sp.getMSP(), sp.getTEN(), tongsoluong, sp.getTENTG(), sp.getDANHMUC(), sp.getNAMXB()
                 , NhaXuatBanDAO.getInstance().selectById(sp.getMNXB() + "").getTennxb()
                 , KhuVucSachDAO.getInstance().selectById(sp.getMKVS() + " ").getTenkhuvuc()
             });

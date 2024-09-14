@@ -274,8 +274,9 @@ public final class KhuVucSach1Dialog extends JDialog implements ActionListener {
             tblModel.addRow(new Object[]{
                     i , 
                     product.getMSP(),
-                    product.getGiaNhap(),
-                    product.getSoLuong()
+                    
+                    product.getSoLuong(),
+                    product.getGiaNhap()
                    
             });
             i++;
@@ -318,22 +319,14 @@ public final class KhuVucSach1Dialog extends JDialog implements ActionListener {
         // Close the window
         dispose();
     }
-<<<<<<< HEAD
-     
-}
-
-
-
     //  else if (e.getSource() == btnCapNhat && Validation()) {
     //     String tenkhuvuc1 = this.txtMaPhieu.getText();
-=======
+
     //  else if (e.getSource() == btnHuyBo) {
     //     System.out.println("Operation cancelled.");
     //     dispose();
     // }
-     else if (e.getSource() == btnCapNhat && Validation()) {
-        String tenkhuvuc1 = this.txtMaPhieu.getText();
->>>>>>> parent of e6813b9 (maybe là xongggg)
+  
         
     //     // Check for duplicate name, but skip if it's the same as the current one
     //     if (dao.doesNameExist(tenkhuvuc1) && !tenkhuvuc1.equals(kvk.getTenkhuvuc())) {
