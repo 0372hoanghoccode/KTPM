@@ -9,6 +9,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import config.JDBCUtil;
+import java.beans.Statement;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -273,7 +274,26 @@ public String[] getAll1() {
     public ArrayList<KhuVucSach1DTO> selectAll() {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
-    
+   public static int findMaxMLH() {
+    // Replace with actual database query to find the maximum value of MLH
+    String query = "SELECT MAX(MLH) FROM lohang";
+    int maxMLH =-1 ;  // Khởi tạo với giá trị nhỏ nhất có thể
+
+    try (Connection con = JDBCUtil.getConnection();
+         PreparedStatement ps = con.prepareStatement(query);
+         ResultSet rs = ps.executeQuery()) {
+
+        if (rs.next()) {
+            // Lấy giá trị MLH lớn nhất từ kết quả truy vấn
+            maxMLH = rs.getInt(1);
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+
+    return maxMLH;
+}
+
 
 }
 

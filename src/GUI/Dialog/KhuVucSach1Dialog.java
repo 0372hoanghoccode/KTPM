@@ -212,8 +212,8 @@ private void updateLayoutForCreate() {
     // Ẩn bảng và các thành phần khác nếu có
     pnmain_bottom.removeAll(); // Xóa tất cả các thành phần trong pnmain_bottom
         // Lấy giá trị mã lô hàng lớn nhất hiện tại và cộng thêm 1
-
-    
+        int i = KhuVucSach1DAO.findMaxMLH()+1;
+    txtMaPhieu.setText(i+"");
     // Hiển thị thời gian hiện tại
     Timestamp currentTime = new Timestamp(System.currentTimeMillis());
     txtThoiGian.setText(currentTime.toString()); // Hiển thị thời gian hiện tại
