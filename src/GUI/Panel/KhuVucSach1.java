@@ -126,7 +126,7 @@ tableKhuvuc.addMouseListener(new MouseAdapter() {
         functionBar.setLayout(new GridLayout(1, 2, 50, 0));
         functionBar.setBorder(new EmptyBorder(10, 10, 10, 10));
 
-        String[] action = {"create", "update", "detail","delete", "import", "export"};
+        String[] action = {"create", "detail","delete", "import", "export"};
         mainFunction = new MainFunction(m.user.getMNQ(), "khuvucsach", action);
         for (String ac : action) {
             mainFunction.btn.get(ac).addActionListener(this);
