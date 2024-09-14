@@ -28,7 +28,9 @@ import BUS.MaKhuyenMaiBUS;
 import BUS.PhieuXuatBUS;
 import BUS.GioHangBUS;
 import BUS.SanPhamBUS;
+import DAO.ChiTietLoHangDAO;
 import DTO.ChiTietGioHangDTO;
+import DTO.ChiTietLoHangDTO;
 import DTO.ChiTietMaKhuyenMaiDTO;
 import DTO.ChiTietPhieuDTO;
 import DTO.GioHangDTO;
@@ -270,7 +272,7 @@ public final class GioHang extends JPanel {
         formPanel.add(txtTenSp);
         formPanel.add(txtGiaXuat);
         formPanel.add(txtSoLuongSPxuat);
-        formPanel.add(txtMaKM);
+      //  formPanel.add(txtMaKM);
         formPanel.add(txtGiaGiam);
         
         content_right_top.add(formPanel, BorderLayout.CENTER);
@@ -489,11 +491,65 @@ public final class GioHang extends JPanel {
     }
 
     public void loadDataTalbeSanPham(ArrayList<DTO.SanPhamDTO> result) {
-        tblModelSP.setRowCount(0);
-        for (SanPhamDTO sp : result) {
-            tblModelSP.addRow(new Object[]{sp.getMSP(), sp.getTEN(), sp.getSL()});
+          tblModelSP.setRowCount(0); // Xóa tất cả các hàng hiện tại trong bảng
+    int soluong ; 
+    ChiTietLoHangDAO chiTietLoHangDAO = new ChiTietLoHangDAO();
+    
+    for (SanPhamDTO sp : result) {
+        System.out.print(sp.getMSP());
+              ChiTietLoHangDTO string= findMinLohangWithValidQuantity(sp.getMSP());
+               if (string == null)
+                    soluong = 0 ; 
+               else 
+                    soluong = string.getSoLuong();
+            tblModelSP.addRow(new Object[]{
+                sp.getMSP(), 
+                sp.getTEN(), 
+               soluong  // Số lượng trong lô hợp lệ
+            });
+            // Cập nhật giá xuất
+            if (string != null )
+              this.txtGiaXuat.setText(string.getGiaNhap() * 2 + "");
+            else {
+                this.txtGiaXuat.setText( "");
+            }
+        
+    }
+    }
+    
+   public ChiTietLoHangDTO findMinLohangWithValidQuantity(int maSP) {
+    // Lấy danh sách các chi tiết lô hàng từ DAO
+    ArrayList<ChiTietLoHangDTO> loHangList = new ChiTietLoHangDAO().findLohangByMSP(maSP);
+    
+    // Khởi tạo biến để lưu đối tượng lô hàng nhỏ nhất
+    ChiTietLoHangDTO minLohang = null;
+    int minCode = Integer.MAX_VALUE; // Giá trị lớn nhất để tìm mã nhỏ nhất
+    
+    // Duyệt qua danh sách các chi tiết lô hàng
+    for (ChiTietLoHangDTO loHang : loHangList) {
+        String mlh = loHang.getMLH(); // Mã lô hàng
+        int soLuong = loHang.getSoLuong(); // Số lượng lô hàng
+        
+        // Kiểm tra số lượng lô hàng
+        if (soLuong > 0) {
+            try {
+                int currentCode = Integer.parseInt(mlh); // Chuyển đổi mã lô hàng từ String sang int
+                
+                // Nếu chưa tìm thấy lô hàng hợp lệ nào hoặc mã hiện tại nhỏ hơn mã đã tìm thấy
+                if (minLohang == null || currentCode < minCode) {
+                    minCode = currentCode;
+                    minLohang = loHang; // Cập nhật đối tượng lô hàng nhỏ nhất
+                }
+            } catch (NumberFormatException e) {
+                // Xử lý trường hợp mã lô hàng không phải là số hợp lệ
+                System.err.println("Mã lô hàng không phải là số hợp lệ: " + mlh);
+            }
         }
     }
+    
+    // Trả về đối tượng lô hàng nhỏ nhất hoặc null nếu không tìm thấy lô hàng hợp lệ
+    return minLohang;
+}
 
     public void loadDataTableChiTietGioHang(ArrayList<ChiTietGioHangDTO> ctGioHang) {
         tblModel.setRowCount(0);

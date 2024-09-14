@@ -511,7 +511,7 @@ public final class TaoPhieuXuat extends JPanel {
           ArrayList<ChiTietLoHangDTO> loHangList = chiTietLoHangDAO.findLohangByMSP(sp.getMSP());
         
         // Tìm lô hàng có mã nhỏ nhất
-        ChiTietLoHangDTO minLohang = getLohangWithMinCode(loHangList);
+        ChiTietLoHangDTO minLohang = findMinLohangWithValidQuantity(masp);
           this.txtGiaXuat.setText(minLohang.getGiaNhap()*2+"");
 //        cbxMaKM.setArr(getMaGiamGiaTable(sp.getMSP()));
         
@@ -528,7 +528,7 @@ public final class TaoPhieuXuat extends JPanel {
           ArrayList<ChiTietLoHangDTO> loHangList = chiTietLoHangDAO.findLohangByMSP(phieu.getMSP());
         
         // Tìm lô hàng có mã nhỏ nhất
-        ChiTietLoHangDTO minLohang = getLohangWithMinCode(loHangList);
+        ChiTietLoHangDTO minLohang = findMinLohangWithValidQuantity(ctsp.getMSP());
             this.txtGiaXuat.setText(minLohang.getGiaNhap()*2+"");
         this.txtSoLuongSPxuat.setText(Integer.toString(phieu.getSL()));
      //   cbxMaKM.setArr(getMaGiamGiaTable(ctsp.getMSP()));
@@ -603,28 +603,6 @@ public void loadDataTableSanPham(ArrayList<SanPhamDTO> result) {
 }
 
 
-public ChiTietLoHangDTO getLohangWithMinCode(ArrayList<ChiTietLoHangDTO> loHangList) {
-    ChiTietLoHangDTO minLohang = null;
-    int minCode = Integer.MAX_VALUE; // Khởi tạo mã nhỏ nhất với giá trị lớn nhất
-
-    for (ChiTietLoHangDTO loHang : loHangList) {
-        // Chỉ xem xét các lô hàng có số lượng lớn hơn 0
-        if (loHang.getSoLuong() > 0) {
-            try {
-                int currentCode = Integer.parseInt(loHang.getMLH()); // Chuyển đổi mã lô hàng từ String sang int
-                if (currentCode < minCode) {
-                    minCode = currentCode; // Cập nhật mã lô hàng nhỏ nhất
-                    minLohang = loHang; // Cập nhật lô hàng nhỏ nhất
-                }
-            } catch (NumberFormatException e) {
-                // Xử lý trường hợp mã lô hàng không thể chuyển đổi sang int
-                System.err.println("Mã lô hàng không phải là số hợp lệ: " + loHang.getMLH());
-            }
-        }
-    }
-
-    return minLohang; // Trả về lô hàng nhỏ nhất hoặc null nếu không tìm thấy lô hàng hợp lệ
-}
 
 
 
@@ -658,6 +636,9 @@ public ChiTietLoHangDTO getLohangWithMinCode(ArrayList<ChiTietLoHangDTO> loHangL
     int index = tableSanPham.getSelectedRow();  // Giả sử tableSanPham là bảng sản phẩm đã chọn
     int availableQuantity = 0;  // Khai báo biến lưu số lượng có sẵn
     System.out.println("Hello mã " + txtMaSp.getText());
+    String text = txtMaSp.getText(); // Lấy giá trị từ trường văn bản
+int number = Integer.parseInt(text); // Chuyển đổi giá trị thành kiểu int
+
     if (txtMaSp.getText().trim().isEmpty()) {
         JOptionPane.showMessageDialog(null, "Vui lòng chọn sản phẩm", "Cảnh báo!", JOptionPane.WARNING_MESSAGE);
         check = false;
@@ -665,7 +646,7 @@ public ChiTietLoHangDTO getLohangWithMinCode(ArrayList<ChiTietLoHangDTO> loHangL
       
             ChiTietLoHangDAO chiTietLoHangDAO = new ChiTietLoHangDAO();
             ArrayList<ChiTietLoHangDTO> loHangList = chiTietLoHangDAO.findLohangByMSP(Integer.parseInt(txtMaSp.getText()));
-            ChiTietLoHangDTO minLohang = getLohangWithMinCode(loHangList);
+            ChiTietLoHangDTO minLohang = findMinLohangWithValidQuantity(number);
 //            for (ChiTietLoHangDTO loHang : loHangList) {
 //                System.out.println(loHang.getMLH());
 //                  System.out.println(loHang.getMSP());
@@ -745,7 +726,7 @@ public void eventBtnNhapHang() throws SQLException {
                 int maSp = chiTiet.getMSP();
                 int tien = chiTiet.getTIEN();
                 ArrayList<ChiTietLoHangDTO> loHangList = chiTietLoHangDAO.findLohangByMSP(maSp);
-                ChiTietLoHangDTO minLohang = getLohangWithMinCode(loHangList);
+                ChiTietLoHangDTO minLohang = findMinLohangWithValidQuantity(maSp);
                 
                 System.out.print(chiTiet.getMP());
                 if (minLohang != null) {

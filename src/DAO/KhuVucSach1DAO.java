@@ -18,6 +18,8 @@ import java.util.logging.Logger;
 
 public class KhuVucSach1DAO implements DAOinterface<KhuVucSach1DTO> {
 
+    
+
     private final  ChiTietLoHangDAO chitietlohang = new ChiTietLoHangDAO();
     ArrayList<ChiTietLoHangDTO> chitiet = chitietlohang.selectAll();
     
@@ -26,7 +28,27 @@ public class KhuVucSach1DAO implements DAOinterface<KhuVucSach1DTO> {
         return ChiTietLoHangDAO.selectAll1(Integer.toString(maphieu));
     }
  
- 
+   public static int insert1(KhuVucSach1DTO t) {
+    int result = 0;
+    Connection con = null;
+    PreparedStatement pst = null;
+    
+    try {
+        con = JDBCUtil.getConnection();
+        String sql = "INSERT INTO `lohang`(`MLH`, `Ngay`, `TT`) VALUES ( ?, ?, 1)";
+        pst = con.prepareStatement(sql);
+        
+        pst.setString(1, t.getMLH()); // Mã lô hàng
+      
+        pst.setTimestamp(2, t.getNgay()); // Ngày là kiểu Timestamp
+        
+        result = pst.executeUpdate();
+    } catch (SQLException ex) {
+        Logger.getLogger(KhuVucSachDAO.class.getName()).log(Level.SEVERE, null, ex);
+    } 
+    
+    return result;
+}
  
     
    public String[] getArrMLH() {
@@ -45,7 +67,7 @@ public class KhuVucSach1DAO implements DAOinterface<KhuVucSach1DTO> {
 }
     
     @Override
-  public int insert(KhuVucSach1DTO t) {
+  public  int insert(KhuVucSach1DTO t) {
     int result = 0;
     Connection con = null;
     PreparedStatement pst = null;
