@@ -428,24 +428,50 @@ public final class TaoPhieuNhap extends JPanel implements ItemListener, ActionLi
         lbltongtien.setText(Formater.FormatVND(phieunhapBus.getTIEN(ctPhieu)));
     }
 
-    public boolean validateNhap() {
-        int phuongthuc = 0;
-        if (Validation.isEmpty(txtMaSp.getText())) {
-            JOptionPane.showMessageDialog(this, "Vui lòng chọn sản phẩm", "Chọn sản phẩm", JOptionPane.WARNING_MESSAGE);
-            return false;
-        } else if (Validation.isEmpty(txtDongia.getText())) {
-            JOptionPane.showMessageDialog(this, "Giá nhập không được để rỗng !", "Cảnh báo !", JOptionPane.WARNING_MESSAGE);
-            return false;
-        } else if (phuongthuc == 0) {
-           
-            if (Validation.isEmpty(txtSoLuongSPnhap.getText()) || !Validation.isNumber(txtSoLuongSPnhap.getText())) {
-                JOptionPane.showMessageDialog(this, "Số lượng không được để rỗng và phải là số!", "Cảnh báo !", JOptionPane.WARNING_MESSAGE);
-                return false;
-            }
-        } 
-    
-        return true;
+public boolean validateNhap() {
+    int phuongthuc = 0; // Đảm bảo rằng biến này được sử dụng đúng cách trong hàm
+
+    String selectedLotCode = (String) cbbLoHang.getSelectedItem();
+
+    // Kiểm tra nếu mã sản phẩm không hợp lệ
+    if (Validation.isEmpty(txtMaSp.getText())) {
+        JOptionPane.showMessageDialog(this, "Vui lòng chọn sản phẩm", "Chọn sản phẩm", JOptionPane.WARNING_MESSAGE);
+        return false;
     }
+
+    int maSp;
+    try {
+        maSp = Integer.parseInt(txtMaSp.getText());
+    } catch (NumberFormatException e) {
+        JOptionPane.showMessageDialog(this, "Mã sản phẩm phải là số nguyên hợp lệ.", "Lỗi", JOptionPane.ERROR_MESSAGE);
+        return false;
+    }
+
+    // Kiểm tra nếu giá nhập để rỗng
+    if (Validation.isEmpty(txtDongia.getText())) {
+        JOptionPane.showMessageDialog(this, "Giá nhập không được để rỗng !", "Cảnh báo !", JOptionPane.WARNING_MESSAGE);
+        return false;
+    }
+
+    // Kiểm tra số lượng
+    if (phuongthuc == 0) {
+        if (Validation.isEmpty(txtSoLuongSPnhap.getText()) || !Validation.isNumber(txtSoLuongSPnhap.getText())) {
+            JOptionPane.showMessageDialog(this, "Số lượng không được để rỗng và phải là số!", "Cảnh báo !", JOptionPane.WARNING_MESSAGE);
+            return false;
+        }
+    }
+
+    // Kiểm tra xem sản phẩm đã tồn tại trong lô hàng chưa
+    boolean productExistsInLot = phieunhapBus.checkProductInLot(selectedLotCode, maSp);
+    if (productExistsInLot) {
+        JOptionPane.showMessageDialog(this, "Sản phẩm đã nhập trong lô hàng này.", "Cảnh báo !", JOptionPane.WARNING_MESSAGE);
+        return false;
+    }
+
+    // Nếu tất cả các điều kiện đều hợp lệ
+    return true;
+}
+
 
 
     public void resetForm() {

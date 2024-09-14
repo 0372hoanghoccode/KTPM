@@ -27,12 +27,13 @@ public class PhieuNhapDAO implements DAOinterface<PhieuNhapDTO> {
         int result = 0;
         try {
             Connection con = (Connection) JDBCUtil.getConnection();
-            String sql = "INSERT INTO `PHIEUNHAP` (`MNV`, `TIEN`, `TG`, `TT`) VALUES (?,?,?,?)";
+            String sql = "INSERT INTO `PHIEUNHAP` (`MPN` , `MNV`, `TIEN`, `TG`, `TT`) VALUES (?,?,?,?,?)";
             PreparedStatement pst = con.prepareStatement(sql);
-            pst.setInt(1, t.getMNV());
-            pst.setDouble(2, t.getTIEN());
-            pst.setTimestamp(3, t.getTG());
-            pst.setInt(4, t.getTT());
+                 pst.setInt(1, t.getMP());
+            pst.setInt(2, t.getMNV());
+            pst.setDouble(3, t.getTIEN());
+            pst.setTimestamp(4, t.getTG());
+            pst.setInt(5, t.getTT());
             result = pst.executeUpdate();
             JDBCUtil.closeConnection(con);
         } catch (SQLException ex) {
