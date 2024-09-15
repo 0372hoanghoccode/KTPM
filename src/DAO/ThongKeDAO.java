@@ -14,7 +14,12 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 public class ThongKeDAO {
 
@@ -108,8 +113,6 @@ public class ThongKeDAO {
     }
 
 public ArrayList<ThongKeDoanhThuDTO> getDoanhThuTheoTungNam(int year_start, int year_end) {
-    //ArrayList<ThongKeDoanhThuDTO> result = new ArrayList<>();
-    
     // SQL để tính tổng chi phí theo năm
     String sqlChiPhi = """
                 WITH RECURSIVE years(year) AS (
@@ -142,17 +145,18 @@ public ArrayList<ThongKeDoanhThuDTO> getDoanhThuTheoTungNam(int year_start, int 
                     COALESCE(SUM(PHIEUXUAT.TIEN), 0) AS doanhthu
                 FROM years
                 LEFT JOIN PHIEUXUAT ON YEAR(PHIEUXUAT.TG) = years.year
+                          WHERE PHIEUXUAT.TT = 1
                 GROUP BY years.year
                 ORDER BY years.year;
                 """;
 
     // Tạo danh sách để lưu kết quả cuối cùng
     ArrayList<ThongKeDoanhThuDTO> result = new ArrayList<>();
-    
+
     try (Connection con = JDBCUtil.getConnection();
          PreparedStatement pstChiPhi = con.prepareStatement(sqlChiPhi);
          PreparedStatement pstDoanhThu = con.prepareStatement(sqlDoanhThu)) {
-        
+
         // Thiết lập giá trị cho các truy vấn
         pstChiPhi.setInt(1, year_start);
         pstChiPhi.setInt(2, year_end);
@@ -161,22 +165,27 @@ public ArrayList<ThongKeDoanhThuDTO> getDoanhThuTheoTungNam(int year_start, int 
 
         // Kết quả truy vấn chi phí
         ResultSet rsChiPhi = pstChiPhi.executeQuery();
+
         // Kết quả truy vấn doanh thu
         ResultSet rsDoanhThu = pstDoanhThu.executeQuery();
 
-        // Sử dụng hai ResultSet để kết hợp kết quả
+        // Tạo map để lưu doanh thu theo năm
+        Map<Integer, Long> doanhThuMap = new HashMap<>();
+
+        // Đọc doanh thu từ ResultSet và lưu vào map
+        while (rsDoanhThu.next()) {
+            int nam = rsDoanhThu.getInt("nam");
+            long doanhthu = rsDoanhThu.getLong("doanhthu");
+            doanhThuMap.put(nam, doanhthu);
+        }
+
+        // Đọc chi phí từ ResultSet và kết hợp với doanh thu từ map
         while (rsChiPhi.next()) {
             int nam = rsChiPhi.getInt("nam");
             long chiphi = rsChiPhi.getLong("chiphi");
             
-            // Tìm doanh thu tương ứng cho năm
-            long doanhthu = 0;
-            while (rsDoanhThu.next()) {
-                if (rsDoanhThu.getInt("nam") == nam) {
-                    doanhthu = rsDoanhThu.getLong("doanhthu");
-                    break;
-                }
-            }
+            // Tìm doanh thu tương ứng cho năm từ map
+            long doanhthu = doanhThuMap.getOrDefault(nam, 0L);
             
             long loinhuan = doanhthu - chiphi;
             ThongKeDoanhThuDTO dto = new ThongKeDoanhThuDTO(nam, chiphi, doanhthu, loinhuan);
@@ -187,6 +196,7 @@ public ArrayList<ThongKeDoanhThuDTO> getDoanhThuTheoTungNam(int year_start, int 
     }
     return result;
 }
+
 
 
 
@@ -251,7 +261,7 @@ public ArrayList<ThongKeDoanhThuDTO> getDoanhThuTheoTungNam(int year_start, int 
                 SELECT MONTH(TG) AS thang, 
                        COALESCE(SUM(TIEN), 0) AS doanhthu
                 FROM PHIEUXUAT
-                WHERE YEAR(TG) = ?
+                WHERE YEAR(TG) = ? AND TT = 1
                 GROUP BY MONTH(TG)
                 ORDER BY MONTH(TG);
                 """;
@@ -373,7 +383,7 @@ public ArrayList<ThongKeTungNgayTrongThangDTO> getThongKe7NgayGanNhat() {
     // SQL để tính tổng tiền của phiếu nhập
     String sqlChiPhi = """
                 WITH RECURSIVE dates(date) AS (
-                    SELECT DATE_SUB(CURDATE(), INTERVAL 7 DAY)
+                    SELECT DATE_SUB(CURDATE(), INTERVAL 6 DAY)
                     UNION ALL
                     SELECT DATE_ADD(date, INTERVAL 1 DAY)
                     FROM dates
@@ -388,10 +398,10 @@ public ArrayList<ThongKeTungNgayTrongThangDTO> getThongKe7NgayGanNhat() {
                 ORDER BY dates.date;
                 """;
 
-    // SQL để tính tổng tiền của phiếu xuất
+    // SQL để tính tổng tiền của phiếu xuất với TT = 1
     String sqlDoanhThu = """
                 WITH RECURSIVE dates(date) AS (
-                    SELECT DATE_SUB(CURDATE(), INTERVAL 7 DAY)
+                    SELECT DATE_SUB(CURDATE(), INTERVAL 6 DAY)
                     UNION ALL
                     SELECT DATE_ADD(date, INTERVAL 1 DAY)
                     FROM dates
@@ -402,58 +412,61 @@ public ArrayList<ThongKeTungNgayTrongThangDTO> getThongKe7NgayGanNhat() {
                     COALESCE(SUM(PHIEUXUAT.TIEN), 0) AS doanhthu
                 FROM dates
                 LEFT JOIN PHIEUXUAT ON DATE(PHIEUXUAT.TG) = dates.date
+                WHERE PHIEUXUAT.TT = 1
                 GROUP BY dates.date
                 ORDER BY dates.date;
                 """;
 
     try (Connection con = JDBCUtil.getConnection();
-         // Tính tổng chi phí
          PreparedStatement pstChiPhi = con.prepareStatement(sqlChiPhi);
          ResultSet rsChiPhi = pstChiPhi.executeQuery();
          
-         // Tính tổng doanh thu
          PreparedStatement pstDoanhThu = con.prepareStatement(sqlDoanhThu);
          ResultSet rsDoanhThu = pstDoanhThu.executeQuery()) {
 
-        // List để lưu kết quả
-        ArrayList<ThongKeTungNgayTrongThangDTO> chiPhiList = new ArrayList<>();
-        ArrayList<ThongKeTungNgayTrongThangDTO> doanhThuList = new ArrayList<>();
+        // Tạo map để lưu chi phí theo ngày
+        Map<Date, Integer> chiPhiMap = new HashMap<>();
 
-        // Lưu kết quả chi phí
+        // Lưu kết quả chi phí vào map
         while (rsChiPhi.next()) {
             Date ngay = rsChiPhi.getDate("ngay");
             int chiphi = rsChiPhi.getInt("chiphi");
-            chiPhiList.add(new ThongKeTungNgayTrongThangDTO(ngay, chiphi, 0, 0)); // doanhthu, loinhuan tạm thời là 0
+            chiPhiMap.put(ngay, chiphi);
         }
 
-        // Lưu kết quả doanh thu
+        // Tạo map để lưu doanh thu theo ngày
+        Map<Date, Integer> doanhThuMap = new HashMap<>();
+
+        // Lưu kết quả doanh thu vào map
         while (rsDoanhThu.next()) {
             Date ngay = rsDoanhThu.getDate("ngay");
             int doanhthu = rsDoanhThu.getInt("doanhthu");
-
-            // Tìm kiếm ngày tương ứng trong chi phí
-            for (ThongKeTungNgayTrongThangDTO chiPhi : chiPhiList) {
-                if (chiPhi.getNgay().equals(ngay)) {
-                    int chiphi = chiPhi.getChiphi();
-                    int loinhuan = doanhthu - chiphi;
-                    chiPhi.setDoanhthu(doanhthu);
-                    chiPhi.setLoinhuan(loinhuan);
-                    result.add(chiPhi);
-                    break;
-                }
-            }
-
-            // Nếu ngày không có trong danh sách chi phí
-            if (result.stream().noneMatch(t -> t.getNgay().equals(ngay))) {
-                int loinhuan = doanhthu; // Nếu không có chi phí, lãi lỗ là doanh thu
-                result.add(new ThongKeTungNgayTrongThangDTO(ngay, 0, doanhthu, loinhuan));
-            }
+            doanhThuMap.put(ngay, doanhthu);
         }
+
+        // Kết hợp dữ liệu từ hai map để tạo kết quả
+        Set<Date> allDates = new HashSet<>();
+        allDates.addAll(chiPhiMap.keySet());
+        allDates.addAll(doanhThuMap.keySet());
+
+        for (Date ngay : allDates) {
+            int chiphi = chiPhiMap.getOrDefault(ngay, 0);
+            int doanhthu = doanhThuMap.getOrDefault(ngay, 0);
+            int loinhuan = doanhthu - chiphi;
+
+            result.add(new ThongKeTungNgayTrongThangDTO(ngay, chiphi, doanhthu, loinhuan));
+        }
+
+        // Sắp xếp kết quả theo ngày
+        result.sort(Comparator.comparing(ThongKeTungNgayTrongThangDTO::getNgay));
+
     } catch (SQLException e) {
         e.printStackTrace();
     }
+
     return result;
 }
+
 
 
 
