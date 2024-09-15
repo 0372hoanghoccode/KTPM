@@ -23,14 +23,14 @@ public final class ThongKe extends JPanel {
         this.setBackground(BackgroundColor);
 
         tongquan = new ThongKeTongQuan(thongkeBUS);
-        nhapxuat = new ThongKeTonKho(thongkeBUS);
+      //  nhapxuat = new ThongKeTonKho(thongkeBUS);
         khachhang = new ThongKeKhachHang(thongkeBUS);
         doanhthu = new ThongKeDoanhThu(thongkeBUS);
 
         tabbedPane = new JTabbedPane();
         tabbedPane.setOpaque(false);
         tabbedPane.addTab("Tổng quan", tongquan);
-        tabbedPane.addTab("Tồn kho", nhapxuat);
+      //  tabbedPane.addTab("Tồn kho", nhapxuat);
         tabbedPane.addTab("Doanh thu", doanhthu);
         tabbedPane.addTab("Khách hàng", khachhang);
 

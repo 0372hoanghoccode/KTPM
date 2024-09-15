@@ -106,54 +106,89 @@ public class ThongKeDAO {
         return result;
     }
 
-    public ArrayList<ThongKeDoanhThuDTO> getDoanhThuTheoTungNam(int year_start, int year_end) {
-        ArrayList<ThongKeDoanhThuDTO> result = new ArrayList<>();
-        try {
-            Connection con = JDBCUtil.getConnection();
-            String sqlSetStartYear = "SET @start_year = ?;";
-            String sqlSetEndYear = "SET @end_year = ?;";
-            String sqlSelect = """
-                        WITH RECURSIVE years(year) AS (
-                        SELECT @start_year
-                        UNION ALL
-                        SELECT year + 1
-                        FROM years
-                        WHERE year < @end_year
-                        )
-                        SELECT 
-                        years.year AS nam,
-                        COALESCE(SUM(CTPHIEUNHAP.TIENNHAP), 0) AS chiphi, 
-                        COALESCE(SUM(CTPHIEUXUAT.TIENXUAT), 0) AS doanhthu
-                        FROM years
-                        LEFT JOIN PHIEUXUAT ON YEAR(PHIEUXUAT.TG) = years.year
-                        LEFT JOIN CTPHIEUXUAT ON PHIEUXUAT.MPX = CTPHIEUXUAT.MPX
-                        LEFT JOIN SANPHAM ON SANPHAM.MSP = CTPHIEUXUAT.MSP
-                        LEFT JOIN CTPHIEUNHAP ON SANPHAM.MSP = CTPHIEUNHAP.MSP
-                        GROUP BY years.year
-                        ORDER BY years.year;""";
-            PreparedStatement pstStartYear = con.prepareStatement(sqlSetStartYear);
-            PreparedStatement pstEndYear = con.prepareStatement(sqlSetEndYear);
-            PreparedStatement pstSelect = con.prepareStatement(sqlSelect);
+public ArrayList<ThongKeDoanhThuDTO> getDoanhThuTheoTungNam(int year_start, int year_end) {
+    //ArrayList<ThongKeDoanhThuDTO> result = new ArrayList<>();
+    
+    // SQL để tính tổng chi phí theo năm
+    String sqlChiPhi = """
+                WITH RECURSIVE years(year) AS (
+                    SELECT ?
+                    UNION ALL
+                    SELECT year + 1
+                    FROM years
+                    WHERE year < ?
+                )
+                SELECT 
+                    years.year AS nam,
+                    COALESCE(SUM(PHIEUNHAP.TIEN), 0) AS chiphi
+                FROM years
+                LEFT JOIN PHIEUNHAP ON YEAR(PHIEUNHAP.TG) = years.year
+                GROUP BY years.year
+                ORDER BY years.year;
+                """;
 
-            pstStartYear.setInt(1, year_start);
-            pstEndYear.setInt(1, year_end);
+    // SQL để tính tổng doanh thu theo năm
+    String sqlDoanhThu = """
+                WITH RECURSIVE years(year) AS (
+                    SELECT ?
+                    UNION ALL
+                    SELECT year + 1
+                    FROM years
+                    WHERE year < ?
+                )
+                SELECT 
+                    years.year AS nam,
+                    COALESCE(SUM(PHIEUXUAT.TIEN), 0) AS doanhthu
+                FROM years
+                LEFT JOIN PHIEUXUAT ON YEAR(PHIEUXUAT.TG) = years.year
+                GROUP BY years.year
+                ORDER BY years.year;
+                """;
 
-            pstStartYear.execute();
-            pstEndYear.execute();
+    // Tạo danh sách để lưu kết quả cuối cùng
+    ArrayList<ThongKeDoanhThuDTO> result = new ArrayList<>();
+    
+    try (Connection con = JDBCUtil.getConnection();
+         PreparedStatement pstChiPhi = con.prepareStatement(sqlChiPhi);
+         PreparedStatement pstDoanhThu = con.prepareStatement(sqlDoanhThu)) {
+        
+        // Thiết lập giá trị cho các truy vấn
+        pstChiPhi.setInt(1, year_start);
+        pstChiPhi.setInt(2, year_end);
+        pstDoanhThu.setInt(1, year_start);
+        pstDoanhThu.setInt(2, year_end);
 
-            ResultSet rs = pstSelect.executeQuery();
-            while (rs.next()) {
-                int TG = rs.getInt("nam");
-                Long chiphi = rs.getLong("chiphi");
-                Long doanhthu = rs.getLong("doanhthu");
-                ThongKeDoanhThuDTO x = new ThongKeDoanhThuDTO(TG, chiphi, doanhthu, doanhthu - chiphi);
-                result.add(x);
+        // Kết quả truy vấn chi phí
+        ResultSet rsChiPhi = pstChiPhi.executeQuery();
+        // Kết quả truy vấn doanh thu
+        ResultSet rsDoanhThu = pstDoanhThu.executeQuery();
+
+        // Sử dụng hai ResultSet để kết hợp kết quả
+        while (rsChiPhi.next()) {
+            int nam = rsChiPhi.getInt("nam");
+            long chiphi = rsChiPhi.getLong("chiphi");
+            
+            // Tìm doanh thu tương ứng cho năm
+            long doanhthu = 0;
+            while (rsDoanhThu.next()) {
+                if (rsDoanhThu.getInt("nam") == nam) {
+                    doanhthu = rsDoanhThu.getLong("doanhthu");
+                    break;
+                }
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
+            
+            long loinhuan = doanhthu - chiphi;
+            ThongKeDoanhThuDTO dto = new ThongKeDoanhThuDTO(nam, chiphi, doanhthu, loinhuan);
+            result.add(dto);
         }
-        return result;
+    } catch (SQLException e) {
+        e.printStackTrace();
     }
+    return result;
+}
+
+
+
 
     public static ArrayList<ThongKeKhachHangDTO> getThongKeKhachHang(String text, Date timeStart, Date timeEnd) {
         ArrayList<ThongKeKhachHangDTO> result = new ArrayList<>();
