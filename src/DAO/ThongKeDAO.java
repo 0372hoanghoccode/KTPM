@@ -13,6 +13,7 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 
 public class ThongKeDAO {
@@ -232,49 +233,71 @@ public ArrayList<ThongKeDoanhThuDTO> getDoanhThuTheoTungNam(int year_start, int 
     }
 
 
-    public ArrayList<ThongKeTheoThangDTO> getThongKeTheoThang(int nam) {
-        ArrayList<ThongKeTheoThangDTO> result = new ArrayList<>();
-        try {
-            Connection con = JDBCUtil.getConnection();
-            String sql = "SELECT months.month AS thang, \n"
-                    + "       COALESCE(SUM(CTPHIEUNHAP.TIENNHAP), 0) AS chiphi,\n"
-                    + "       COALESCE(SUM(CTPHIEUXUAT.TIENXUAT), 0) AS doanhthu\n"
-                    + "FROM (\n"
-                    + "       SELECT 1 AS month\n"
-                    + "       UNION ALL SELECT 2\n"
-                    + "       UNION ALL SELECT 3\n"
-                    + "       UNION ALL SELECT 4\n"
-                    + "       UNION ALL SELECT 5\n"
-                    + "       UNION ALL SELECT 6\n"
-                    + "       UNION ALL SELECT 7\n"
-                    + "       UNION ALL SELECT 8\n"
-                    + "       UNION ALL SELECT 9\n"
-                    + "       UNION ALL SELECT 10\n"
-                    + "       UNION ALL SELECT 11\n"
-                    + "       UNION ALL SELECT 12\n"
-                    + "     ) AS months\n"
-                    + "LEFT JOIN PHIEUXUAT ON MONTH(PHIEUXUAT.TG) = months.month AND YEAR(PHIEUXUAT.TG) = ? \n"
-                    + "LEFT JOIN CTPHIEUXUAT ON PHIEUXUAT.MPX = CTPHIEUXUAT.MPX\n"
-                    + "LEFT JOIN SANPHAM ON SANPHAM.MSP = CTPHIEUXUAT.MSP\n"
-                    + "LEFT JOIN CTPHIEUNHAP ON SANPHAM.MSP = CTPHIEUNHAP.MSP\n"
-                    + "GROUP BY months.month\n"
-                    + "ORDER BY months.month;";
-            PreparedStatement pst = con.prepareStatement(sql);
-            pst.setInt(1, nam);
-            ResultSet rs = pst.executeQuery();
-            while (rs.next()) {
-                int thang = rs.getInt("thang");
-                int chiphi = rs.getInt("chiphi");
-                int doanhthu = rs.getInt("doanhthu");
-                int loinhuan = doanhthu - chiphi;
-                ThongKeTheoThangDTO thongke = new ThongKeTheoThangDTO(thang, chiphi, doanhthu, loinhuan);
-                result.add(thongke);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
+  public ArrayList<ThongKeTheoThangDTO> getThongKeTheoThang(int year) {
+    ArrayList<ThongKeTheoThangDTO> result = new ArrayList<>();
+
+    // SQL để tính tổng chi phí theo tháng
+    String sqlChiPhi = """
+                SELECT MONTH(TG) AS thang, 
+                       COALESCE(SUM(TIEN), 0) AS chiphi
+                FROM PHIEUNHAP
+                WHERE YEAR(TG) = ?
+                GROUP BY MONTH(TG)
+                ORDER BY MONTH(TG);
+                """;
+
+    // SQL để tính tổng doanh thu theo tháng
+    String sqlDoanhThu = """
+                SELECT MONTH(TG) AS thang, 
+                       COALESCE(SUM(TIEN), 0) AS doanhthu
+                FROM PHIEUXUAT
+                WHERE YEAR(TG) = ?
+                GROUP BY MONTH(TG)
+                ORDER BY MONTH(TG);
+                """;
+
+    // Tạo danh sách để lưu kết quả chi phí và doanh thu theo tháng
+    ArrayList<ThongKeTheoThangDTO> chiPhiList = new ArrayList<>(Collections.nCopies(12, new ThongKeTheoThangDTO(0, 0, 0, 0)));
+    
+    try (Connection con = JDBCUtil.getConnection();
+         PreparedStatement pstChiPhi = con.prepareStatement(sqlChiPhi);
+         PreparedStatement pstDoanhThu = con.prepareStatement(sqlDoanhThu)) {
+
+        // Thiết lập năm cho các truy vấn
+        pstChiPhi.setInt(1, year);
+        pstDoanhThu.setInt(1, year);
+
+        // Kết quả truy vấn chi phí
+        ResultSet rsChiPhi = pstChiPhi.executeQuery();
+        // Kết quả truy vấn doanh thu
+        ResultSet rsDoanhThu = pstDoanhThu.executeQuery();
+
+        // Cập nhật danh sách chi phí
+        while (rsChiPhi.next()) {
+            int thang = rsChiPhi.getInt("thang") - 1; // Đánh chỉ số từ 0 đến 11
+            int chiphi = rsChiPhi.getInt("chiphi");
+            chiPhiList.set(thang, new ThongKeTheoThangDTO(thang + 1, chiphi, 0, -chiphi));
         }
-        return result;
+
+        // Cập nhật danh sách doanh thu và lãi lỗ
+        while (rsDoanhThu.next()) {
+            int thang = rsDoanhThu.getInt("thang") - 1; // Đánh chỉ số từ 0 đến 11
+            int doanhthu = rsDoanhThu.getInt("doanhthu");
+            ThongKeTheoThangDTO dto = chiPhiList.get(thang);
+            int chiphi = dto.getChiphi();
+            int loinhuan = doanhthu - chiphi;
+            chiPhiList.set(thang, new ThongKeTheoThangDTO(thang + 1, chiphi, doanhthu, loinhuan));
+        }
+        
+        result.addAll(chiPhiList);
+
+    } catch (SQLException e) {
+        e.printStackTrace();
     }
+    return result;
+}
+
+
 
     public ArrayList<ThongKeTungNgayTrongThangDTO> getThongKeTungNgayTrongThang(int thang, int nam) {
         ArrayList<ThongKeTungNgayTrongThangDTO> result = new ArrayList<>();
