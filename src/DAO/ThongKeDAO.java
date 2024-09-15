@@ -309,44 +309,98 @@ public class ThongKeDAO {
         return result;
     }
 
-    public ArrayList<ThongKeTungNgayTrongThangDTO> getThongKe7NgayGanNhat() {
-        ArrayList<ThongKeTungNgayTrongThangDTO> result = new ArrayList<>();
-        try {
-            Connection con = JDBCUtil.getConnection();
-            String sql = """
-                            WITH RECURSIVE dates(date) AS (
-                            SELECT DATE_SUB(CURDATE(), INTERVAL 7 DAY)
-                            UNION ALL
-                            SELECT DATE_ADD(date, INTERVAL 1 DAY)
-                            FROM dates
-                            WHERE date < CURDATE()
-                            )
-                            SELECT 
-                            dates.date AS ngay,
-                            COALESCE(SUM(CTPHIEUXUAT.TIENXUAT), 0) AS doanhthu,
-                            COALESCE(SUM(CTPHIEUNHAP.TIENNHAP), 0) AS chiphi
-                            FROM dates
-                            LEFT JOIN PHIEUXUAT ON DATE(PHIEUXUAT.TG) = dates.date
-                            LEFT JOIN CTPHIEUXUAT ON PHIEUXUAT.MPX = CTPHIEUXUAT.MPX
-                            LEFT JOIN SANPHAM ON SANPHAM.MSP = CTPHIEUXUAT.MSP
-                            LEFT JOIN CTPHIEUNHAP ON SANPHAM.MSP = CTPHIEUNHAP.MSP
-                            GROUP BY dates.date
-                            ORDER BY dates.date;""";
-            PreparedStatement pst = con.prepareStatement(sql);
-            ResultSet rs = pst.executeQuery();
-            while (rs.next()) {
-                Date ngay = rs.getDate("ngay");
-                int chiphi = rs.getInt("chiphi");
-                int doanhthu = rs.getInt("doanhthu");
-                int loinhuan = doanhthu - chiphi;
-                ThongKeTungNgayTrongThangDTO tn = new ThongKeTungNgayTrongThangDTO(ngay, chiphi, doanhthu, loinhuan);
-                result.add(tn);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
+public ArrayList<ThongKeTungNgayTrongThangDTO> getThongKe7NgayGanNhat() {
+    ArrayList<ThongKeTungNgayTrongThangDTO> result = new ArrayList<>();
+
+    // SQL để tính tổng tiền của phiếu nhập
+    String sqlChiPhi = """
+                WITH RECURSIVE dates(date) AS (
+                    SELECT DATE_SUB(CURDATE(), INTERVAL 7 DAY)
+                    UNION ALL
+                    SELECT DATE_ADD(date, INTERVAL 1 DAY)
+                    FROM dates
+                    WHERE date < CURDATE()
+                )
+                SELECT 
+                    dates.date AS ngay,
+                    COALESCE(SUM(PHIEUNHAP.TIEN), 0) AS chiphi
+                FROM dates
+                LEFT JOIN PHIEUNHAP ON DATE(PHIEUNHAP.TG) = dates.date
+                GROUP BY dates.date
+                ORDER BY dates.date;
+                """;
+
+    // SQL để tính tổng tiền của phiếu xuất
+    String sqlDoanhThu = """
+                WITH RECURSIVE dates(date) AS (
+                    SELECT DATE_SUB(CURDATE(), INTERVAL 7 DAY)
+                    UNION ALL
+                    SELECT DATE_ADD(date, INTERVAL 1 DAY)
+                    FROM dates
+                    WHERE date < CURDATE()
+                )
+                SELECT 
+                    dates.date AS ngay,
+                    COALESCE(SUM(PHIEUXUAT.TIEN), 0) AS doanhthu
+                FROM dates
+                LEFT JOIN PHIEUXUAT ON DATE(PHIEUXUAT.TG) = dates.date
+                GROUP BY dates.date
+                ORDER BY dates.date;
+                """;
+
+    try (Connection con = JDBCUtil.getConnection();
+         // Tính tổng chi phí
+         PreparedStatement pstChiPhi = con.prepareStatement(sqlChiPhi);
+         ResultSet rsChiPhi = pstChiPhi.executeQuery();
+         
+         // Tính tổng doanh thu
+         PreparedStatement pstDoanhThu = con.prepareStatement(sqlDoanhThu);
+         ResultSet rsDoanhThu = pstDoanhThu.executeQuery()) {
+
+        // List để lưu kết quả
+        ArrayList<ThongKeTungNgayTrongThangDTO> chiPhiList = new ArrayList<>();
+        ArrayList<ThongKeTungNgayTrongThangDTO> doanhThuList = new ArrayList<>();
+
+        // Lưu kết quả chi phí
+        while (rsChiPhi.next()) {
+            Date ngay = rsChiPhi.getDate("ngay");
+            int chiphi = rsChiPhi.getInt("chiphi");
+            chiPhiList.add(new ThongKeTungNgayTrongThangDTO(ngay, chiphi, 0, 0)); // doanhthu, loinhuan tạm thời là 0
         }
-        return result;
+
+        // Lưu kết quả doanh thu
+        while (rsDoanhThu.next()) {
+            Date ngay = rsDoanhThu.getDate("ngay");
+            int doanhthu = rsDoanhThu.getInt("doanhthu");
+
+            // Tìm kiếm ngày tương ứng trong chi phí
+            for (ThongKeTungNgayTrongThangDTO chiPhi : chiPhiList) {
+                if (chiPhi.getNgay().equals(ngay)) {
+                    int chiphi = chiPhi.getChiphi();
+                    int loinhuan = doanhthu - chiphi;
+                    chiPhi.setDoanhthu(doanhthu);
+                    chiPhi.setLoinhuan(loinhuan);
+                    result.add(chiPhi);
+                    break;
+                }
+            }
+
+            // Nếu ngày không có trong danh sách chi phí
+            if (result.stream().noneMatch(t -> t.getNgay().equals(ngay))) {
+                int loinhuan = doanhthu; // Nếu không có chi phí, lãi lỗ là doanh thu
+                result.add(new ThongKeTungNgayTrongThangDTO(ngay, 0, doanhthu, loinhuan));
+            }
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
     }
+    return result;
+}
+
+
+
+
+
 
     public ArrayList<ThongKeTungNgayTrongThangDTO> getThongKeTuNgayDenNgay(String star, String end) {
         ArrayList<ThongKeTungNgayTrongThangDTO> result = new ArrayList<>();
