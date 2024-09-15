@@ -161,26 +161,26 @@ public class ChiTietPhieuXuatDAO implements ChiTietInterface<ChiTietPhieuDTO> {
         return result;
     }
 
-//    public void updateSL(String t) {
-//        try {
-//            Connection con = (Connection) JDBCUtil.getConnection();
-//            String sql = "SELECT * FROM CTPHIEUXUAT WHERE MPX = ?";
-//            PreparedStatement pst = (PreparedStatement) con.prepareStatement(sql);
-//            pst.setString(1, t);
-//            ResultSet rs = (ResultSet) pst.executeQuery();
-//            while (rs.next()) {
-//                int maphieu = rs.getInt("MPX");
-//                int MSP = rs.getInt("MSP");
-//                int SL = rs.getInt("SL");
-//                int tienxuat = rs.getInt("TIENXUAT");
-//                ChiTietPhieuDTO ctphieu = new ChiTietPhieuDTO(maphieu, MSP, SL, tienxuat);
-//                int SLsp = -(ctphieu.getSL());
-//                SanPhamDAO.getInstance().updateSoLuongTon(ctphieu.getMSP(), SLsp);
-//            }
-//            JDBCUtil.closeConnection(con);
-//        } catch (SQLException e) {
-//            System.out.println(e);
-//        }
-//    }
+    public void updateSL(String t) {
+        try {
+            Connection con = (Connection) JDBCUtil.getConnection();
+            String sql = "SELECT * FROM CTPHIEUXUAT WHERE MPX = ?";
+            PreparedStatement pst = (PreparedStatement) con.prepareStatement(sql);
+            pst.setString(1, t);
+            ResultSet rs = (ResultSet) pst.executeQuery();
+            while (rs.next()) {
+                int maphieu = rs.getInt("MPX");
+                int MSP = rs.getInt("MSP");
+                int SL = rs.getInt("SL");
+                int tienxuat = rs.getInt("TIENXUAT");
+                ChiTietPhieuDTO ctphieu = new ChiTietPhieuDTO(maphieu, MSP, SL, tienxuat);
+                int SLsp = -(ctphieu.getSL());
+                SanPhamDAO.getInstance().updateSoLuongTon(ctphieu.getMSP(), SLsp);
+            }
+            JDBCUtil.closeConnection(con);
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+    }
 
 }

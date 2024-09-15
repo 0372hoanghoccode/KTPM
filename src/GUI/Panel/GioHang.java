@@ -129,7 +129,7 @@ public final class GioHang extends JPanel {
                 int index = tableGioHang.getSelectedRow();
                 if (index != -1) {
                     tableSanPham.setSelectionMode(index);
-                    setFormChiTietGioHang(chitietgiohang.get(index));
+                    setFormChiTietGioHang(chitietgiohang.get(index) , listSP);
                     // ChiTietGioHangDTO ctphieu = chitietphieu.get(index);
                     // SanPhamDTO ctspSell = spBUS.getByMaSP(ctphieu.getMSP());
                     // setInfoSanPham(ctspSell);
@@ -159,7 +159,7 @@ public final class GioHang extends JPanel {
                 int index = tableSanPham.getSelectedRow();
                 if (index != -1) {
                     resetForm();
-                    setInfoSanPham(listSP.get(index));
+                    setInfoSanPham(listSP.get(index) , listSP);
                     if (!checkTonTai()) {
                         actionbtn("add");
                     } else {
@@ -327,7 +327,7 @@ public final class GioHang extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (checkInfo()) {
-                    addCtGioHang();
+                    addCtGioHang(listSP);
                     // Thông báo dạng popup
                     Notification thongbaoNoi = new Notification(mainChinh, Notification.Type.SUCCESS, Notification.Location.TOP_CENTER, "Thêm sản phẩm thành công!");
                     thongbaoNoi.showNotification();
@@ -468,24 +468,51 @@ public final class GioHang extends JPanel {
     }
 
 
-    public void setInfoSanPham(SanPhamDTO sp) {
+    public void setInfoSanPham(SanPhamDTO sp,  ArrayList<DTO.SanPhamDTO> result) {
         masp = sp.getMSP();
         this.txtMaSp.setText(Integer.toString(sp.getMSP()));
         this.txtTenSp.setText(sp.getTEN());
       //  this.txtMaISBN.setText(sp.getISBN());
-        this.txtGiaXuat.setText(Integer.toString(sp.getTIENX()));
-       // getMaGiamGiaTable(sp.getMSP());
+       
+          ChiTietLoHangDAO chiTietLoHangDAO = new ChiTietLoHangDAO();
+    
+            for (SanPhamDTO sp1 : result) {
+      
+              ChiTietLoHangDTO string= findMinLohangWithValidQuantity(sp.getMSP());
+              
+            if (string != null )
+              this.txtGiaXuat.setText(string.getGiaNhap() * 2 + "");
+           
+            else {
+                this.txtGiaXuat.setText( "");
+            }
+        
+    }
         
     }
 
     
 
-    public void setFormChiTietGioHang(ChiTietGioHangDTO phieu) { //set info vào inputform khi nhan ben tablephieunhap
+    public void setFormChiTietGioHang(ChiTietGioHangDTO phieu , ArrayList<DTO.SanPhamDTO> result) { //set info vào inputform khi nhan ben tablephieunhap
         SanPhamDTO ctsp = spBUS.getByMaSP(phieu.getMSP());
         // ChiTietMaKhuyenMaiDTO ctmkm = mkmBUS.findCT(listctMKM, ctsp.getMSP());
         this.txtMaSp.setText(Integer.toString(ctsp.getMSP()));
         this.txtTenSp.setText(spBUS.getByMaSP(ctsp.getMSP()).getTEN());
-        this.txtGiaXuat.setText(Integer.toString(phieu.getTIENGIO()));
+       // this.txtGiaXuat.setText(Integer.toString(phieu.getTIENGIO()));
+        ChiTietLoHangDAO chiTietLoHangDAO = new ChiTietLoHangDAO();
+    
+    for (SanPhamDTO sp : result) {
+      
+              ChiTietLoHangDTO string= findMinLohangWithValidQuantity(sp.getMSP());
+            
+            if (string != null )
+            //  this.txtGiaXuat.setText(string.getGiaNhap() * 2 + "");
+            this.txtGiaXuat.setText("100");
+            else {
+                this.txtGiaXuat.setText( "");
+            }
+        
+    }
         this.txtSoLuongSPxuat.setText(Integer.toString(phieu.getSL()));
         getMaGiamGiaTable(ctsp.getMSP());
     }
@@ -496,7 +523,7 @@ public final class GioHang extends JPanel {
     ChiTietLoHangDAO chiTietLoHangDAO = new ChiTietLoHangDAO();
     
     for (SanPhamDTO sp : result) {
-        System.out.print(sp.getMSP());
+      
               ChiTietLoHangDTO string= findMinLohangWithValidQuantity(sp.getMSP());
                if (string == null)
                     soluong = 0 ; 
@@ -576,6 +603,11 @@ public final class GioHang extends JPanel {
     }
 
     public boolean checkInfo() {
+          String text = txtMaSp.getText();
+          System.out.print("Mã bao nhiêu "  + text);
+            // Chuyển đổi giá trị từ String sang int
+            int maSp = Integer.parseInt(text);
+        ChiTietLoHangDTO chitiet = laymin(maSp);
         boolean check = true;
         int index = tableSanPham.getSelectedRow();
         if (txtMaSp.getText().equals("")) {
@@ -584,25 +616,23 @@ public final class GioHang extends JPanel {
         } else if (txtGiaXuat.getText().equals("")) {
             JOptionPane.showMessageDialog(null, "Giá nhập không được để rỗng !", "Cảnh báo !", JOptionPane.WARNING_MESSAGE);
             check = false;
-        } else if (txtSoLuongSPxuat.getText().equals("") || Integer.parseInt(txtSoLuongSPxuat.getText()) > listSP.get(index).getSL()) {
+        } else if (txtSoLuongSPxuat.getText().equals("") || Integer.parseInt(txtSoLuongSPxuat.getText()) > chitiet.getSoLuong()) {
             JOptionPane.showMessageDialog(null, "Số lượng không được để rỗng và không lớn hơn đang có!", "Cảnh báo !", JOptionPane.WARNING_MESSAGE);
             check = false;
         } 
         return check;
     }
 
-    public void addCtGioHang() { // them sp vao chitietphieu
-        int masp = Integer.parseInt(txtMaSp.getText());
+    public void addCtGioHang(ArrayList<DTO.SanPhamDTO> result) { // them sp vao chitietphieu
+       
         int giaxuat;
-        String mkm = "";
-        if(!txtGiaGiam.getText().equals(" ")) {
-            giaxuat = Integer.parseInt(txtGiaGiam.getText());
-            mkm = txtMaKM.getText();
-        }
-        else
-            giaxuat = Integer.parseInt(txtGiaXuat.getText());
+//        String text = txtMaSp.getText();
+//             int maSp = Integer.parseInt(text);
+//        ChiTietLoHangDTO chitiet = laymin(maSp);
+        
+         giaxuat = Integer.parseInt(txtGiaXuat.getText());
         int soluong = Integer.parseInt(txtSoLuongSPxuat.getText());
-        ChiTietGioHangDTO ctphieu = new ChiTietGioHangDTO(tk.getMNV(), masp, mkm, soluong, giaxuat);
+        ChiTietGioHangDTO ctphieu = new ChiTietGioHangDTO(tk.getMNV(), masp, "", soluong, giaxuat);
         ChiTietGioHangDTO p = giohangBUS.findCT(chitietgiohang, ctphieu.getMSP());
         if (p == null) {
             chitietgiohang.add(ctphieu);
@@ -612,7 +642,7 @@ public final class GioHang extends JPanel {
         } else {
             int input = JOptionPane.showConfirmDialog(this, "Sản phẩm đã tồn tại trong phiếu !\nBạn có muốn chỉnh sửa không ?", "Sản phẩm đã tồn tại !", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
             if (input == 0) {
-                setFormChiTietGioHang(ctphieu);
+                setFormChiTietGioHang(ctphieu , listSP);
             }
         }
     }
@@ -639,5 +669,13 @@ public final class GioHang extends JPanel {
             }
         }
     }
-
+    
+    public ChiTietLoHangDTO laymin(int sp){
+         ChiTietLoHangDTO string = null; 
+               string= findMinLohangWithValidQuantity(sp);
+     
+           return string ; 
+        
+    } 
+    
 }
