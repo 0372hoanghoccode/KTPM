@@ -305,9 +305,9 @@ private void updateLayoutForCreate() {
        for (ChiTietLoHangDTO product : chitietlohang) {
             tblModel.addRow(new Object[]{
                     i , 
-                    product.getMSP(),
-                    product.getGiaNhap(),
-                    product.getSoLuong()
+                    product.getMSP(),   product.getSoLuong(),
+                    product.getGiaNhap()
+                 
                    
             });
             i++;
@@ -404,7 +404,7 @@ public void actionPerformed(ActionEvent e) {
 //
 //        // Cập nhật khu vực sách
 //        jpkvk.kvkBUS.update(updatedKhuVuc);
-        System.out.println("Khu vực sách đã được cập nhật: " + updatedKhuVuc);
+    //    System.out.println("Khu vực sách đã được cập nhật: " + updatedKhuVuc);
 
         // Tải lại bảng dữ liệu
         jpkvk.loadDataTable(jpkvk.listKVK);

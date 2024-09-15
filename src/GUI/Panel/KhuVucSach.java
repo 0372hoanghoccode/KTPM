@@ -210,7 +210,7 @@ public class KhuVucSach extends JPanel implements ActionListener, ItemListener {
         itemTaskbar listItem[] = new itemTaskbar[result.size()];
         int i = 0;
         for (SanPhamDTO sp : result) {
-            if (sp.getSL() != 0) {
+            if (sp.getSL() == 0) {
                 listItem[i] = new itemTaskbar(sp.getHINHANH(), sp.getTEN(), sp.getSL());
                 right.add(listItem[i]);
                 i++;

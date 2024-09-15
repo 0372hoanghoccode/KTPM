@@ -111,6 +111,7 @@ public final class SanPhamDialog extends JDialog implements ActionListener {
         pnCenter.add(pninfosanphamright, BorderLayout.WEST);
 
         tenSP = new InputForm("Tên sản phẩm");
+        
         danhmuc = new InputForm("Danh mục");
         namXB = new InputForm("Năm xuất bản");
         tenTG = new InputForm("Tên tác giả");
@@ -119,9 +120,11 @@ public final class SanPhamDialog extends JDialog implements ActionListener {
         PlainDocument NamXB = (PlainDocument)namXB.getTxtForm().getDocument();
         NamXB.setDocumentFilter((new NumericDocumentFilter()));
         txtsoluong = new InputForm("Số Lượng");
+        txtsoluong.setDisable();
         PlainDocument nhap = (PlainDocument)txtsoluong.getTxtForm().getDocument();
         nhap.setDocumentFilter((new NumericDocumentFilter()));
         txtgiaxuat = new InputForm("Giá xuất");
+        txtgiaxuat.setDisable();
         PlainDocument xuat = (PlainDocument)txtgiaxuat.getTxtForm().getDocument();
         xuat.setDocumentFilter((new NumericDocumentFilter()));
         cbbLoHang = new SelectForm("Lô Hàng",  arrmlh); //Hieusua -thêm cái string lo hang vo
@@ -150,6 +153,7 @@ public final class SanPhamDialog extends JDialog implements ActionListener {
                 initView();
                 btnSaveCH = new ButtonCustom("Lưu thông tin", "success", 14);
                 btnSaveCH.addActionListener(this);
+                 tenSP.setDisable();
                 pnbottom.add(btnSaveCH);
             }
             case "create" -> {

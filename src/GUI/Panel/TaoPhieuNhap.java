@@ -43,7 +43,10 @@ import GUI.Component.PanelBorderRadius;
 import GUI.Component.SelectForm;
 import helper.Formater;
 import helper.Validation;
+import java.sql.SQLException;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 public final class TaoPhieuNhap extends JPanel implements ItemListener, ActionListener {
@@ -410,8 +413,15 @@ public final class TaoPhieuNhap extends JPanel implements ItemListener, ActionLi
 
     public void loadDataTalbeSanPham(ArrayList<SanPhamDTO> result) {
         tblModelSP.setRowCount(0);
+        int sl = 0 ; 
         for (SanPhamDTO sp : result) {
-            tblModelSP.addRow(new Object[]{sp.getMSP(), sp.getTEN(), sp.getSL()});
+            try {
+                sl = ChiTietLoHangDAO.getTotalQuantityByProduct(sp.getMSP());
+            } catch (SQLException ex) {
+                Logger.getLogger(TaoPhieuNhap.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
+            tblModelSP.addRow(new Object[]{sp.getMSP(), sp.getTEN(), sl});
         }
     }
 
