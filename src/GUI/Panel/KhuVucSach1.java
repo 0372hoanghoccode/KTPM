@@ -133,17 +133,17 @@ tableKhuvuc.addMouseListener(new MouseAdapter() {
         }
         functionBar.add(mainFunction);
 
-        search = new IntegratedSearch(new String[]{"Tất cả", "Mã khu vực lô"});
+        search = new IntegratedSearch(new String[]{"Mã lô hàng"});
         search.cbxChoose.addItemListener(this);
-//        search.txtSearchForm.addKeyListener(new KeyAdapter() {
-//            @Override
-//            public void keyReleased(KeyEvent e) {
-//                String type = (String) search.cbxChoose.getSelectedItem();
-//                String txt = search.txtSearchForm.getText();
-//                listKVK = lohangBUS. (txt, type);
-//                loadDataTable(listKVK);
-//            }
-//        });
+        search.txtSearchForm.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyReleased(KeyEvent e) {
+                String type = (String) search.cbxChoose.getSelectedItem();
+                String txt = search.txtSearchForm.getText();
+                listKVK = lohangBUS.search(txt, type);
+                loadDataTable(listKVK);
+            }
+        });
 
         search.btnReset.addActionListener(this);
         functionBar.add(search);

@@ -294,6 +294,55 @@ public String[] getAll1() {
     return maxMLH;
 }
 
+  public ArrayList<KhuVucSach1DTO> search(String keyword, String type) {
+    ArrayList<KhuVucSach1DTO> results = new ArrayList<>();
+   
+    switch (type) {
+//        case "Tất cả":
+//            ArrayList<KhuVucSach1DTO> allResults = findAll(keyword);
+//            for (KhuVucSach1DTO kv : allResults) {
+//                // Thay vì gọi convertToDTO, tạo DTO trực tiếp ở đây
+//                results.add(new KhuVucSach1DTO(kv.getMLH(), kv.getNgay(),1) );
+//            }
+//            break;
+        case "Mã lô hàng":
+            ArrayList<KhuVucSach1DTO> maLoHangResults = findByMaLoHang(keyword);
+            for (KhuVucSach1DTO kv : maLoHangResults) {
+                // Thay vì gọi convertToDTO, tạo DTO trực tiếp ở đây
+                results.add(new KhuVucSach1DTO(kv.getMLH(), kv.getNgay() , 1 ));
+            }
+            break;
+        default:
+            System.out.println("Loại tìm kiếm không hợp lệ.");
+            break;
+    }
+
+    return results;
+}
+
+ public ArrayList<KhuVucSach1DTO> findByMaLoHang(String maLoHang) {
+    ArrayList<KhuVucSach1DTO> results = new ArrayList<>();
+    String query = "SELECT MLH, ngay FROM lohang WHERE MLH LIKE ?";
+    
+    try (Connection con = JDBCUtil.getConnection();
+         PreparedStatement ps = con.prepareStatement(query)) {
+        ps.setString(1, "%" + maLoHang + "%");
+        ResultSet rs = ps.executeQuery();
+        while (rs.next()) {
+            // Lấy dữ liệu từ ResultSet
+            String ma = rs.getString("MLH");  // Giả sử tên cột là ma_lohang
+            Timestamp ngay = rs.getTimestamp("ngay");  // Giả sử tên cột là ngay
+
+            // Tạo đối tượng KhuVucSach1DTO từ kết quả truy vấn
+            KhuVucSach1DTO kv = new KhuVucSach1DTO(ma, ngay, 1);
+            results.add(kv);
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+    return results;
+}
+
 
 }
 
