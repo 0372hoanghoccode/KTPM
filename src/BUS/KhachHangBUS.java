@@ -74,47 +74,51 @@ public class KhachHangBUS {
 
     public ArrayList<KhachHangDTO> search(String text, String type) {
         ArrayList<KhachHangDTO> result = new ArrayList<>();
-        text = text.toLowerCase();
-        switch (type) {
-            case "Tất cả" -> {
-                for (KhachHangDTO i : this.listKhachHang) {
-                    if (Integer.toString(i.getMaKH()).toLowerCase().contains(text) || i.getHoten().toLowerCase().contains(text) || i.getDiachi().toLowerCase().contains(text) || i.getSdt().toLowerCase().contains(text)) {
-                        result.add(i);
+        text = text.toLowerCase(); // chuyển text thành chữ thường để so sánh
+    
+        for (KhachHangDTO khachHang : this.listKhachHang) {
+            boolean match = false;
+            
+            switch (type) {
+                case "Tất cả" -> {
+                    if (String.valueOf(khachHang.getMaKH()).toLowerCase().contains(text) ||
+                        khachHang.getHoten().toLowerCase().contains(text) ||
+                        khachHang.getDiachi().toLowerCase().contains(text) ||
+                        khachHang.getSdt().toLowerCase().contains(text)) {
+                        match = true;
                     }
                 }
+                case "Mã khách hàng" -> {
+                    if (String.valueOf(khachHang.getMaKH()).toLowerCase().contains(text)) {
+                        match = true;
+                    }
+                }
+                case "Tên khách hàng" -> {
+                    if (khachHang.getHoten().toLowerCase().contains(text)) {
+                        match = true;
+                    }
+                }
+                case "Địa chỉ" -> {
+                    if (khachHang.getDiachi().toLowerCase().contains(text)) {
+                        match = true;
+                    }
+                }
+                case "Số điện thoại" -> {
+                    if (khachHang.getSdt().toLowerCase().contains(text)) {
+                        match = true;
+                    }
+                }
+                default -> throw new IllegalArgumentException("Loại tìm kiếm không hợp lệ: " + type);
             }
-            case "Mã khách hàng" -> {
-                for (KhachHangDTO i : this.listKhachHang) {
-                    if (Integer.toString(i.getMaKH()).toLowerCase().contains(text)) {
-                        result.add(i);
-                    }
-                }
-            }
-            case "Tên khách hàng" -> {
-                for (KhachHangDTO i : this.listKhachHang) {
-                    if (i.getHoten().toLowerCase().contains(text)) {
-                        result.add(i);
-                    }
-                }
-            }
-            case "Địa chỉ" -> {
-                for (KhachHangDTO i : this.listKhachHang) {
-                    if (i.getDiachi().toLowerCase().contains(text)) {
-                        result.add(i);
-                    }
-                }
-            }
-            case "Số điện thoại" -> {
-                for (KhachHangDTO i : this.listKhachHang) {
-                    if (i.getSdt().toLowerCase().contains(text)) {
-                        result.add(i);
-                    }
-                }
+    
+            if (match) {
+                result.add(khachHang); // nếu điều kiện đúng, thêm vào danh sách kết quả
             }
         }
-
+    
         return result;
     }
+    
 
     public String getTenKhachHang(int makh) {
         String name = "";

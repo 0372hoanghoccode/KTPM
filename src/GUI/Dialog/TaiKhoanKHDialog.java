@@ -68,12 +68,16 @@ public class TaiKhoanKHDialog extends JDialog {
         pnmain.setBackground(Color.white);
         username = new InputForm("Tên đăng nhập");
         password = new InputForm("Mật khẩu", "password");
-        maNhomQuyen = new SelectForm("Nhóm quyền", getNhomQuyen());
         trangthai = new SelectForm("Trạng thái", new String[]{"Ngưng hoạt động", "Hoạt động", "Chờ xử lý"});
+        maNhomQuyen = new SelectForm("Nhóm quyền", getNhomQuyen());
+        maNhomQuyen.setSelectedItem("Khách hàng");
+        maNhomQuyen.setVisible(false);
+        
         pnmain.add(username);
         pnmain.add(password);
-        pnmain.add(maNhomQuyen);
         pnmain.add(trangthai);
+        pnmain.add(maNhomQuyen);
+        
         pnbottom = new JPanel(new FlowLayout());
         pnbottom.setBorder(new EmptyBorder(10, 0, 10, 0));
         pnbottom.setBackground(Color.white);

@@ -214,7 +214,7 @@ public class TaiKhoanKH extends JPanel implements ActionListener, ItemListener {
 else if (e.getSource() == mainFunction.btn.get("detail")) {
             int index = getRowSelected();
             if (index != -1) {
-                new TaiKhoanKHDialog(this, owner, "Thêm tài khoản", true, "view", listTk.get(index));
+                new TaiKhoanKHDialog(this, owner, "Chi Tiết Tài Khoản", true, "view", listTk.get(index));
             }
         } else if (e.getSource() == mainFunction.btn.get("export")) {
             try {

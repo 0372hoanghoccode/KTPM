@@ -17,6 +17,8 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Arrays;
+
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -68,12 +70,14 @@ public class TaiKhoanDialog extends JDialog {
         pnmain.setBackground(Color.white);
         username = new InputForm("Tên đăng nhập");
         password = new InputForm("Mật khẩu", "password");
-        maNhomQuyen = new SelectForm("Nhóm quyền", getNhomQuyen());
         trangthai = new SelectForm("Trạng thái", new String[]{"Ngưng hoạt động", "Hoạt động", "Chờ xử lý"});
+        maNhomQuyen = new SelectForm("Nhóm quyền", getNhomQuyen());
+        
         pnmain.add(username);
         pnmain.add(password);
-        pnmain.add(maNhomQuyen);
         pnmain.add(trangthai);
+        pnmain.add(maNhomQuyen);
+        
         pnbottom = new JPanel(new FlowLayout());
         pnbottom.setBorder(new EmptyBorder(10, 0, 10, 0));
         pnbottom.setBackground(Color.white);
@@ -171,13 +175,22 @@ btnThem.addActionListener(new ActionListener() {
         this.add(pnbottom, BorderLayout.SOUTH);
     }
 
-    public String[] getNhomQuyen() {
-        String[] listNhomQuyen = new String[listNq.size()];
-        for (int i = 0; i < listNq.size(); i++) {
-            listNhomQuyen[i] = listNq.get(i).getTennhomquyen();
+public String[] getNhomQuyen() {
+    String[] listNhomQuyen = new String[listNq.size()];
+    int index = 0; // Biến để theo dõi vị trí trong mảng kết quả
+    
+    for (int i = 0; i < listNq.size(); i++) {
+        // Kiểm tra nếu tên nhóm quyền không phải là "khách hàng" và không phải "người xem"
+        if (!listNq.get(i).getTennhomquyen().equalsIgnoreCase("khách hàng") &&
+            !listNq.get(i).getTennhomquyen().equalsIgnoreCase("người xem")) {
+            listNhomQuyen[index] = listNq.get(i).getTennhomquyen();
+            index++; // Tăng index khi thêm phần tử vào mảng
         }
-        return listNhomQuyen;
     }
+    
+    // Tạo mảng có kích thước phù hợp chỉ chứa các nhóm quyền cần thiết
+    return Arrays.copyOf(listNhomQuyen, index);
+}
 
     public boolean validateInput() {
         if (username.getText().length() == 0) {

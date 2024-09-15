@@ -130,7 +130,7 @@ public void initComponents(String title, String type) {
 
     // Tạo panel top với 2 input fields
     pnmain_top = new JPanel(new GridLayout(1, 2));
-    txtMaPhieu = new InputForm("Mã phiếu");
+    txtMaPhieu = new InputForm("Mã Lô Hàng");
     txtThoiGian = new InputForm("Thời gian tạo");
 
     txtMaPhieu.setEditable(false);
@@ -178,7 +178,7 @@ public void initComponents(String title, String type) {
             break;
         case "detail":
             pnmain_bottom.add(scrollTable); // Hiển thị bảng khi xem chi tiết
-            pnmain_btn.add(btnCapNhat); // Thêm nút "Lưu thông tin" khi xem chi tiết
+            // pnmain_btn.add(btnCapNhat); // Thêm nút "Lưu thông tin" khi xem chi tiết
             initInfo(); // Phương thức để khởi tạo thông tin chi tiết
             break;
         case "update":
