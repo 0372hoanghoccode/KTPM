@@ -256,11 +256,11 @@ public class PhieuXuatDAO implements DAOinterface<PhieuXuatDTO> {
         } catch (SQLException e) {
             System.out.println(e);
         }
-        for (int i = 0; i < SP.size(); i++) {
-            if(result.get(i).getSL() > SP.get(i).getSL()){
-                return false;
-            }
-        }
+//        for (int i = 0; i < SP.size(); i++) {
+//            if(result.get(i).getSL() > SP.get(i).getSL()){
+//                return false;
+//            }
+//        }
         return true;
     }
     @Override

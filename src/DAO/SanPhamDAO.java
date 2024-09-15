@@ -232,4 +232,28 @@ public class SanPhamDAO implements DAOinterface<SanPhamDTO> {
         }
         return result;
     }
+        public static String getTenSanPhamByMaSP(int maSP) {
+        String tenSP = null;
+        // SQL truy vấn để lấy tên sản phẩm từ mã sản phẩm
+        String sql = "SELECT ten FROM SanPham WHERE MSP = ?";
+
+        try (Connection con = JDBCUtil.getConnection();  // Kết nối cơ sở dữ liệu
+             PreparedStatement pst = con.prepareStatement(sql)) {  // Tạo PreparedStatement
+            
+            // Thiết lập tham số truy vấn
+            pst.setInt(1, maSP);
+
+            // Thực hiện truy vấn
+            ResultSet rs = pst.executeQuery();
+            
+            // Xử lý kết quả truy vấn
+            if (rs.next()) {
+                tenSP = rs.getString("ten");  // Lấy tên sản phẩm
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return tenSP;  // Trả về tên sản phẩm
+    }
 }

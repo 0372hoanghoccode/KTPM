@@ -46,10 +46,10 @@ public class PhieuXuatBUS {
         listPhieuXuat.remove(px);
     }
 
-//    public void update(PhieuXuatDTO px) {
-//    phieuXuatDAO.update(px);  
-//    chiTietPhieuXuatDAO.updateSL(px.getMP() + ""); 
-//}
+    public void update(PhieuXuatDTO px) {
+    phieuXuatDAO.update(px);  
+    chiTietPhieuXuatDAO.updateSL(px.getMP() + ""); 
+}
 
 
     public void insert(PhieuXuatDTO px) {

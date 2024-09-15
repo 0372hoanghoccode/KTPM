@@ -73,7 +73,7 @@ public final class ChiTietPhieuKHDialog extends JDialog implements ActionListene
         for (int i = 0; i < ctPhieu.size(); i++) {
             SanPhamDTO sp = spBus.getByMaSP(ctPhieu.get(i).getMSP());
             tblModel.addRow(new Object[]{
-                i + 1, sp.getMSP(), SanPhamDAO.getInstance().selectById(sp.getMSP()+"").getTEN(), 
+                i + 1, sp.getMSP(), SanPhamDAO.getTenSanPhamByMaSP(sp.getMSP()), 
                 Formater.FormatVND(ctPhieu.get(i).getTIEN()), ctPhieu.get(i).getSL()
             });
         }
