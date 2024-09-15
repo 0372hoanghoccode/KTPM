@@ -283,4 +283,13 @@ public class PhieuXuatDAO implements DAOinterface<PhieuXuatDTO> {
         }
         return result;
     }
+     public static void updatePhieuXuatStatus(int mp, int status) throws SQLException {
+        String sql = "UPDATE PHIEUXUAT SET TT = ? WHERE MPX = ?";
+        try (Connection con = JDBCUtil.getConnection();
+             PreparedStatement pst = con.prepareStatement(sql)) {
+            pst.setInt(1, status);
+            pst.setInt(2, mp);
+            pst.executeUpdate();
+        }
+    }
 } 

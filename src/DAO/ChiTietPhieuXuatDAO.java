@@ -11,6 +11,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import BUS.MaKhuyenMaiBUS;
+import DTO.ChiTietPhieuXuatDTO;
 
 import java.sql.ResultSet;
 
@@ -161,26 +162,28 @@ public class ChiTietPhieuXuatDAO implements ChiTietInterface<ChiTietPhieuDTO> {
         return result;
     }
 
-    public void updateSL(String t) {
-        try {
-            Connection con = (Connection) JDBCUtil.getConnection();
-            String sql = "SELECT * FROM CTPHIEUXUAT WHERE MPX = ?";
-            PreparedStatement pst = (PreparedStatement) con.prepareStatement(sql);
-            pst.setString(1, t);
-            ResultSet rs = (ResultSet) pst.executeQuery();
-            while (rs.next()) {
-                int maphieu = rs.getInt("MPX");
-                int MSP = rs.getInt("MSP");
-                int SL = rs.getInt("SL");
-                int tienxuat = rs.getInt("TIENXUAT");
-                ChiTietPhieuDTO ctphieu = new ChiTietPhieuDTO(maphieu, MSP, SL, tienxuat);
-                int SLsp = -(ctphieu.getSL());
-                SanPhamDAO.getInstance().updateSoLuongTon(ctphieu.getMSP(), SLsp);
-            }
-            JDBCUtil.closeConnection(con);
-        } catch (SQLException e) {
-            System.out.println(e);
-        }
-    }
+public static ArrayList<ChiTietPhieuXuatDTO> getChiTietByPhieuXuat(int maPhieuXuat) {
+        ArrayList<ChiTietPhieuXuatDTO> chiTietList = new ArrayList<>();
+        String sql = "SELECT * FROM ctphieuxuat WHERE MPX = ?";
 
+        try (Connection con = JDBCUtil.getConnection();
+             PreparedStatement pst = con.prepareStatement(sql)) {
+            pst.setInt(1, maPhieuXuat);
+            ResultSet rs = pst.executeQuery();
+            
+            while (rs.next()) {
+                // Giả sử ChiTietPhieuXuatDTO có các trường maSP, soLuong
+                ChiTietPhieuXuatDTO chiTiet = new ChiTietPhieuXuatDTO(rs.getInt("MPX"),
+                    rs.getInt("MSP"),
+                    rs.getInt("SL"),
+                        rs.getInt("TIENXUAT")
+                );
+                chiTietList.add(chiTiet);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return chiTietList;
+    }
+  
 }

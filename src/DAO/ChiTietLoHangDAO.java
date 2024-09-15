@@ -49,7 +49,7 @@ public class ChiTietLoHangDAO implements ChiTietInterface<ChiTietLoHangDTO>{
     }
 
     
-  public void updateQuantity(int maSP, String maLoHang, int soLuongChange) throws SQLException {
+  public static void updateQuantity(int maSP, String maLoHang, int soLuongChange) throws SQLException {
     // Câu lệnh SQL để cập nhật số lượng lô hàng
     String updateQuantitySQL = "UPDATE ctlohang SET SoLuong = SoLuong + ? WHERE MSP = ? AND MLH = ?";
 

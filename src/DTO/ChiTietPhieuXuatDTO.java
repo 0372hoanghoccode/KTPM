@@ -13,6 +13,10 @@ public class ChiTietPhieuXuatDTO extends ChiTietPhieuDTO{
         super(MP, MSP, SL, TIENXUAT);
         this.MKM = MKM;
     }
+     public ChiTietPhieuXuatDTO(int MP, int MSP, int SL, int TIENXUAT) {
+        super(MP, MSP, SL, TIENXUAT);
+       
+     }
 
     public int getMKM() {
         return MKM;

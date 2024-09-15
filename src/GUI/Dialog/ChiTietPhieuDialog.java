@@ -23,12 +23,17 @@ import javax.swing.table.DefaultTableModel;
 import BUS.PhieuNhapBUS;
 import BUS.PhieuXuatBUS;
 import BUS.SanPhamBUS;
+import DAO.ChiTietLoHangDAO;
+import DAO.ChiTietPhieuXuatDAO;
 
 import DAO.KhachHangDAO;
 import DAO.KhuVucSach1DAO;
 import DAO.NhanVienDAO;
+import DAO.PhieuXuatDAO;
 import DAO.SanPhamDAO;
+import DTO.ChiTietLoHangDTO;
 import DTO.ChiTietPhieuDTO;
+import DTO.ChiTietPhieuXuatDTO;
 import DTO.KhuVucSach1DTO;
 import DTO.PhieuNhapDTO;
 import DTO.PhieuTraDTO;
@@ -40,6 +45,9 @@ import GUI.Component.InputForm;
 import GUI.Panel.KhuVucSach1;
 import helper.Formater;
 import helper.writePDF;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public final class ChiTietPhieuDialog extends JDialog implements ActionListener {
 
@@ -218,17 +226,110 @@ int mlhInt;
                 w.writePN(phieunhap.getMP());
             }
         }
-        if(source == btnDuyet) {
-            if (this.phieuxuat != null) {
-                if(!phieuxuatBus.checkSLPx(phieuxuat.getMP())) JOptionPane.showMessageDialog(null, "Không đủ số lượng để tạo phiếu!");
-                else {
-                    phieuxuat.setTT(1);
-                    phieuxuatBus.update(phieuxuat);
+       if (source == btnDuyet) {
+    if (this.phieuxuat != null) {
+        // Kiểm tra số lượng phiếu xuất
+        if (!phieuxuatBus.checkSLPx(phieuxuat.getMP())) {
+            JOptionPane.showMessageDialog(null, "Không đủ số lượng để tạo phiếu!");
+        } else {
+       
+
+            // Lấy chi tiết phiếu xuất
+            ArrayList<ChiTietPhieuXuatDTO> chitiet = ChiTietPhieuXuatDAO.getChiTietByPhieuXuat(phieuxuat.getMP());
+            
+            boolean hasError = false;
+
+            for (ChiTietPhieuXuatDTO chitietphieuxuat : chitiet) {
+                // Lấy chi tiết lô hàng tương ứng với mã sản phẩm
+                ChiTietLoHangDTO chitietlohang = laymin(chitietphieuxuat.getMSP());
+                if (chitietlohang != null) {
+                    int soluongUpdate = chitietlohang.getSoLuong() - chitietphieuxuat.getSL();
+
+                    if (soluongUpdate >= 0) {
+                        System.out.println("Số lượng mới là " + soluongUpdate);
+                        
+                        try {
+                            // Cập nhật số lượng trong lô hàng
+                            ChiTietLoHangDAO.updateQuantity(chitietlohang.getMSP(), chitietlohang.getMLH(), -chitietphieuxuat.getSL());
+                        } catch (SQLException ex) {
+                            Logger.getLogger(ChiTietPhieuDialog.class.getName()).log(Level.SEVERE, null, ex);
+                            hasError = true;
+                            JOptionPane.showMessageDialog(null, "Lỗi khi cập nhật số lượng trong lô hàng!");
+                        }
+                    } else {
+                        // Số lượng không đủ
+                        JOptionPane.showMessageDialog(null, "Số lượng không đủ cho sản phẩm: " + chitietphieuxuat.getMSP());
+                        hasError = true;
+                        break; // Dừng việc xử lý khi có lỗi số lượng
+                    }
+                } else {
+                    System.out.println("Không tìm thấy lô hàng cho sản phẩm: " + chitietphieuxuat.getMSP());
+                    hasError = true;
+                    break; // Dừng việc xử lý khi không tìm thấy lô hàng
                 }
             }
-            if (this.phieunhap != null) {
 
+            if (!hasError) {
+                // Thông báo duyệt thành công nếu không có lỗi
+                JOptionPane.showMessageDialog(null, "Duyệt phiếu xuất thành công!");
+                     // Cập nhật trạng thái của phiếu xuất
+            phieuxuat.setTT(1);
+            try {
+                // Cập nhật phiếu xuất vào cơ sở dữ liệu nếu cần
+                // phieuxuatBus.update(phieuxuat);
+                PhieuXuatDAO.updatePhieuXuatStatus(phieuxuat.getMP(), phieuxuat.getTT());
+            } catch (SQLException ex) {
+                Logger.getLogger(ChiTietPhieuDialog.class.getName()).log(Level.SEVERE, null, ex);
+                JOptionPane.showMessageDialog(null, "Lỗi khi cập nhật phiếu xuất!");
+                return; // Dừng thực hiện nếu có lỗi khi cập nhật
+            }
+                this.dispose();
             }
         }
     }
+}
+
+
+        
+    }
+     public ChiTietLoHangDTO laymin(int sp){
+         ChiTietLoHangDTO string = null; 
+               string= findMinLohangWithValidQuantity(sp);
+     
+           return string ; 
+        
+    } 
+     public ChiTietLoHangDTO findMinLohangWithValidQuantity(int maSP) {
+    // Lấy danh sách các chi tiết lô hàng từ DAO
+    ArrayList<ChiTietLoHangDTO> loHangList = new ChiTietLoHangDAO().findLohangByMSP(maSP);
+    
+    // Khởi tạo biến để lưu đối tượng lô hàng nhỏ nhất
+    ChiTietLoHangDTO minLohang = null;
+    int minCode = Integer.MAX_VALUE; // Giá trị lớn nhất để tìm mã nhỏ nhất
+    
+    // Duyệt qua danh sách các chi tiết lô hàng
+    for (ChiTietLoHangDTO loHang : loHangList) {
+        String mlh = loHang.getMLH(); // Mã lô hàng
+        int soLuong = loHang.getSoLuong(); // Số lượng lô hàng
+        
+        // Kiểm tra số lượng lô hàng
+        if (soLuong > 0) {
+            try {
+                int currentCode = Integer.parseInt(mlh); // Chuyển đổi mã lô hàng từ String sang int
+                
+                // Nếu chưa tìm thấy lô hàng hợp lệ nào hoặc mã hiện tại nhỏ hơn mã đã tìm thấy
+                if (minLohang == null || currentCode < minCode) {
+                    minCode = currentCode;
+                    minLohang = loHang; // Cập nhật đối tượng lô hàng nhỏ nhất
+                }
+            } catch (NumberFormatException e) {
+                // Xử lý trường hợp mã lô hàng không phải là số hợp lệ
+                System.err.println("Mã lô hàng không phải là số hợp lệ: " + mlh);
+            }
+        }
+    }
+    
+    // Trả về đối tượng lô hàng nhỏ nhất hoặc null nếu không tìm thấy lô hàng hợp lệ
+    return minLohang;
+}
 }
