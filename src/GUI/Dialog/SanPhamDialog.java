@@ -124,14 +124,14 @@ public final class SanPhamDialog extends JDialog implements ActionListener {
         PlainDocument nhap = (PlainDocument)txtsoluong.getTxtForm().getDocument();
         nhap.setDocumentFilter((new NumericDocumentFilter()));
         txtgiaxuat = new InputForm("Giá bán");
-        txtgiaxuat.setDisable();
+      txtgiaxuat.setDisable();
         PlainDocument xuat = (PlainDocument)txtgiaxuat.getTxtForm().getDocument();
         xuat.setDocumentFilter((new NumericDocumentFilter()));
         cbbLoHang = new SelectForm("Lô Hàng",  arrmlh); //Hieusua -thêm cái string lo hang vo
         txtgiabia = new InputForm("Giá Bìa");
         txtgiabia.setDisable();
         cbbMKM = new SelectForm("Mã Khuyến Mãi",  new String[]{"MKM1", "MKM2", "MKM3"});//Hieusua -thêm cái string mkm zo
-        txtgiabia = new InputForm("Giá Bìa");
+     
   masp1 = new InputForm("Mã sản phẩm");
         masp1.setVisible(false);
         hinhanh = new InputImage("Hình minh họa");
@@ -321,9 +321,9 @@ public final class SanPhamDialog extends JDialog implements ActionListener {
          String selectedLotCode = (String) cbbLoHang.getSelectedItem();
           int quantity = dao.getProductQuantityInLot(selectedLotCode, masp);
                 txtsoluong.setText(Integer.toString(quantity));
-                                int gianhap = dao.TuMaLayGiaNhap(selectedLotCode, masp);
-                int giaBan = gianhap * 2 ; 
-                  txtgiaxuat.setText(Integer.toString(giaBan));
+                //                int gianhap = dao.TuMaLayGiaNhap(selectedLotCode, masp);
+             //   int giaBan = gianhap * 2 ; 
+             //     txtgiaxuat.setText(Integer.toString(giaBan));
         cbbLoHang.addActionListener(new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
@@ -331,10 +331,10 @@ public final class SanPhamDialog extends JDialog implements ActionListener {
             if (selectedLotCode != null) {
                 // Hiển thị số lượng sản phẩm của mã lô hàng đã chọn
                 int quantity = dao.getProductQuantityInLot(selectedLotCode, masp);
-                int gianhap = dao.TuMaLayGiaNhap(selectedLotCode, masp);
-                int giaBan = gianhap * 2 ; 
+               // int gianhap = dao.TuMaLayGiaNhap(selectedLotCode, masp);
+               // int giaBan = gianhap * 2 ; 
                 txtsoluong.setText(Integer.toString(quantity));
-                     txtgiaxuat.setText(Integer.toString(giaBan));
+                  //   txtgiaxuat.setText(Integer.toString(giaBan));
             }
         }
     });

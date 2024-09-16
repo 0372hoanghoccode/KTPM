@@ -71,7 +71,7 @@ public final class MaKhuyenMaiDialog extends JDialog implements ActionListener {
         for (int i = 0; i < ctMkm.size(); i++) {
             SanPhamDTO sp = spBus.getByMaSP(ctMkm.get(i).getMSP());
             tblModel.addRow(new Object[]{
-                i + 1, sp.getMSP(), SanPhamDAO.getInstance().selectById(sp.getMSP()+"").getTEN(), 
+                i + 1, sp.getMSP(), sp.getTEN(), 
                 ctMkm.get(i).getPTG() + "%"
             });
         }
