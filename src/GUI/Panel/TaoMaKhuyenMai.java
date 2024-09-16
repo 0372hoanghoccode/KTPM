@@ -40,6 +40,7 @@ import GUI.Component.InputDate;
 import GUI.Component.InputForm;
 import GUI.Component.NumericDocumentFilter;
 import GUI.Component.PanelBorderRadius;
+import GUI.Component.SelectForm;
 import helper.Validation;
 
 
@@ -51,9 +52,10 @@ public final class TaoMaKhuyenMai extends JPanel implements ItemListener, Action
     JPanel contentCenter, left_top, content_btn, left_bottom;
     DefaultTableModel tblModel, tblModelSP; //table co san 
     ButtonCustom btnAddSp, btnDelete, btnNhapMKM; //, btnImport
-    InputForm txtMaKM, txtNhanVien, txtMaSp, txtTenSp, txtMaISBN, txtPTG;
+    InputForm txtMaKM, txtNhanVien, txtMaSp, txtTenSp, txtMaISBN, txtPTG,txtGiaNhap, txtGiaBan,txtGiaBia;
     InputDate dateStart, dateEnd;
     JTextField txtTimKiem;
+    SelectForm cbbLoHang;
 
     Main m;
     Color BackgroundColor = new Color(211, 211, 211);
@@ -200,7 +202,12 @@ public final class TaoMaKhuyenMai extends JPanel implements ItemListener, Action
         txtTenSp.setPreferredSize(new Dimension(100, 90));
         txtMaSp = new InputForm("Mã sản phẩm");
         txtMaSp.setEditable(false);
-  
+        txtGiaNhap = new InputForm("Giá Nhập");
+        txtGiaNhap.setEditable(false);
+        txtGiaBan = new InputForm("Giá Bán");
+        // txtGiaBan.setEditable(false);
+        txtGiaBia = new InputForm("Giá Bìa");
+        txtGiaBia.setEditable(false);
         txtPTG = new InputForm("Phần trăm giảm");
         PlainDocument ptg = (PlainDocument) txtPTG.getTxtForm().getDocument();
         ptg.setDocumentFilter((new NumericDocumentFilter())); //chỉ cho nhập số
@@ -208,11 +215,14 @@ public final class TaoMaKhuyenMai extends JPanel implements ItemListener, Action
         JPanel merge1 = new JPanel(new BorderLayout());
         merge1.setPreferredSize(new Dimension(100, 50));
         merge1.add(txtMaSp, BorderLayout.WEST);
-
+        merge1.add(txtPTG,BorderLayout.CENTER);
 
         JPanel merge2 = new JPanel(new GridLayout());
         merge2.setPreferredSize(new Dimension(100, 80));
-        merge2.add(txtPTG);
+        merge2.add(txtGiaNhap, BorderLayout.WEST);
+        merge2.add(txtGiaBia,BorderLayout.CENTER);
+        merge2.add(txtGiaBan, BorderLayout.EAST);
+        
 
         content_right_top.add(txtTenSp, BorderLayout.NORTH);
         content_right_top.add(merge1, BorderLayout.CENTER);
@@ -263,8 +273,8 @@ public final class TaoMaKhuyenMai extends JPanel implements ItemListener, Action
         right.setLayout(new BorderLayout());
 
         JPanel right_top, right_center, right_bottom;
-        right_top = new JPanel(new GridLayout(4, 1, 0, 0));
-        right_top.setPreferredSize(new Dimension(300, 360));
+        right_top = new JPanel(new GridLayout(5, 1, 0, 0));
+        right_top.setPreferredSize(new Dimension(300, 450));
         right_top.setOpaque(false);
         txtMaKM = new InputForm("Mã khuyến mãi");
         txtNhanVien = new InputForm("Nhân viên tạo");
@@ -272,10 +282,12 @@ public final class TaoMaKhuyenMai extends JPanel implements ItemListener, Action
         txtNhanVien.setEditable(false);
         dateStart = new InputDate("Từ ngày");
         dateEnd = new InputDate("Đến ngày");
+        cbbLoHang = new SelectForm("Lô Hàng", new String[]{"Lô 1","Lô 2","Lô 3"});
         right_top.add(txtMaKM);
         right_top.add(txtNhanVien);
         right_top.add(dateStart);
         right_top.add(dateEnd);
+        right_top.add(cbbLoHang);
 
         right_center = new JPanel();
         right_center.setPreferredSize(new Dimension(100, 100));
