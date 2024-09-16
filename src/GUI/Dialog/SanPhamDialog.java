@@ -51,8 +51,8 @@ public final class SanPhamDialog extends JDialog implements ActionListener {
     private ButtonCustom  btnAddSanPham;
      SelectForm cbbLoHang;
     InputForm tenSP, tenTG, namXB, danhmuc, masp1;
-    InputForm txtsoluong, txtgiaxuat;
-    SelectForm  cbNXB;
+    InputForm txtsoluong, txtgiaxuat,txtgiabia;
+    SelectForm  cbNXB,cbbMKM;
     SelectForm khuvuc;
     InputImage hinhanh;
     DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
@@ -100,7 +100,7 @@ public final class SanPhamDialog extends JDialog implements ActionListener {
 
     public void initCardOne(String type) {
         pnCenter = new JPanel(new BorderLayout());
-        pninfosanpham = new JPanel(new GridLayout(3, 4, 0, 0));
+        pninfosanpham = new JPanel(new GridLayout(4, 4, 0, 0));
         pninfosanpham.setBackground(Color.WHITE);
         pnCenter.add(pninfosanpham, BorderLayout.CENTER);
 
@@ -123,12 +123,15 @@ public final class SanPhamDialog extends JDialog implements ActionListener {
         txtsoluong.setDisable();
         PlainDocument nhap = (PlainDocument)txtsoluong.getTxtForm().getDocument();
         nhap.setDocumentFilter((new NumericDocumentFilter()));
-        txtgiaxuat = new InputForm("Giá xuất");
+        txtgiaxuat = new InputForm("Giá bán");
         txtgiaxuat.setDisable();
         PlainDocument xuat = (PlainDocument)txtgiaxuat.getTxtForm().getDocument();
         xuat.setDocumentFilter((new NumericDocumentFilter()));
         cbbLoHang = new SelectForm("Lô Hàng",  arrmlh); //Hieusua -thêm cái string lo hang vo
-
+        txtgiabia = new InputForm("Giá Bìa");
+        txtgiabia.setDisable();
+        cbbMKM = new SelectForm("Mã Khuyến Mãi",  new String[]{"MKM1", "MKM2", "MKM3"});//Hieusua -thêm cái string mkm zo
+        txtgiabia = new InputForm("Giá Bìa");
   masp1 = new InputForm("Mã sản phẩm");
         masp1.setVisible(false);
         hinhanh = new InputImage("Hình minh họa");
@@ -140,9 +143,12 @@ public final class SanPhamDialog extends JDialog implements ActionListener {
         pninfosanpham.add(cbNXB);
         pninfosanpham.add(khuvuc);
         pninfosanpham.add(txtsoluong);
-        pninfosanpham.add(txtgiaxuat);
+        pninfosanpham.add(txtgiabia);
         pninfosanpham.add(cbbLoHang);
+        pninfosanpham.add(txtgiaxuat);
+        pninfosanpham.add(cbbMKM);
         pninfosanphamright.add(hinhanh);
+        
 
         pnbottom = new JPanel(new FlowLayout());
         pnbottom.setBorder(new EmptyBorder(20, 0, 10, 0));
