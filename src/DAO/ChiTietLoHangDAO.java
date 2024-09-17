@@ -99,6 +99,9 @@ public class ChiTietLoHangDAO implements ChiTietInterface<ChiTietLoHangDTO>{
     return quantity; // Trả về số lượng sản phẩm trong lô
 }
     
+    
+    
+ 
         
     public static int TuMaLayGiaNhap(String lotCode, int productCode) {
     String sql = "SELECT GiaNhap FROM ctlohang WHERE MLH = ? AND MSP = ?";
@@ -122,6 +125,30 @@ public class ChiTietLoHangDAO implements ChiTietInterface<ChiTietLoHangDTO>{
 }
 
 
+    public static int getTotalQuantityForProduct(int productCode) {
+    String sql = "SELECT SUM(soLuong) as totalQuantity FROM ctlohang WHERE MSP = ?";
+    int totalQuantity = 0;
+
+    try (Connection con = JDBCUtil.getConnection(); 
+         PreparedStatement pstmt = con.prepareStatement(sql)) {
+        
+        pstmt.setInt(1, productCode); // Mã sản phẩm
+        
+        ResultSet rs = pstmt.executeQuery();
+        if (rs.next()) {
+            totalQuantity = rs.getInt("totalQuantity");
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+
+    return totalQuantity; // Trả về tổng số lượng sản phẩm
+}
+    
+
+
+    
+    
  public static ArrayList<ChiTietLoHangDTO> getByMaLoHang(String maLoHang) {
         ArrayList<ChiTietLoHangDTO> list = new ArrayList<>();
         String sql = "SELECT * FROM ctlohang WHERE MLH = ?";

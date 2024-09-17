@@ -3,6 +3,7 @@ package GUI.Component;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.awt.event.ActionListener;
 import javax.accessibility.AccessibleContext;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -142,4 +143,26 @@ public final class InputForm extends JPanel {
         return txtForm.getText();
     }
 
+
+
+    public void addActionListener(ActionListener actionListener) {
+        // Add listener to txtForm if it's not null
+        if (txtForm != null) {
+            txtForm.addActionListener(actionListener);
+        }
+        
+        // Add listener to txtPass if it's not null
+        if (txtPass != null) {
+            txtPass.addActionListener(actionListener);
+        }
+        
+        // Store the listener in the listenerList
+        listenerList.add(ActionListener.class, actionListener);
+    }
+    
+  
+
+    // Other methods...
 }
+
+

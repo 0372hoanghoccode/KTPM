@@ -194,10 +194,7 @@ public String[] getAll1() {
         
     } catch (Exception e) {
         e.printStackTrace(); // In ra lỗi để tiện theo dõi
-    } finally {
-        // Đảm bảo đóng kết nối cơ sở dữ liệu
-        JDBCUtil.closeConnection(con);
-    }
+    } 
     
     // Chuyển đổi từ ArrayList sang mảng chuỗi
     return resultList.toArray(new String[0]);

@@ -95,6 +95,29 @@ public class MaKhuyenMaiDAO implements DAOinterface<MaKhuyenMaiDTO> {
         }
         return result;
     }
+      public static String[] selectAll1() {
+        ArrayList<String> resultList = new ArrayList<>();
+        Connection con = null;
+        PreparedStatement pst = null;
+        ResultSet rs = null;
+
+        try {
+            con = JDBCUtil.getConnection(); // Mở kết nối
+            String sql = "SELECT MKM FROM MAKHUYENMAI WHERE TT=1"; // Truy vấn chỉ lấy cột MKM
+            pst = con.prepareStatement(sql);
+            rs = pst.executeQuery();
+
+            while (rs.next()) {
+                String mkm = rs.getString("MKM");
+                resultList.add(mkm);
+            }
+        } catch (Exception e) {
+            e.printStackTrace(); // In ra lỗi nếu có
+        } 
+
+        // Chuyển đổi ArrayList sang mảng String[]
+        return resultList.toArray(new String[0]);
+    }
 
     @Override
     public MaKhuyenMaiDTO selectById(String t) {

@@ -93,12 +93,12 @@ public final class ChiTietPhieuDialog extends JDialog implements ActionListener 
         phieuxuatBus = new PhieuXuatBUS();
         
         chitietphieu = phieuxuatBus.selectCTP(phieuxuatDTO.getMP());
-        initComponent(title);
+        initComponent1(title);
         if(phieuxuatDTO.getTT() != 2) {
             btnDuyet.setEnabled(false);
         }
         initPhieuXuat();
-        loadDataTableChiTietPhieu(chitietphieu);
+        loadDataTableChiTietPhieuXuat(chitietphieu);
         this.setVisible(true);
     }
     // Phiếu lô hàng 
@@ -148,6 +148,33 @@ int mlhInt;
             });
         }
     }
+    
+   public void loadDataTableChiTietPhieuXuat(ArrayList<ChiTietPhieuDTO> ctPhieu) {
+    tblModel.setRowCount(0); // Xóa tất cả các hàng hiện tại trong bảng
+
+    for (int i = 0; i < ctPhieu.size(); i++) {
+        ChiTietPhieuDTO ct = ctPhieu.get(i);
+        SanPhamDTO sp = spBus.getByMaSP(ct.getMSP());
+        
+        // Lấy dữ liệu cho các cột mới
+        int giaGiam = ct.getGiaGiam(); // Giả sử ChiTietPhieuDTO có phương thức getGiagiam()
+        int giaThanhToan = ct.getGiaThanhToan(); // Giả sử ChiTietPhieuDTO có phương thức getGiaThanhToan()
+        String maKM = ct.getMKM(); // Giả sử ChiTietPhieuDTO có phương thức getMKM()
+
+        // Thêm một hàng mới vào bảng
+        tblModel.addRow(new Object[]{
+            i + 1, 
+            sp.getMSP(), 
+            sp.getTEN(), 
+            Formater.FormatVND(ct.getTIEN()), 
+            ct.getSL(), 
+            Formater.FormatVND(giaGiam), 
+            Formater.FormatVND(giaThanhToan), 
+            maKM
+        });
+    }
+}
+
 
     public void initComponent(String title) {
         this.setSize(new Dimension(1100, 500));
@@ -211,6 +238,81 @@ int mlhInt;
         this.setLocationRelativeTo(null);
     }
 
+    
+    public void initComponent1(String title) {
+    this.setSize(new Dimension(1100, 500));
+    this.setLayout(new BorderLayout(0, 0));
+    titlePage = new HeaderTitle(title.toUpperCase());
+
+    pnmain = new JPanel(new BorderLayout());
+
+    pnmain_top = new JPanel(new GridLayout(1, 4));
+    txtMaPhieu = new InputForm("Mã phiếu");
+    txtNhanVien = new InputForm("Nhân viên nhập");
+    txtThoiGian = new InputForm("Thời gian tạo");
+
+    txtMaPhieu.setEditable(false);
+    txtNhanVien.setEditable(false);
+    txtThoiGian.setEditable(false);
+
+    pnmain_top.add(txtMaPhieu);
+    pnmain_top.add(txtNhanVien);
+    pnmain_top.add(txtThoiGian);
+
+    pnmain_bottom = new JPanel(new BorderLayout());
+    pnmain_bottom.setBorder(new EmptyBorder(5, 5, 5, 5));
+    pnmain_bottom.setBackground(Color.WHITE);
+
+    // Tạo bảng và các thành phần liên quan
+    table = new JTable();
+    scrollTable = new JScrollPane();
+    tblModel = new DefaultTableModel();
+    
+    // Cập nhật tiêu đề cột để bao gồm các cột mới
+    String[] header = new String[]{"STT", "Mã SP", "Tên SP", "Đơn giá", "Số lượng", "Giá giảm", "Giá thanh toán", "Mã KM"};
+    tblModel.setColumnIdentifiers(header);
+    
+    // Cập nhật mô hình bảng
+    table.setModel(tblModel);
+    table.setFocusable(false);
+    scrollTable.setViewportView(table);
+    
+    // Căn giữa nội dung các ô trong bảng
+    DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+    centerRenderer.setHorizontalAlignment(JLabel.CENTER);
+    table.setDefaultRenderer(Object.class, centerRenderer);
+
+    // Cập nhật độ rộng của các cột
+    table.getColumnModel().getColumn(2).setPreferredWidth(200); // Tên SP
+    table.getColumnModel().getColumn(5).setPreferredWidth(100); // Giá giảm
+    table.getColumnModel().getColumn(6).setPreferredWidth(100); // Giá thanh toán
+    table.getColumnModel().getColumn(7).setPreferredWidth(100); // Mã KM
+
+    pnmain_bottom.add(scrollTable, BorderLayout.CENTER);
+
+    pnmain_btn = new JPanel(new FlowLayout());
+    pnmain_btn.setBorder(new EmptyBorder(10, 0, 10, 0));
+    pnmain_btn.setBackground(Color.white);
+    btnPdf = new ButtonCustom("Xuất file PDF", "success", 14);
+    // btnHuyBo = new ButtonCustom("Huỷ bỏ", "danger", 14);
+    btnDuyet = new ButtonCustom("Duyệt phiếu", "success", 14);
+    btnDuyet.addActionListener(this);
+    btnPdf.addActionListener(this);
+    // btnHuyBo.addActionListener(this);
+    pnmain_btn.add(btnDuyet);
+    pnmain_btn.add(btnPdf);
+    // pnmain_btn.add(btnHuyBo);
+
+    pnmain.add(pnmain_top, BorderLayout.NORTH);
+    pnmain.add(pnmain_bottom, BorderLayout.CENTER);
+    pnmain.add(pnmain_btn, BorderLayout.SOUTH);
+
+    this.add(titlePage, BorderLayout.NORTH);
+    this.add(pnmain, BorderLayout.CENTER);
+    this.setLocationRelativeTo(null);
+}
+
+    
     @Override
     public void actionPerformed(ActionEvent e) {
         Object source = e.getSource();

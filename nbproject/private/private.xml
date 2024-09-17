@@ -3,15 +3,14 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/ASUS%20Vivobook/Desktop/KTPM/src/BUS/PhieuXuatBUS.java</file>
-            <file>file:/C:/Users/ASUS%20Vivobook/Desktop/KTPM/src/GUI/Panel/DonHang.java</file>
-            <file>file:/C:/Users/ASUS%20Vivobook/Desktop/KTPM/src/GUI/Panel/GioHang.java</file>
-            <file>file:/C:/Users/ASUS%20Vivobook/Desktop/KTPM/src/GUI/Dialog/ChiTietPhieuDialog.java</file>
-            <file>file:/C:/Users/ASUS%20Vivobook/Desktop/KTPM/src/GUI/Dialog/ChiTietPhieuKHDialog.java</file>
-            <file>file:/C:/Users/ASUS%20Vivobook/Desktop/KTPM/src/DAO/ChiTietPhieuXuatDAO.java</file>
-            <file>file:/C:/Users/ASUS%20Vivobook/Desktop/KTPM/src/DTO/ChiTietGioHangDTO.java</file>
-            <file>file:/C:/Users/ASUS%20Vivobook/Desktop/KTPM/src/DAO/SanPhamDAO.java</file>
-            <file>file:/C:/Users/ASUS%20Vivobook/Desktop/KTPM/src/DAO/PhieuXuatDAO.java</file>
+            <file>file:/C:/Users/ASUS%20Vivobook/Desktop/KTPM/src/GUI/Panel/TaoMaKhuyenMai.java</file>
+            <file>file:/C:/Users/ASUS%20Vivobook/Desktop/KTPM/src/DTO/ChiTietPhieuXuatDTO.java</file>
+            <file>file:/C:/Users/ASUS%20Vivobook/Desktop/KTPM/src/DAO/ChiTietLoHangDAO.java</file>
+            <file>file:/C:/Users/ASUS%20Vivobook/Desktop/KTPM/src/DAO/MaKhuyenMaiDAO.java</file>
+            <file>file:/C:/Users/ASUS%20Vivobook/Desktop/KTPM/src/GUI/Panel/TaoPhieuNhap1.java</file>
+            <file>file:/C:/Users/ASUS%20Vivobook/Desktop/KTPM/src/GUI/Panel/SanPham.java</file>
+            <file>file:/C:/Users/ASUS%20Vivobook/Desktop/KTPM/src/GUI/Panel/TaoPhieuXuat.java</file>
+            <file>file:/C:/Users/ASUS%20Vivobook/Desktop/KTPM/src/GUI/Component/MenuTaskbar.java</file>
         </group>
     </open-files>
 </project-private>

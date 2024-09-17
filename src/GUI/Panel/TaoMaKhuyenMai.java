@@ -30,6 +30,10 @@ import com.formdev.flatlaf.extras.FlatSVGIcon;
 
 import BUS.MaKhuyenMaiBUS;
 import BUS.SanPhamBUS;
+import DAO.ChiTietLoHangDAO;
+import DAO.KhuVucSach1DAO;
+import DAO.SanPhamDAO;
+import DTO.ChiTietLoHangDTO;
 import DTO.ChiTietMaKhuyenMaiDTO;
 import DTO.NhanVienDTO;
 import DTO.MaKhuyenMaiDTO;
@@ -56,7 +60,7 @@ public final class TaoMaKhuyenMai extends JPanel implements ItemListener, Action
     InputDate dateStart, dateEnd;
     JTextField txtTimKiem;
     SelectForm cbbLoHang;
-
+ String[] arrmlh ;
     Main m;
     Color BackgroundColor = new Color(211, 211, 211);
 
@@ -65,16 +69,22 @@ public final class TaoMaKhuyenMai extends JPanel implements ItemListener, Action
     NhanVienDTO nvDto;
 
     ArrayList<SanPhamDTO> listSP = spBUS.getAll(); // list ben kho 
+    ArrayList<SanPhamDTO> listSp_lonhon0 = SanPhamDAO.filterProductsWithPositiveQuantity(listSP);
     ArrayList<SanPhamDTO> listSP_tmp = new ArrayList<>(); 
     ArrayList<ChiTietMaKhuyenMaiDTO> chitietMKM;
     int rowPhieuSelect = -1;
+   KhuVucSach1DAO kvs1dao = new KhuVucSach1DAO();
 
     public TaoMaKhuyenMai(NhanVienDTO nv, String type, Main m ){
         this.nvDto = nv;
         this.m = m;
         chitietMKM = new ArrayList<>();
+       
+          arrmlh = kvs1dao.getAll1();
         initComponent(type);
-        loadDataTalbeSanPham(listSP);
+        
+          loadDataTalbeSanPham(listSp_lonhon0);
+       
     }
 
 
@@ -282,7 +292,7 @@ public final class TaoMaKhuyenMai extends JPanel implements ItemListener, Action
         txtNhanVien.setEditable(false);
         dateStart = new InputDate("Từ ngày");
         dateEnd = new InputDate("Đến ngày");
-        cbbLoHang = new SelectForm("Lô Hàng", new String[]{"Lô 1","Lô 2","Lô 3"});
+         cbbLoHang = new SelectForm("Lô Hàng", arrmlh); //Hieusua -thêm cái string lo hang vo
         right_top.add(txtMaKM);
         right_top.add(txtNhanVien);
         right_top.add(dateStart);
@@ -322,9 +332,70 @@ public final class TaoMaKhuyenMai extends JPanel implements ItemListener, Action
     }
 
     public void setInfoSanPham(SanPhamDTO sp) { //set info vào inputform khi nhan ben tablesanpham
+          String selectedLotCode = (String) cbbLoHang.getSelectedItem();
         this.txtMaSp.setText(Integer.toString(sp.getMSP()));
         this.txtTenSp.setText(sp.getTEN());
+        this.txtGiaBia.setText(sp.getTIENX()+"");
+        
+        int gianhap = ChiTietLoHangDAO.TuMaLayGiaNhap(selectedLotCode ,sp.getMSP());
+         this.txtGiaNhap.setText(gianhap+"");
+       
+        
+        txtPTG.setText("0");
+           txtPTG.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+               int giabia = sp.getTIENX();
+            // Lấy phần trăm khuyến mãi từ TextField
+            String phantramKhuyenMaiStr = txtPTG.getText();
+            int phantramKhuyenMai = Integer.parseInt(phantramKhuyenMaiStr);
+            
+            // Tính giá sau khuyến mãi
+            int giasaukhikhuyenmai = giabia - (giabia * phantramKhuyenMai / 100);
+            
+            // Cập nhật giá vào TextField
+            txtGiaBan.setText(String.valueOf(giasaukhikhuyenmai));
+                System.out.print("hello");
+            }
+        });
+           this.txtGiaNhap.setText(gianhap+"");
+        
     }
+    
+    
+      public ChiTietLoHangDTO findMinLohangWithValidQuantity(int maSP) {
+    // Lấy danh sách các chi tiết lô hàng từ DAO
+    ArrayList<ChiTietLoHangDTO> loHangList = new ChiTietLoHangDAO().findLohangByMSP(maSP);
+    
+    // Khởi tạo biến để lưu đối tượng lô hàng nhỏ nhất
+    ChiTietLoHangDTO minLohang = null;
+    int minCode = Integer.MAX_VALUE; // Giá trị lớn nhất để tìm mã nhỏ nhất
+    
+    // Duyệt qua danh sách các chi tiết lô hàng
+    for (ChiTietLoHangDTO loHang : loHangList) {
+        String mlh = loHang.getMLH(); // Mã lô hàng
+        int soLuong = loHang.getSoLuong(); // Số lượng lô hàng
+        
+        // Kiểm tra số lượng lô hàng
+        if (soLuong > 0) {
+            try {
+                int currentCode = Integer.parseInt(mlh); // Chuyển đổi mã lô hàng từ String sang int
+                
+                // Nếu chưa tìm thấy lô hàng hợp lệ nào hoặc mã hiện tại nhỏ hơn mã đã tìm thấy
+                if (minLohang == null || currentCode < minCode) {
+                    minCode = currentCode;
+                    minLohang = loHang; // Cập nhật đối tượng lô hàng nhỏ nhất
+                }
+            } catch (NumberFormatException e) {
+                // Xử lý trường hợp mã lô hàng không phải là số hợp lệ
+                System.err.println("Mã lô hàng không phải là số hợp lệ: " + mlh);
+            }
+        }
+    }
+    
+    // Trả về đối tượng lô hàng nhỏ nhất hoặc null nếu không tìm thấy lô hàng hợp lệ
+    return minLohang;
+}
 
     public void setFormChiTietPhieu(ChiTietMaKhuyenMaiDTO phieu) { //set info vào inputform khi nhan ben tablephieunhap
         SanPhamDTO ctsp = spBUS.getByMaSP(phieu.getMSP());

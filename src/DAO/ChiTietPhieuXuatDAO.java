@@ -24,40 +24,53 @@ public class ChiTietPhieuXuatDAO implements ChiTietInterface<ChiTietPhieuDTO> {
 
     
     
-     public static void insert(ChiTietPhieuDTO chiTietPhieu) throws SQLException {
-        String sql = "INSERT INTO ctphieuxuat (MPX, MSP, SL, Tienxuat) VALUES (?, ?, ?, ?)";
+public static void insert(ChiTietPhieuDTO chiTietPhieu) throws SQLException {
+    String sql = "INSERT INTO ctphieuxuat (MPX, MSP, SL, Tienxuat, Giagiam, GiaThanhToan, MKM) VALUES (?, ?, ?, ?, ?, ?, ?)";
+    
+    try (
+        Connection con = JDBCUtil.getConnection(); // Không cần cast
+        PreparedStatement pstmt = con.prepareStatement(sql)
+    ) {
+        pstmt.setInt(1, chiTietPhieu.getMP());
+        pstmt.setInt(2, chiTietPhieu.getMSP());
+        pstmt.setInt(3, chiTietPhieu.getSL());
+        pstmt.setInt(4, chiTietPhieu.getTIEN());
+        pstmt.setInt(5, chiTietPhieu.getGiaGiam()); // Giả sử có getter cho giagiam
+        pstmt.setInt(6, chiTietPhieu.getGiaThanhToan()); // Giả sử có getter cho giaThanhToan
+        pstmt.setString(7, chiTietPhieu.getMKM()); // Giả sử có getter cho MKM
         
-        try (
-                 Connection con = (Connection) JDBCUtil.getConnection();PreparedStatement pstmt = con.prepareStatement(sql)) {
-            pstmt.setInt(1, chiTietPhieu.getMP());
-            pstmt.setInt(2, chiTietPhieu.getMSP());
-            pstmt.setInt(3, chiTietPhieu.getSL());
-            pstmt.setInt(4, chiTietPhieu.getTIEN());
-            
-            pstmt.executeUpdate();
-        }
+        pstmt.executeUpdate();
     }
+}
+
     
     @Override
-    public int insert(ArrayList<ChiTietPhieuDTO> t) {
-        int result = 0;
-        for (int i = 0; i < t.size(); i++) {
-            try {
-                Connection con = (Connection) JDBCUtil.getConnection();
-                String sql = "INSERT INTO `CTPHIEUXUAT` (`MPX`, `MSP`, `SL`,  `TIENXUAT`) VALUES (?,?,?,?)";
-                PreparedStatement pst = (PreparedStatement) con.prepareStatement(sql);
-                pst.setInt(1, t.get(i).getMP());
-                pst.setInt(2, t.get(i).getMSP());
-                pst.setInt(3, t.get(i).getSL());        
-                pst.setInt(4, t.get(i).getTIEN());
-                result = pst.executeUpdate();
-                JDBCUtil.closeConnection(con);
-            } catch (SQLException ex) {
-                Logger.getLogger(ChiTietPhieuXuatDAO.class.getName()).log(Level.SEVERE, null, ex);
-            }
+  public int insert(ArrayList<ChiTietPhieuDTO> t) {
+    int result = 0;
+    String sql = "INSERT INTO `CTPHIEUXUAT` (`MPX`, `MSP`, `SL`, `TIENXUAT`, `GIAGIAM`, `GIATHANHTOAN`, `MKM`) VALUES (?, ?, ?, ?, ?, ?, ?)";
+    
+    try (Connection con = JDBCUtil.getConnection();
+         PreparedStatement pst = con.prepareStatement(sql)) {
+        
+        for (ChiTietPhieuDTO chiTiet : t) {
+            pst.setInt(1, chiTiet.getMP());
+            pst.setInt(2, chiTiet.getMSP());
+            pst.setInt(3, chiTiet.getSL());
+            pst.setInt(4, chiTiet.getTIEN());
+            pst.setInt(5, chiTiet.getGiaGiam()); // Đảm bảo getter có sẵn
+            pst.setInt(6, chiTiet.getGiaThanhToan()); // Đảm bảo getter có sẵn
+            pst.setString(7, chiTiet.getMKM()); // Đảm bảo getter có sẵn
+            
+            result += pst.executeUpdate();
         }
-        return result;
+        
+    } catch (SQLException ex) {
+        Logger.getLogger(ChiTietPhieuXuatDAO.class.getName()).log(Level.SEVERE, null, ex);
     }
+    
+    return result;
+}
+
 
     public int insertGH(ArrayList<ChiTietPhieuDTO> t) {
         int result = 0;
@@ -139,51 +152,63 @@ public class ChiTietPhieuXuatDAO implements ChiTietInterface<ChiTietPhieuDTO> {
     }
 
     @Override
-    public ArrayList<ChiTietPhieuDTO> selectAll(String t) {
-        ArrayList<ChiTietPhieuDTO> result = new ArrayList<>();
-        try {
-            Connection con = (Connection) JDBCUtil.getConnection();
-            String sql = "SELECT * FROM CTPHIEUXUAT WHERE MPX = ?";
-            PreparedStatement pst = (PreparedStatement) con.prepareStatement(sql);
-            pst.setString(1, t);
-            ResultSet rs = (ResultSet) pst.executeQuery();
-            while (rs.next()) {
-                int maphieu = rs.getInt("MPX");
-                int MSP = rs.getInt("MSP");
-                int SL = rs.getInt("SL");
-                int tienxuat = rs.getInt("TIENXUAT");
-                ChiTietPhieuDTO ctphieu = new ChiTietPhieuDTO(maphieu, MSP, SL, tienxuat);
-                result.add(ctphieu);
-            }
-            JDBCUtil.closeConnection(con);
-        } catch (SQLException e) {
-            System.out.println(e);
+public ArrayList<ChiTietPhieuDTO> selectAll(String t) {
+    ArrayList<ChiTietPhieuDTO> result = new ArrayList<>();
+    try {
+        Connection con = JDBCUtil.getConnection();
+        String sql = "SELECT MPX, MSP, SL, TIENXUAT, GIAGIAM, GIATHANHTOAN, MKM FROM CTPHIEUXUAT WHERE MPX = ?";
+        PreparedStatement pst = con.prepareStatement(sql);
+        pst.setString(1, t);
+        ResultSet rs = pst.executeQuery();
+        
+        while (rs.next()) {
+            int maphieu = rs.getInt("MPX");
+            int MSP = rs.getInt("MSP");
+            int SL = rs.getInt("SL");
+            int tienxuat = rs.getInt("TIENXUAT");
+            int giagiam = rs.getInt("GIAGIAM"); // Lấy giá giảm
+            int giathanhToan = rs.getInt("GIATHANHTOAN"); // Lấy giá thanh toán
+            String maKM = rs.getString("MKM"); // Lấy mã khuyến mãi
+            
+            ChiTietPhieuDTO ctphieu = new ChiTietPhieuDTO(maphieu, MSP, SL, tienxuat, giagiam, giathanhToan, maKM);
+            result.add(ctphieu);
         }
-        return result;
+        
+        JDBCUtil.closeConnection(con);
+    } catch (SQLException e) {
+        e.printStackTrace();
     }
+    return result;
+}
+
 
 public static ArrayList<ChiTietPhieuXuatDTO> getChiTietByPhieuXuat(int maPhieuXuat) {
-        ArrayList<ChiTietPhieuXuatDTO> chiTietList = new ArrayList<>();
-        String sql = "SELECT * FROM ctphieuxuat WHERE MPX = ?";
+    ArrayList<ChiTietPhieuXuatDTO> chiTietList = new ArrayList<>();
+    String sql = "SELECT * FROM ctphieuxuat WHERE MPX = ?";
 
-        try (Connection con = JDBCUtil.getConnection();
-             PreparedStatement pst = con.prepareStatement(sql)) {
-            pst.setInt(1, maPhieuXuat);
-            ResultSet rs = pst.executeQuery();
-            
-            while (rs.next()) {
-                // Giả sử ChiTietPhieuXuatDTO có các trường maSP, soLuong
-                ChiTietPhieuXuatDTO chiTiet = new ChiTietPhieuXuatDTO(rs.getInt("MPX"),
-                    rs.getInt("MSP"),
-                    rs.getInt("SL"),
-                        rs.getInt("TIENXUAT")
-                );
-                chiTietList.add(chiTiet);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
+    try (Connection con = JDBCUtil.getConnection();
+         PreparedStatement pst = con.prepareStatement(sql)) {
+        pst.setInt(1, maPhieuXuat);
+        ResultSet rs = pst.executeQuery();
+        
+        while (rs.next()) {
+            // Tạo đối tượng ChiTietPhieuXuatDTO từ kết quả truy vấn
+            ChiTietPhieuXuatDTO chiTiet = new ChiTietPhieuXuatDTO(
+                rs.getInt("MPX"),
+                rs.getInt("MSP"),
+                rs.getInt("SL"),
+                rs.getInt("TIENXUAT"),
+                rs.getInt("GIAGIAM"), // Thêm giá giảm
+                rs.getInt("GIATHANHTOAN"), // Thêm giá thanh toán
+                rs.getString("MKM") // Thêm mã khuyến mãi
+            );
+            chiTietList.add(chiTiet);
         }
-        return chiTietList;
+    } catch (SQLException e) {
+        e.printStackTrace();
     }
+    return chiTietList;
+}
+
   
 }

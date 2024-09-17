@@ -7,7 +7,9 @@ public class ChiTietPhieuDTO {
     private int MSP;
     private int SL;
     private int TIEN;
-
+    private int giaGiam ;
+    private int giaThanhToan ; 
+    private String MKM ; 
     public ChiTietPhieuDTO() {
     }
 
@@ -16,6 +18,41 @@ public class ChiTietPhieuDTO {
         this.MSP = MSP;
         this.SL = SL;
         this.TIEN = TIEN;
+    }
+       public ChiTietPhieuDTO(int MP, int MSP, int SL, int TIEN , int giagiam , int giathanhtoan , String MKM) {
+        this.MP = MP;
+        this.MSP = MSP;
+        this.SL = SL;
+        this.TIEN = TIEN;
+        this.giaGiam = giagiam ;
+        this.giaThanhToan = giathanhtoan ; 
+        this.MKM = MKM ; 
+    }
+       
+          public String getMKM () {
+        return MKM ;
+        
+    }
+
+    public void setKMK(String MP) {
+        this.MKM = MP;
+    }
+       
+     public int getGiaGiam () {
+        return giaGiam ;
+        
+    }
+
+    public void setGiaGiam(int MP) {
+        this.giaGiam = MP;
+    }
+    public int getGiaThanhToan () {
+        return giaThanhToan  ;
+        
+    }
+
+    public void setGiaThanhToan(int MP) {
+        this.giaThanhToan = MP;
     }
 
     public int getMP() {

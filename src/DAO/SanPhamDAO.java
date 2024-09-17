@@ -1,5 +1,6 @@
 package DAO;
 
+import static DAO.ChiTietLoHangDAO.getTotalQuantityForProduct;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -256,4 +257,20 @@ public class SanPhamDAO implements DAOinterface<SanPhamDTO> {
 
         return tenSP;  // Trả về tên sản phẩm
     }
+            
+        public static ArrayList<SanPhamDTO> filterProductsWithPositiveQuantity(ArrayList<SanPhamDTO> listSP) {
+        ArrayList<SanPhamDTO> filteredList = new ArrayList<>();
+        
+        for (SanPhamDTO sanpham : listSP) {
+            int productCode = sanpham.getMSP(); // Lấy mã sản phẩm từ đối tượng SanPhamDTO
+            int totalQuantity = getTotalQuantityForProduct(productCode); // Lấy tổng số lượng từ cơ sở dữ liệu
+            
+            if (totalQuantity > 0) {
+                filteredList.add(sanpham); // Thêm sản phẩm vào danh sách mới nếu tổng số lượng > 0
+            }
+        }
+        
+        return filteredList; // Trả về danh sách sản phẩm đã lọc
+    }
+
 }

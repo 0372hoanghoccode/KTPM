@@ -35,6 +35,7 @@ import DAO.ChiTietPhieuXuatDAO;
 import DAO.NhanVienDAO;
 import DAO.PhieuXuatDAO;
 import DTO.ChiTietLoHangDTO;
+import DTO.ChiTietMaKhuyenMaiDTO;
 import DTO.ChiTietPhieuDTO;
 import DTO.ChiTietPhieuXuatDTO;
 import DTO.KhachHangDTO;
@@ -113,7 +114,7 @@ public final class TaoPhieuXuat extends JPanel {
         tablePhieuXuat = new JTable();
         scrollTablePhieuNhap = new JScrollPane();
         tblModel = new DefaultTableModel();
-        String[] header = new String[]{"STT", "Mã SP", "Tên sản phẩm", "Đơn giá", "Số lượng"};
+        String[] header = new String[]{"STT", "Mã SP", "Tên SP", "Đơn giá", "Số lượng" , "Giá Giảm" , "Giá thanh toán"};
         tblModel.setColumnIdentifiers(header);
         tablePhieuXuat.setModel(tblModel);
         scrollTablePhieuNhap.setViewportView(tablePhieuXuat);
@@ -125,7 +126,7 @@ public final class TaoPhieuXuat extends JPanel {
                 columnModel.getColumn(i).setCellRenderer(centerRenderer);
             }
         }
-        tablePhieuXuat.getColumnModel().getColumn(2).setPreferredWidth(300);
+        tablePhieuXuat.getColumnModel().getColumn(2).setPreferredWidth(200);
         tablePhieuXuat.setFocusable(false);
         tablePhieuXuat.setDefaultEditor(Object.class, null);
         scrollTablePhieuNhap.setViewportView(tablePhieuXuat);
@@ -230,42 +231,42 @@ public final class TaoPhieuXuat extends JPanel {
         txtMaSp = new InputForm("Mã sản phẩm");
         txtMaSp.setEditable(false);
         txtMaISBN = new InputForm("Mã ISBN");
-        // txtMaISBN.setEditable(false);
+         txtMaISBN.setEditable(false);
         txtMaISBN.setVisible(false); // Ẩn thành phần InputForm
 
         txtGiaXuat = new InputForm("Giá xuất");
-        PlainDocument dongia = (PlainDocument) txtGiaXuat.getTxtForm().getDocument();
-        dongia.setDocumentFilter((new NumericDocumentFilter()));   //chỉ cho nhập số
+         txtGiaXuat.setEditable(false);
+       
         txtSoLuongSPxuat = new InputForm("Số lượng");
         PlainDocument soluong = (PlainDocument) txtSoLuongSPxuat.getTxtForm().getDocument();
         soluong.setDocumentFilter((new NumericDocumentFilter())); //chỉ cho nhập số
-        // txtMaGiamGia = new InputForm("Mã giảm giá");
-//        String[] maGiamGia = {"Chọn"};
-//        cbxMaKM = new SelectForm("Mã giảm giá", maGiamGia);
-//        txtGiaGiam = new InputForm("Giá giảm");
-//        txtGiaGiam.setText(" ");
-//        txtGiaGiam.setEditable(false);
-//        cbxMaKM.cbb.addItemListener((ItemListener) new ItemListener() {
-//            @Override
-//            public void itemStateChanged(ItemEvent e) {
-//                int index = cbxMaKM.cbb.getSelectedIndex();
-//                if(index != 0)
-//                {
-//                    double giaxuat = Integer.parseInt(txtGiaXuat.getText());
-//                    //double phantramgiam = (double) listctMKM.get(index - 1).getPTG();
-//                   // int giagiam = (int) (giaxuat * (1 - phantramgiam/100));
-//                   // txtGiaGiam.setText(Integer.toString(giagiam));
-//                }
-//            }
-//            
-//        });
-        // txtMaGiamGia.getTxtForm().addKeyListener(new KeyAdapter() {
-        //         @Override
-        //         public void keyReleased(java.awt.event.KeyEvent evt) {
-        //             ArrayList<MaKhuyenMaiDTO> rs = mkmBUS.search(txtMaGiamGia.getText());
-        //     // hhhhhhhhhhhhhhhhhhhhhhhhhhhhh
-        //         }
-        //     });
+         txtMaGiamGia = new InputForm("Mã giảm giá");
+        String[] maGiamGia = {"Chọn"};
+        cbxMaKM = new SelectForm("Mã giảm giá", maGiamGia);
+        txtGiaGiam = new InputForm("Giá giảm");
+        txtGiaGiam.setText("");
+        txtGiaGiam.setEditable(false);
+        cbxMaKM.cbb.addItemListener((ItemListener) new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                int index = cbxMaKM.cbb.getSelectedIndex();
+                if(index != 0)
+                {
+                    double giaxuat = Integer.parseInt(txtGiaXuat.getText());
+                    double phantramgiam = (double) listctMKM.get(index - 1).getPTG();
+                    int giagiam = (int) (giaxuat * (1 - phantramgiam/100));
+                    txtGiaGiam.setText(Integer.toString(giagiam));
+                }
+            }
+            
+        });
+         txtMaGiamGia.getTxtForm().addKeyListener(new KeyAdapter() {
+                 @Override
+                 public void keyReleased(java.awt.event.KeyEvent evt) {
+                     ArrayList<MaKhuyenMaiDTO> rs = mkmBUS.search(txtMaGiamGia.getText());
+           
+                 }
+             });
 
             
         JPanel merge1 = new JPanel(new BorderLayout());
@@ -277,9 +278,9 @@ public final class TaoPhieuXuat extends JPanel {
         merge2.setPreferredSize(new Dimension(100, 160));
         merge2.add(txtGiaXuat);
         merge2.add(txtSoLuongSPxuat);
-        // merge2.add(txtMaGiamGia);
-//        merge2.add(cbxMaKM);
-//        merge2.add(txtGiaGiam);
+         merge2.add(txtMaGiamGia);
+        merge2.add(cbxMaKM);
+        merge2.add(txtGiaGiam);
 
         content_right_top.add(txtTenSp, BorderLayout.NORTH);
         content_right_top.add(merge1, BorderLayout.CENTER);
@@ -467,24 +468,24 @@ public final class TaoPhieuXuat extends JPanel {
         this.txtTenSp.setText("");
         this.txtMaSp.setText("");
        // this.txtMaISBN.setText("");
-        this.txtGiaXuat.setText("");
+      //  this.txtGiaXuat.setText("");
         this.txtSoLuongSPxuat.setText("");
         // this.txtMaGiamGia.setText("");
 //        this.txtGiaGiam.setText(" ");
     }
 
-//    public String[] getMaGiamGiaTable(int masp) {
-//        listctMKM = mkmBUS.Getctmkm(masp);
-//        int size = listctMKM.size();
-//        ArrayList<String> arr = new ArrayList<>();
-//        for (int i = 0; i < size; i++) {
-//            if(!validateSelectDate(listctMKM.get(i))) arr.add(listctMKM.get(i).getMKM());
-//        }
-//        String[] tmp = new String[arr.size()];
-//        for (int i = 0; i < tmp.length; i++) tmp[i] = arr.get(i);
-//        tmp = Stream.concat(Stream.of("Chọn"), Arrays.stream(tmp)).toArray(String[]::new);
-//        return tmp;
-//    }
+    public String[] getMaGiamGiaTable(int masp) {
+        listctMKM = mkmBUS.Getctmkm(masp);
+        int size = listctMKM.size();
+        ArrayList<String> arr = new ArrayList<>();
+        for (int i = 0; i < size; i++) {
+            if(!validateSelectDate(listctMKM.get(i))) arr.add(listctMKM.get(i).getMKM());
+        }
+        String[] tmp = new String[arr.size()];
+        for (int i = 0; i < tmp.length; i++) tmp[i] = arr.get(i);
+        tmp = Stream.concat(Stream.of("Chọn"), Arrays.stream(tmp)).toArray(String[]::new);
+        return tmp;
+    }
 
     public boolean validateSelectDate(DTO.ChiTietMaKhuyenMaiDTO tmp) {
         MaKhuyenMaiDTO a = mkmBUS.selectMkm(tmp.getMKM());
@@ -512,8 +513,8 @@ public final class TaoPhieuXuat extends JPanel {
         
         // Tìm lô hàng có mã nhỏ nhất
         ChiTietLoHangDTO minLohang = findMinLohangWithValidQuantity(masp);
-          this.txtGiaXuat.setText(minLohang.getGiaNhap()*2+"");
-//        cbxMaKM.setArr(getMaGiamGiaTable(sp.getMSP()));
+          this.txtGiaXuat.setText(sp.getTIENX()+"");
+       cbxMaKM.setArr(getMaGiamGiaTable(sp.getMSP()));
         
     }
 
@@ -521,7 +522,7 @@ public final class TaoPhieuXuat extends JPanel {
 
     public void setFormChiTietPhieu(ChiTietPhieuDTO phieu) { //set info vào inputform khi nhan ben tablephieunhap
         SanPhamDTO ctsp = spBUS.getByMaSP(phieu.getMSP());
-        // ChiTietMaKhuyenMaiDTO ctmkm = mkmBUS.findCT(listctMKM, ctsp.getMSP());
+         ChiTietMaKhuyenMaiDTO ctmkm = mkmBUS.findCT(listctMKM, ctsp.getMSP());
         this.txtMaSp.setText(Integer.toString(ctsp.getMSP()));
         this.txtTenSp.setText(spBUS.getByMaSP(ctsp.getMSP()).getTEN());
                   ChiTietLoHangDAO chiTietLoHangDAO = new ChiTietLoHangDAO();
@@ -529,9 +530,10 @@ public final class TaoPhieuXuat extends JPanel {
         
         // Tìm lô hàng có mã nhỏ nhất
         ChiTietLoHangDTO minLohang = findMinLohangWithValidQuantity(ctsp.getMSP());
-            this.txtGiaXuat.setText(minLohang.getGiaNhap()*2+"");
+           this.txtGiaXuat.setText(ctsp.getTIENX()+"");
+           System.out.print("hello nè " + ctsp.getTIENX());
         this.txtSoLuongSPxuat.setText(Integer.toString(phieu.getSL()));
-     //   cbxMaKM.setArr(getMaGiamGiaTable(ctsp.getMSP()));
+        cbxMaKM.setArr(getMaGiamGiaTable(ctsp.getMSP()));
     }
 
 
@@ -593,33 +595,51 @@ public void loadDataTableSanPham(ArrayList<SanPhamDTO> result) {
                soluong  // Số lượng trong lô hợp lệ
             });
             // Cập nhật giá xuất
-            if (string != null )
-              this.txtGiaXuat.setText(string.getGiaNhap() * 2 + "");
-            else {
-                this.txtGiaXuat.setText( "");
-            }
+//            if (string != null )
+//              this.txtGiaXuat.setText(string.getGiaNhap() * 2 + "");
+//            else {
+//                this.txtGiaXuat.setText( "");
+//            }
         
     }
 }
-
-
-
-
-
 
     public void loadDataTableChiTietPhieu(ArrayList<ChiTietPhieuDTO> ctPhieu) {
         tblModel.setRowCount(0);
         int size = ctPhieu.size();
         sum = 0;
-        for (int i = 0; i < size; i++) {
-            SanPhamDTO phienban = spBUS.getByMaSP(ctPhieu.get(i).getMSP());
-            sum += ctPhieu.get(i).getTIEN() * ctPhieu.get(i).getSL();
-            tblModel.addRow(new Object[]{
-                i + 1, phienban.getMSP(), spBUS.getByMaSP(phienban.getMSP()).getTEN(), 
-                Formater.FormatVND(ctPhieu.get(i).getTIEN()), ctPhieu.get(i).getSL()
-            });
-        }
-        lbltongtien.setText(Formater.FormatVND(sum));
+//try {
+//    // Kiểm tra nếu chuỗi giá xuất không rỗng
+//    if (!giaXuatStr.isEmpty()) {
+//        giaXuat = Integer.parseInt(giaXuatStr); // Chuyển đổi chuỗi thành số nguyên
+//    }
+//
+//    // Kiểm tra nếu chuỗi giá giảm không rỗng
+//    if (!giaGiamStr.isEmpty()) {
+//        giaGiam = Integer.parseInt(giaGiamStr); // Chuyển đổi chuỗi thành số nguyên
+//    }
+//
+//            // Thực hiện phép toán
+//          giathanhtoan = giaXuat - giaGiam;
+//
+//} catch (NumberFormatException e) {
+//    // Xử lý lỗi khi chuyển đổi chuỗi thành số nguyên
+//    System.out.println("Lỗi khi chuyển đổi chuỗi thành số nguyên: " + e.getMessage());
+//    // Có thể hiển thị thông báo lỗi cho người dùng nếu cần
+//} 
+
+for (int i = 0; i < size; i++) {
+    SanPhamDTO phienban = spBUS.getByMaSP(ctPhieu.get(i).getMSP());
+   
+    sum += ctPhieu.get(i).getGiaThanhToan() * ctPhieu.get(i).getSL();
+    
+    tblModel.addRow(new Object[]{
+        i + 1, phienban.getMSP(), phienban.getTEN(), 
+        Formater.FormatVND(ctPhieu.get(i).getTIEN()), ctPhieu.get(i).getSL(), ctPhieu.get(i).getGiaGiam(), Formater.FormatVND(chitietphieu.get(i).getGiaThanhToan())
+    });
+}
+
+lbltongtien.setText(Formater.FormatVND(sum));
     }
 
     
@@ -683,12 +703,25 @@ int number = Integer.parseInt(text); // Chuyển đổi giá trị thành kiểu
     public void addCtPhieu() { // them sp vao chitietphieu
         int masp = Integer.parseInt(txtMaSp.getText());
         int giaxuat;
-//        if(!txtGiaGiam.getText().equals(" ")) 
-//            giaxuat = Integer.parseInt(txtGiaGiam.getText());
-//        else
-            giaxuat = Integer.parseInt(txtGiaXuat.getText());
+        int index = cbxMaKM.cbb.getSelectedIndex();
+           String selectedItem = (String) cbxMaKM.cbb.getItemAt(index);
+         
+       giaxuat = Integer.parseInt(txtGiaXuat.getText());
+       int giagiam ; 
+    int giaThanhToan ; 
+    if (index != 0) {
+        double phantramgiam = (double) listctMKM.get(index - 1).getPTG();
+          giagiam = (int) (giaxuat * phantramgiam / 100);
+        giaThanhToan = (int) (giaxuat - giagiam);
+    } else {
+        giagiam = 0;
+        giaThanhToan = (int) giaxuat;
+        selectedItem = "Không có";
+    }
+             
+      
         int soluong = Integer.parseInt(txtSoLuongSPxuat.getText());
-        ChiTietPhieuDTO ctphieu = new ChiTietPhieuDTO(maphieu, masp, soluong, giaxuat);
+        ChiTietPhieuDTO ctphieu = new ChiTietPhieuDTO(maphieu, masp, soluong, giaxuat ,giagiam , giaThanhToan , selectedItem);
         ChiTietPhieuDTO p = phieuXuatBUS.findCT(chitietphieu, ctphieu.getMSP());
         if (p == null) {
             chitietphieu.add(ctphieu);
@@ -725,6 +758,7 @@ public void eventBtnNhapHang() throws SQLException {
             for (ChiTietPhieuDTO chiTiet : chitietphieu) {
                 int maSp = chiTiet.getMSP();
                 int tien = chiTiet.getTIEN();
+                
                 ArrayList<ChiTietLoHangDTO> loHangList = chiTietLoHangDAO.findLohangByMSP(maSp);
                 ChiTietLoHangDTO minLohang = findMinLohangWithValidQuantity(maSp);
                 
@@ -739,7 +773,8 @@ public void eventBtnNhapHang() throws SQLException {
                     chiTietLoHangDAO.updateQuantity(maSp ,maLoHang, -soLuongXuat); // Trừ số lượng xuất bán
                        
                     // Thêm chi tiết phiếu xuất vào cơ sở dữ liệu
-                    ChiTietPhieuXuatDTO chiTietPhieuXuat = new ChiTietPhieuXuatDTO(chiTiet.getMP(), maSp, soLuongXuat, tien, 0); // Mã khuyến mãi là 0 nếu không có
+                    ChiTietPhieuXuatDTO chiTietPhieuXuat =
+                  new ChiTietPhieuXuatDTO(chiTiet.getMP(), maSp, soLuongXuat, tien, chiTiet.getGiaGiam() , chiTiet.getGiaThanhToan() , chiTiet.getMKM()); // Mã khuyến mãi là 0 nếu không có
                     chiTietPhieuXuatDAO.insert(chiTietPhieuXuat);
                 } else {
                     JOptionPane.showMessageDialog(null, "Không tìm thấy lô hàng hợp lệ cho sản phẩm mã " + maSp, "Cảnh báo !", JOptionPane.ERROR_MESSAGE);
