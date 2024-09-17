@@ -276,11 +276,11 @@ public final class TaoPhieuXuat extends JPanel {
 
         JPanel merge2 = new JPanel(new GridLayout(2,2));
         merge2.setPreferredSize(new Dimension(100, 160));
-        merge2.add(txtGiaXuat);
-        merge2.add(txtSoLuongSPxuat);
-         merge2.add(txtMaGiamGia);
-        merge2.add(cbxMaKM);
-        merge2.add(txtGiaGiam);
+        merge2.add(txtGiaXuat,BorderLayout.CENTER);
+        merge2.add(txtSoLuongSPxuat,BorderLayout.EAST);
+        //  merge2.add(txtMaGiamGia);
+        merge2.add(cbxMaKM,BorderLayout.WEST);
+        merge2.add(txtGiaGiam, BorderLayout.CENTER);
 
         content_right_top.add(txtTenSp, BorderLayout.NORTH);
         content_right_top.add(merge1, BorderLayout.CENTER);
