@@ -41,23 +41,26 @@ public class ChiTietGioHangDAO implements ChiTietInterface<ChiTietGioHangDTO>{
     }
 
     public int insert(ChiTietGioHangDTO t) {
-        int result = 0;
-            try {
-                Connection con = (Connection) JDBCUtil.getConnection();
-                String sql = "INSERT INTO `CTGIOHANG` (`MKH`, `MSP`, `SL`, `MKM`, `TIENGIO`) VALUES (?,?,?,?,?)";
-                PreparedStatement pst = (PreparedStatement) con.prepareStatement(sql);
-                pst.setInt(1, t.getMKH());
-                pst.setInt(2, t.getMSP());
-                pst.setInt(3, t.getSL());
-                pst.setString(4, t.getMKM());
-                pst.setInt(5, t.getTIENGIO());
-                result = pst.executeUpdate();
-                JDBCUtil.closeConnection(con);
-            } catch (SQLException ex) {
-                Logger.getLogger(ChiTietPhieuXuatDAO.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        return result;
+    int result = 0;
+    try {
+        Connection con = JDBCUtil.getConnection();
+        String sql = "INSERT INTO `CTGIOHANG` (`MKH`, `MSP`, `SL`, `TIENGIO`, `GIAGIAM`, `GIATHANHTOAN`, `MKM`) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        PreparedStatement pst = con.prepareStatement(sql);
+        pst.setInt(1, t.getMKH());
+        pst.setInt(2, t.getMSP());
+        pst.setInt(3, t.getSL());
+        pst.setInt(4, t.getTIENGIO());
+        pst.setInt(5, t.getGIAGIAM());
+        pst.setInt(6, t.getGIATHANHTOAN());
+        pst.setString(7, t.getMKM());
+        result = pst.executeUpdate();
+        JDBCUtil.closeConnection(con);
+    } catch (SQLException ex) {
+        Logger.getLogger(ChiTietPhieuXuatDAO.class.getName()).log(Level.SEVERE, null, ex);
     }
+    return result;
+}
+
 
     public int insertNoMKM(ChiTietGioHangDTO t) {
         int result = 0;
@@ -127,28 +130,34 @@ public class ChiTietGioHangDAO implements ChiTietInterface<ChiTietGioHangDTO>{
     }
 
     @Override
-    public ArrayList<ChiTietGioHangDTO> selectAll(String t) {
-        ArrayList<ChiTietGioHangDTO> result = new ArrayList<>();
-        try {
-            Connection con = (Connection) JDBCUtil.getConnection();
-            String sql = "SELECT * FROM CTGIOHANG WHERE MKH = ?";
-            PreparedStatement pst = (PreparedStatement) con.prepareStatement(sql);
-            pst.setString(1, t);
-            ResultSet rs = (ResultSet) pst.executeQuery();
-            while (rs.next()) {
-                int mkh = rs.getInt("MKH");
-                int masp = rs.getInt("MSP");
-                int soluong = rs.getInt("SL");
-                int tiengio = rs.getInt("TIENGIO");
-                String mkm = rs.getString("MKM");
-                ChiTietGioHangDTO ctphieu = new ChiTietGioHangDTO(mkh, masp, mkm, soluong, tiengio);
-                result.add(ctphieu);
-            }
-            JDBCUtil.closeConnection(con);
-        } catch (SQLException e) {
-            System.out.println(e);
+  public ArrayList<ChiTietGioHangDTO> selectAll(String t) {
+    ArrayList<ChiTietGioHangDTO> result = new ArrayList<>();
+    try {
+        Connection con = JDBCUtil.getConnection();
+        String sql = "SELECT * FROM CTGIOHANG WHERE MKH = ?";
+        PreparedStatement pst = con.prepareStatement(sql);
+        pst.setString(1, t);
+        ResultSet rs = pst.executeQuery();
+        
+        while (rs.next()) {
+            int mkh = rs.getInt("MKH");
+            int masp = rs.getInt("MSP");
+            int soluong = rs.getInt("SL");
+            int tiengio = rs.getInt("TIENGIO");
+            int giagiam = rs.getInt("GIAGIAM");
+            int giathanhtoan = rs.getInt("GIATHANHTOAN");
+            String mkm = rs.getString("MKM");
+            
+            ChiTietGioHangDTO ctphieu = new ChiTietGioHangDTO(mkh, masp, soluong, tiengio, giagiam, giathanhtoan, mkm);
+            result.add(ctphieu);
         }
-        return result;
+        
+        JDBCUtil.closeConnection(con);
+    } catch (SQLException e) {
+        System.out.println(e);
     }
+    return result;
+}
+
     
 }

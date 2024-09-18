@@ -3,91 +3,79 @@ package DTO;
 import java.util.Objects;
 
 public class ChiTietGioHangDTO {
-    int MKH;
-    int MSP;
-    String MKM;
-    int SL;
-    int TIENGIO;
+    private int MKH;
+    private int MSP;
+    private int SL;
+    private int TIENGIO;
+    private int GIAGIAM;
+    private int GIATHANHTOAN;
+    private String MKM;
 
-    
-
-    public ChiTietGioHangDTO(int mKH, int mSP, String mKM, int sL, int tIENGIO) {
-        MKH = mKH;
-        MSP = mSP;
-        MKM = mKM;
-        SL = sL;
-        TIENGIO = tIENGIO;
+    public ChiTietGioHangDTO(int mkh, int msp, int sl, int tiengio, int giagiam, int giathanhtoan, String makm) {
+        this.MKH = mkh;
+        this.MSP = msp;
+        this.SL = sl;
+        this.TIENGIO = tiengio;
+        this.GIAGIAM = giagiam;
+        this.GIATHANHTOAN = giathanhtoan;
+        this.MKM = makm;
     }
 
-    public ChiTietGioHangDTO(){}
-
+    // Getters
     public int getMKH() {
         return MKH;
-    }
-
-    public void setMKH(int mKH) {
-        MKH = mKH;
     }
 
     public int getMSP() {
         return MSP;
     }
 
-    public void setMSP(int mSP) {
-        MSP = mSP;
-    }
-
     public int getSL() {
         return SL;
-    }
-
-    public void setSL(int sL) {
-        SL = sL;
     }
 
     public int getTIENGIO() {
         return TIENGIO;
     }
 
-    public void setTIENGIO(int tIEN) {
-        TIENGIO = tIEN;
-    };
+    public int getGIAGIAM() {
+        return GIAGIAM;
+    }
 
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final ChiTietGioHangDTO other = (ChiTietGioHangDTO) obj;
-        
-        if (this.MKH != other.MKH) {
-            return false;
-        }
-        if (this.TIENGIO != other.TIENGIO) {
-            return false;
-        }
-    
-        return Objects.equals(this.SL, other.SL);
+    public int getGIATHANHTOAN() {
+        return GIATHANHTOAN;
     }
 
     public String getMKM() {
         return MKM;
     }
 
-    public void setMKM(String mKM) {
-        MKM = mKM;
+    // Setters
+    public void setMKH(int mkh) {
+        this.MKH = mkh;
     }
 
-    @Override
-    public String toString() {
-        return "ChiTietGioHangDTO [MKH=" + MKH + ", MSP=" + MSP + ", MKM=" + MKM + ", SL=" + SL + ", TIENGIO=" + TIENGIO
-                + "]";
+    public void setMSP(int msp) {
+        this.MSP = msp;
     }
 
+    public void setSL(int sl) {
+        this.SL = sl;
+    }
+
+    public void setTIENGIO(int tiengio) {
+        this.TIENGIO = tiengio;
+    }
+
+    public void setGIAGIAM(int giagiam) {
+        this.GIAGIAM = giagiam;
+    }
+
+    public void setGIATHANHTOAN(int giathanhtoan) {
+        this.GIATHANHTOAN = giathanhtoan;
+    }
+
+    public void setMKM(String makm) {
+        this.MKM = makm;
+    }
 }

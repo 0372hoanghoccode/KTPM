@@ -106,7 +106,7 @@ public final class GioHang extends JPanel {
         tableGioHang = new JTable();
         scrollTableGioHangNhap = new JScrollPane();
         tblModel = new DefaultTableModel();
-        String[] header = new String[]{"STT", "Mã SP", "Tên sản phẩm", "Đơn giá", "Số lượng"};
+        String[] header = new String[]{"STT", "Mã SP", "Tên sản phẩm", "Đơn giá", "Số lượng","Giá Giảm","Giá thanh toán","Mã khuyến mãi"};
         tblModel.setColumnIdentifiers(header);
         tableGioHang.setModel(tblModel);
         scrollTableGioHangNhap.setViewportView(tableGioHang);
@@ -478,14 +478,9 @@ public final class GioHang extends JPanel {
     
             for (SanPhamDTO sp1 : result) {
       
-              ChiTietLoHangDTO string= findMinLohangWithValidQuantity(sp.getMSP());
+             
               
-            if (string != null )
-              this.txtGiaXuat.setText(string.getGiaNhap() * 2 + "");
-           
-            else {
-                this.txtGiaXuat.setText( "");
-            }
+             this.txtGiaXuat.setText(sp.getTIENX()+"");
         
     }
         
@@ -535,11 +530,9 @@ public final class GioHang extends JPanel {
                soluong  // Số lượng trong lô hợp lệ
             });
             // Cập nhật giá xuất
-            if (string != null )
-              this.txtGiaXuat.setText(string.getGiaNhap() * 2 + "");
-            else {
-                this.txtGiaXuat.setText( "");
-            }
+         
+              this.txtGiaXuat.setText(sp.getTIENX()+"");
+           
         
     }
     }
@@ -587,7 +580,8 @@ public final class GioHang extends JPanel {
             sum += ctGioHang.get(i).getTIENGIO() * ctGioHang.get(i).getSL();
             tblModel.addRow(new Object[]{
                 i + 1, phienban.getMSP(), spBUS.getByMaSP(phienban.getMSP()).getTEN(), 
-                Formater.FormatVND(ctGioHang.get(i).getTIENGIO()), ctGioHang.get(i).getSL()
+                Formater.FormatVND(ctGioHang.get(i).getTIENGIO()), ctGioHang.get(i).getSL(), ctGioHang.get(i).getGIAGIAM(),
+                ctGioHang.get(i).getGIATHANHTOAN(), ctGioHang.get(i).getMKM()
             });
         }
         lbltongtien.setText(Formater.FormatVND(sum));
@@ -632,7 +626,7 @@ public final class GioHang extends JPanel {
         
          giaxuat = Integer.parseInt(txtGiaXuat.getText());
         int soluong = Integer.parseInt(txtSoLuongSPxuat.getText());
-        ChiTietGioHangDTO ctphieu = new ChiTietGioHangDTO(tk.getMNV(), masp, "", soluong, giaxuat);
+        ChiTietGioHangDTO ctphieu = new ChiTietGioHangDTO(tk.getMNV(), masp, soluong, giaxuat,0,giaxuat, "");
         ChiTietGioHangDTO p = giohangBUS.findCT(chitietgiohang, ctphieu.getMSP());
         if (p == null) {
             chitietgiohang.add(ctphieu);
@@ -659,7 +653,7 @@ public final class GioHang extends JPanel {
                     ArrayList <ChiTietPhieuDTO> ctpx = new ArrayList<ChiTietPhieuDTO>();
                     chitietgiohang = giohangBUS.getAllct(tk.getMNV());
                     for(ChiTietGioHangDTO i : chitietgiohang) {
-                        ctpx.add(new ChiTietPhieuDTO(maphieu, i.getMSP(), i.getSL(), i.getTIENGIO()));
+                        ctpx.add(new ChiTietPhieuDTO(maphieu, i.getMSP(), i.getSL(), i.getTIENGIO(), i.getGIAGIAM() , i.getTIENGIO() , i.getMKM()));
                     }
                     pxbus.insertGH(phieuXuat, ctpx); //update số lượng trong kho
                     JOptionPane.showMessageDialog(null, "Tạo đơn hàng thành công !");

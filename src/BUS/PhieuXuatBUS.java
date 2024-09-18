@@ -59,7 +59,7 @@ public class PhieuXuatBUS {
 
     public void insertGH(PhieuXuatDTO px, ArrayList<ChiTietPhieuDTO> ct) {
         phieuXuatDAO.insert(px); //ghi phieu xuat vao sql
-        chiTietPhieuXuatDAO.insertGH(ct); //goi updatesoluongTon cua sanphamDAO để chỉnh số lượng trong kho -> ghi váo sql
+        chiTietPhieuXuatDAO.insert(ct); //goi updatesoluongTon cua sanphamDAO để chỉnh số lượng trong kho -> ghi váo sql
     }
 
     public ArrayList<ChiTietPhieuDTO> selectCTP(int maphieu) {
