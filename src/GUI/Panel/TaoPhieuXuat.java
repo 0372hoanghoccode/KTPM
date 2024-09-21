@@ -26,6 +26,7 @@ import javax.swing.text.PlainDocument;
 import com.formdev.flatlaf.extras.FlatSVGIcon;
 import com.formdev.flatlaf.fonts.roboto.FlatRobotoFont;
 
+import GUI.Dialog.KhachHangDialog;
 import BUS.KhachHangBUS;
 import BUS.MaKhuyenMaiBUS;
 import BUS.PhieuXuatBUS;
@@ -51,6 +52,7 @@ import GUI.Component.Notification;
 import GUI.Component.NumericDocumentFilter;
 import GUI.Component.PanelBorderRadius;
 import GUI.Component.SelectForm;
+import GUI.Dialog.KhachHangDialog;
 import GUI.Dialog.ListKhachHang;
 import helper.Formater;
 import java.sql.SQLException;
@@ -65,7 +67,7 @@ public final class TaoPhieuXuat extends JPanel {
     JTable tablePhieuXuat, tableSanPham;
     JScrollPane scrollTablePhieuNhap, scrollTableSanPham;
     DefaultTableModel tblModel, tblModelSP; //table co san 
-    ButtonCustom btnAddSp, btnDelete, btnNhapHang;
+    ButtonCustom btnAddSp, btnDelete, btnNhapHang,btnaddKH;
     InputForm txtMaphieu, txtNhanVien, txtTenSp, txtMaSp, txtMaISBN, txtSoLuongSPxuat, txtMaGiamGia, txtGiaGiam;
     SelectForm cbxMaKM; 
     JTextField txtTimKiem;
@@ -395,11 +397,14 @@ public final class TaoPhieuXuat extends JPanel {
         khachJPanel.setPreferredSize(new Dimension(0, 40));
         khachJPanel.setBorder(new EmptyBorder(0, 10, 0, 10));
         khachJPanel.setOpaque(false);
-        JPanel kJPanelLeft = new JPanel(new GridLayout(1, 1));
+        JPanel kJPanelLeft = new JPanel(new GridLayout(1, 2));
         kJPanelLeft.setOpaque(false);
-        kJPanelLeft.setPreferredSize(new Dimension(40, 0));
+        kJPanelLeft.setPreferredSize(new Dimension(80, 0));
+        btnaddKH = new ButtonCustom("+", "excel", 14);
+        
         ButtonCustom btnKh = new ButtonCustom("Chọn khách hàng", "success", 14);
         kJPanelLeft.add(btnKh);
+        kJPanelLeft.add(btnaddKH,BorderLayout.WEST);
         btnKh.addActionListener((ActionEvent e) -> {
             new ListKhachHang(TaoPhieuXuat.this, owner, "Chọn khách hàng", true);
         });
@@ -408,11 +413,13 @@ public final class TaoPhieuXuat extends JPanel {
         txtKh.setEditable(false);
         khachJPanel.add(kJPanelLeft, BorderLayout.EAST);
         khachJPanel.add(txtKh, BorderLayout.CENTER);
-        JPanel khPanel = new JPanel(new GridLayout(2, 1, 5, 0));
+        JPanel khPanel = new JPanel(new GridLayout(3, 1, 5, 0));
         khPanel.setBackground(Color.WHITE);
-        khPanel.setPreferredSize(new Dimension(0, 80));
+        khPanel.setPreferredSize(new Dimension(0, 120));
         JLabel khachKhangJLabel = new JLabel("Khách hàng");
         khachKhangJLabel.setBorder(new EmptyBorder(0, 10, 0, 10));
+        
+
         khPanel.add(khachKhangJLabel);
         khPanel.add(khachJPanel);
         right_center.add(khPanel, BorderLayout.NORTH);
