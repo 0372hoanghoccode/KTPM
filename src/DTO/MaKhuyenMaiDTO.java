@@ -8,16 +8,17 @@ public class MaKhuyenMaiDTO {
     private int MNV;
     private Timestamp TGBD;
     private Timestamp TGKT;
-
+    private int TT ; 
     public MaKhuyenMaiDTO() {
 
     }
 
-    public MaKhuyenMaiDTO(String mKM, int mNV, Timestamp tGBD, Timestamp tGKT) {
+    public MaKhuyenMaiDTO(String mKM, int mNV, Timestamp tGBD, Timestamp tGKT , int TT ) {
         MKM = mKM;
         MNV = mNV;
         TGBD = tGBD;
         TGKT = tGKT;
+        TT = TT ; 
     }
     public String getMKM() {
         return MKM;
@@ -30,6 +31,13 @@ public class MaKhuyenMaiDTO {
     }
     public void setMNV(int mNV) {
         MNV = mNV;
+    }
+    
+      public int getTT() {
+        return TT;
+    }
+    public void setTT(int mNV) {
+        TT = mNV;
     }
     public Timestamp getTGBD() {
         return TGBD;

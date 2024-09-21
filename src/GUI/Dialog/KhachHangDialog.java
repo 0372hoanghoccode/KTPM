@@ -188,15 +188,29 @@ if (!sdt.startsWith("0")) {
     }
     @Override
     public void mousePressed(MouseEvent e) {
-        if (e.getSource() == btnThem && Validation()) {
-                int id=KhachHangDAO.getInstance().getAutoIncrement();
-                long now = System.currentTimeMillis();
-                Timestamp currenTime = new Timestamp(now);
-                jpKH.khachhangBUS.add(new DTO.KhachHangDTO(id, tenKH.getText(),sdtKH.getText(), diachiKH.getText(), emailKH.getText(), currenTime));
-                jpKH.loadDataTable(jpKH.listkh);
-                dispose();
+      if (e.getSource() == btnThem && Validation()) {
+    int id = KhachHangDAO.getInstance().getAutoIncrement();
+    long now = System.currentTimeMillis();
+    Timestamp currenTime = new Timestamp(now);
+    
+    // Tạo đối tượng khách hàng
+    KhachHangDTO newKhachHang = new DTO.KhachHangDTO(id, tenKH.getText(), sdtKH.getText(), diachiKH.getText(), emailKH.getText(), currenTime);
+    
+    // Thêm khách hàng vào danh sách
+    boolean isAdded = jpKH.khachhangBUS.add(newKhachHang);
+    
+    if (isAdded) {
+        // Cập nhật lại bảng dữ liệu
+        jpKH.loadDataTable(jpKH.listkh);
+        JOptionPane.showMessageDialog(this, "Thêm khách hàng thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+    } else {
+        JOptionPane.showMessageDialog(this, "Thêm khách hàng thất bại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+    }
+    
+    // Đóng cửa sổ hiện tại
+    dispose();
+}
 
-        } 
         // else if (e.getSource() == btnHuyBo) {
         //     dispose();
         // }

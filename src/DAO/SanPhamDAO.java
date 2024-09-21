@@ -17,6 +17,8 @@ public class SanPhamDAO implements DAOinterface<SanPhamDTO> {
         return new SanPhamDAO();
     }
 
+   
+
     @Override
     public int insert(SanPhamDTO t) {
         int result = 0;
@@ -295,5 +297,5 @@ public class SanPhamDAO implements DAOinterface<SanPhamDTO> {
         
         return filteredList; // Trả về danh sách sản phẩm đã lọc
     }
-
+      
 }

@@ -86,7 +86,8 @@ public class MaKhuyenMaiDAO implements DAOinterface<MaKhuyenMaiDTO> {
                 int MNV = rs.getInt("MNV");
                 Timestamp TGBD = rs.getTimestamp("TGBD");
                 Timestamp TGKT = rs.getTimestamp("TGKT");
-                MaKhuyenMaiDTO kh = new MaKhuyenMaiDTO(MKM, MNV, TGBD, TGKT);
+                 int TT = rs.getInt("TT");
+                MaKhuyenMaiDTO kh = new MaKhuyenMaiDTO(MKM, MNV, TGBD, TGKT , TT );
                 result.add(kh);
             }
             JDBCUtil.closeConnection(con);
@@ -133,7 +134,8 @@ public class MaKhuyenMaiDAO implements DAOinterface<MaKhuyenMaiDTO> {
                 int MNV = rs.getInt("MNV");
                 Timestamp TGBD = rs.getTimestamp("TGBD");
                 Timestamp TGKT = rs.getTimestamp("TGKT");
-                result = new MaKhuyenMaiDTO(MKM, MNV, TGBD, TGKT);
+                int TT = rs.getInt("TT");
+                result = new MaKhuyenMaiDTO(MKM, MNV, TGBD, TGKT, TT );
             }
             JDBCUtil.closeConnection(con);
         } catch (Exception e) {
@@ -198,6 +200,22 @@ public class MaKhuyenMaiDAO implements DAOinterface<MaKhuyenMaiDTO> {
         Logger.getLogger(MaKhuyenMaiDAO.class.getName()).log(Level.SEVERE, null, ex);
     }
     return result;
+}
+    
+    public static void updateTrangThaiMaKhuyenMai(String maKhuyenMai, int trangThai) {
+    try {
+        Connection con = JDBCUtil.getConnection();
+        String sql = "UPDATE MAKHUYENMAI SET TT = ? WHERE MKM = ?";
+        PreparedStatement pst = con.prepareStatement(sql);
+        pst.setInt(1, trangThai);  // Đặt trạng thái mới
+        pst.setString(2, maKhuyenMai);  // Đặt mã khuyến mãi cần cập nhật
+
+        pst.executeUpdate();
+        pst.close();
+        con.close();
+    } catch (SQLException ex) {
+        Logger.getLogger(MaKhuyenMaiDAO.class.getName()).log(Level.SEVERE, null, ex);
+    }
 }
 
 }

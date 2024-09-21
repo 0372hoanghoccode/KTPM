@@ -2,6 +2,7 @@ package GUI.Panel;
 
 import BUS.MaKhuyenMaiBUS;
 import BUS.SanPhamBUS;
+import DAO.MaKhuyenMaiDAO;
 import DTO.MaKhuyenMaiDTO;
 import DTO.NhanVienDTO;
 import DTO.ChiTietMaKhuyenMaiDTO;
@@ -66,7 +67,7 @@ public class MaKhuyenMai extends JPanel implements ActionListener, ItemListener 
         tableMKM.setBackground(new Color(245, 250, 250));
         scrollTableSanPham = new JScrollPane();
         tblModel = new DefaultTableModel();
-        String[] header = new String[]{"Mã khuyến mãi", "Thời gian bắt đầu", "Thời gian kết thúc"};
+        String[] header = new String[]{"Mã khuyến mãi", "Thời gian bắt đầu", "Thời gian kết thúc", "Trạng thái"};
         tblModel.setColumnIdentifiers(header);
         tableMKM.setModel(tblModel);
         scrollTableSanPham.setViewportView(tableMKM);
@@ -178,14 +179,34 @@ public class MaKhuyenMai extends JPanel implements ActionListener, ItemListener 
         loadDataTable(listMKM);
     }
 
-    public void loadDataTable(ArrayList<MaKhuyenMaiDTO> result) {
-        tblModel.setRowCount(0);
-        for (MaKhuyenMaiDTO kvk : result) {
-            tblModel.addRow(new Object[]{
-                kvk.getMKM(), Formater.FormatTime(kvk.getTGBD()), Formater.FormatTime(kvk.getTGKT())
-            });
+public void loadDataTable(ArrayList<MaKhuyenMaiDTO> result) {
+    tblModel.setRowCount(0);  
+    Date now = new Date();  // Lấy ngày hiện tại
+
+    for (MaKhuyenMaiDTO kvk : result) {
+        Date ngayKetThuc = kvk.getTGKT();  // Lấy ngày kết thúc
+        int intTrangThai = kvk.getTT();
+        String stringTrangThai = "Còn hạn";
+
+        // Kiểm tra nếu ngày kết thúc nhỏ hơn ngày hiện tại
+        if (ngayKetThuc.before(now)) {
+            stringTrangThai = "Hết hạn";
+            intTrangThai = 0; // Đặt trạng thái thành hết hạn
+
+            // Gọi hàm cập nhật trạng thái trong database
+            MaKhuyenMaiDAO.updateTrangThaiMaKhuyenMai(kvk.getMKM(), intTrangThai);
+        } else {
+            stringTrangThai = "Còn hạn";
         }
+
+        tblModel.addRow(new Object[]{
+            kvk.getMKM(), 
+            Formater.FormatTime(kvk.getTGBD()), 
+            Formater.FormatTime(kvk.getTGKT()), 
+            stringTrangThai
+        });
     }
+}
 
     public int getRowSelected() {
         int index = tableMKM.getSelectedRow();

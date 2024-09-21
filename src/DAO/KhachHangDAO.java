@@ -160,7 +160,7 @@ public class KhachHangDAO implements DAOinterface<KhachHangDTO> {
         int result = -1;
         try {
             Connection con = (Connection) JDBCUtil.getConnection();
-            String sql = "SELECT `AUTO_INCREMENT` FROM  INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'quanlycuahangsach' AND   TABLE_NAME   = 'KHACHHANG'";
+            String sql = "SELECT `AUTO_INCREMENT` FROM  INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'testne' AND   TABLE_NAME   = 'KHACHHANG'";
             PreparedStatement pst = (PreparedStatement) con.prepareStatement(sql);
             ResultSet rs2 = pst.executeQuery(sql);
             if (!rs2.isBeforeFirst() ) {
@@ -176,4 +176,29 @@ public class KhachHangDAO implements DAOinterface<KhachHangDTO> {
         }
         return result;
     }
+    public static int getMaxMaKhachHang() {
+    int maxMaKhachHang = -1;  // Giá trị mặc định nếu không tìm thấy kết quả
+    try {
+        // Kết nối đến cơ sở dữ liệu
+        Connection con = JDBCUtil.getConnection();
+        
+        // Truy vấn SQL để lấy giá trị lớn nhất của cột Mã Khách Hàng
+        String sql = "SELECT MAX(MKH) AS maxMaKH FROM KHACHHANG";
+        PreparedStatement pst = con.prepareStatement(sql);
+        
+        // Thực hiện truy vấn
+        ResultSet rs = pst.executeQuery();
+        
+        // Kiểm tra kết quả
+        if (rs.next()) {
+            maxMaKhachHang = rs.getInt("maxMaKH");
+        }
+  
+    } catch (SQLException ex) {
+        Logger.getLogger(KhachHangDAO.class.getName()).log(Level.SEVERE, null, ex);
+    }
+    
+    return maxMaKhachHang;  // Trả về mã khách hàng lớn nhất tìm được
+}
+
 }

@@ -69,6 +69,7 @@ public final class MaKhuyenMaiDialog extends JDialog implements ActionListener {
     public void loadDataTable(ArrayList<ChiTietMaKhuyenMaiDTO> ctMkm) {
         tblModel.setRowCount(0);
         for (int i = 0; i < ctMkm.size(); i++) {
+         
             SanPhamDTO sp = spBus.getByMaSP(ctMkm.get(i).getMSP());
             tblModel.addRow(new Object[]{
                 i + 1, sp.getMSP(), sp.getTEN(), 

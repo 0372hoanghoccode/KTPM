@@ -15,7 +15,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -25,7 +24,7 @@ import javax.swing.text.PlainDocument;
 
 import com.formdev.flatlaf.extras.FlatSVGIcon;
 import com.formdev.flatlaf.fonts.roboto.FlatRobotoFont;
-
+import GUI.Panel.KhachHang ; 
 import GUI.Dialog.KhachHangDialog;
 import BUS.KhachHangBUS;
 import BUS.MaKhuyenMaiBUS;
@@ -33,8 +32,10 @@ import BUS.PhieuXuatBUS;
 import BUS.SanPhamBUS;
 import DAO.ChiTietLoHangDAO;
 import DAO.ChiTietPhieuXuatDAO;
+import DAO.KhachHangDAO;
 import DAO.NhanVienDAO;
 import DAO.PhieuXuatDAO;
+import DAO.SanPhamDAO;
 import DTO.ChiTietLoHangDTO;
 import DTO.ChiTietMaKhuyenMaiDTO;
 import DTO.ChiTietPhieuDTO;
@@ -58,6 +59,7 @@ import helper.Formater;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 
 public final class TaoPhieuXuat extends JPanel {
     JFrame owner = (JFrame) SwingUtilities.getWindowAncestor(this); //gọi phương thức compoment tổ tiên có kiểu window của compoment hiện tại
@@ -88,6 +90,7 @@ public final class TaoPhieuXuat extends JPanel {
     KhachHangBUS khachHangBUS = new KhachHangBUS();
     ArrayList<ChiTietPhieuDTO> chitietphieu = new ArrayList<>();
     ArrayList<DTO.SanPhamDTO> listSP = spBUS.getAll();
+    ArrayList<SanPhamDTO> listSPlonhon0 = SanPhamDAO.filterProductsWithPositiveQuantity(listSP);
     ArrayList<DTO.ChiTietMaKhuyenMaiDTO> listctMKM = new ArrayList<>();
 
     TaiKhoanDTO tk;
@@ -104,7 +107,7 @@ public final class TaoPhieuXuat extends JPanel {
         maphieu = phieuXuatBUS.getMPMAX() + 1;
         System.out.print("mã lớn nhất +1 nè : " + maphieu);
         initComponent(type);
-        loadDataTableSanPham(listSP);
+        loadDataTableSanPham(listSPlonhon0);
     }
 
     private void initComponent(String type) {
@@ -169,7 +172,7 @@ public final class TaoPhieuXuat extends JPanel {
                 int index = tableSanPham.getSelectedRow();
                 if (index != -1) {
                     resetForm();
-                    setInfoSanPham(listSP.get(index));
+                    setInfoSanPham(listSPlonhon0.get(index));
                     if (!checkTonTai()) {
                         actionbtn("add");
                     } else {
@@ -405,8 +408,18 @@ public final class TaoPhieuXuat extends JPanel {
         ButtonCustom btnKh = new ButtonCustom("Chọn khách hàng", "success", 14);
         kJPanelLeft.add(btnKh);
         kJPanelLeft.add(btnaddKH,BorderLayout.WEST);
+        
         btnKh.addActionListener((ActionEvent e) -> {
             new ListKhachHang(TaoPhieuXuat.this, owner, "Chọn khách hàng", true);
+        });
+         btnaddKH.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                KhachHang KhachHang = new KhachHang(mainChinh);
+                new KhachHangDialog(KhachHang, owner, "Thêm khách hàng", true,"create");
+                     setKhachHang(KhachHangDAO.getMaxMaKhachHang());
+                
+            }
         });
 
         txtKh = new JTextField("");
@@ -590,7 +603,7 @@ public void loadDataTableSanPham(ArrayList<SanPhamDTO> result) {
     ChiTietLoHangDAO chiTietLoHangDAO = new ChiTietLoHangDAO();
     
     for (SanPhamDTO sp : result) {
-        System.out.print(sp.getMSP());
+      //  System.out.print(sp.getMSP());
               ChiTietLoHangDTO string= findMinLohangWithValidQuantity(sp.getMSP());
                if (string == null)
                     soluong = 0 ; 

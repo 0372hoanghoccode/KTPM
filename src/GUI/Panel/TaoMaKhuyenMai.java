@@ -216,8 +216,8 @@ public final class TaoMaKhuyenMai extends JPanel implements ItemListener, Action
         txtTenSp.setPreferredSize(new Dimension(100, 90));
         txtMaSp = new InputForm("Mã sản phẩm");
         txtMaSp.setEditable(false);
-        txtGiaNhap = new InputForm("Giá Nhập");
-        txtGiaNhap.setEditable(false);
+//        txtGiaNhap = new InputForm("Giá Nhập");
+//        txtGiaNhap.setEditable(false);
         // txtGiaBan = new InputForm("Giá Bán");
         // txtGiaBan.setEditable(false);
         txtGiaBia = new InputForm("Giá Bìa");
@@ -233,7 +233,7 @@ public final class TaoMaKhuyenMai extends JPanel implements ItemListener, Action
 
         JPanel merge2 = new JPanel(new GridLayout());
         merge2.setPreferredSize(new Dimension(100, 80));
-        merge2.add(txtGiaNhap, BorderLayout.WEST);
+       // merge2.add(txtGiaNhap, BorderLayout.WEST);
         merge2.add(txtGiaBia,BorderLayout.CENTER);
         // merge2.add(txtGiaBan, BorderLayout.EAST);
         
@@ -296,12 +296,12 @@ public final class TaoMaKhuyenMai extends JPanel implements ItemListener, Action
         txtNhanVien.setEditable(false);
         dateStart = new InputDate("Từ ngày");
         dateEnd = new InputDate("Đến ngày");
-         cbbLoHang = new SelectForm("Lô Hàng", arrmlh); //Hieusua -thêm cái string lo hang vo
+      //   cbbLoHang = new SelectForm("Lô Hàng", arrmlh); //Hieusua -thêm cái string lo hang vo
         right_top.add(txtMaKM);
         right_top.add(txtNhanVien);
         right_top.add(dateStart);
         right_top.add(dateEnd);
-        right_top.add(cbbLoHang);
+     //   right_top.add(cbbLoHang);
 
         right_center = new JPanel();
         right_center.setPreferredSize(new Dimension(100, 100));
@@ -339,33 +339,33 @@ public final class TaoMaKhuyenMai extends JPanel implements ItemListener, Action
     }
 
     public void setInfoSanPham(SanPhamDTO sp) { //set info vào inputform khi nhan ben tablesanpham
-          String selectedLotCode = (String) cbbLoHang.getSelectedItem();
+       //   String selectedLotCode = (String) cbbLoHang.getSelectedItem();
         this.txtMaSp.setText(Integer.toString(sp.getMSP()));
         this.txtTenSp.setText(sp.getTEN());
         this.txtGiaBia.setText(sp.getTIENX()+"");
         
-        int gianhap = ChiTietLoHangDAO.TuMaLayGiaNhap(selectedLotCode ,sp.getMSP());
-         this.txtGiaNhap.setText(gianhap+"");
+       // int gianhap = ChiTietLoHangDAO.TuMaLayGiaNhap(selectedLotCode ,sp.getMSP());
+         //this.txtGiaNhap.setText(gianhap+"");
        
         
-        txtPTG.setText("0");
-           txtPTG.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-               int giabia = sp.getTIENX();
-            // Lấy phần trăm khuyến mãi từ TextField
-            String phantramKhuyenMaiStr = txtPTG.getText();
-            int phantramKhuyenMai = Integer.parseInt(phantramKhuyenMaiStr);
-            
-            // Tính giá sau khuyến mãi
-            int giasaukhikhuyenmai = giabia - (giabia * phantramKhuyenMai / 100);
-            
-            // Cập nhật giá vào TextField
-            txtGiaBan.setText(String.valueOf(giasaukhikhuyenmai));
-                System.out.print("hello");
-            }
-        });
-           this.txtGiaNhap.setText(gianhap+"");
+//        txtPTG.setText("0");
+//           txtPTG.addActionListener(new ActionListener() {
+//            @Override
+//            public void actionPerformed(ActionEvent e) {
+//               int giabia = sp.getTIENX();
+//            // Lấy phần trăm khuyến mãi từ TextField
+//            String phantramKhuyenMaiStr = txtPTG.getText();
+//            int phantramKhuyenMai = Integer.parseInt(phantramKhuyenMaiStr);
+//            
+//            // Tính giá sau khuyến mãi
+//            int giasaukhikhuyenmai = giabia - (giabia * phantramKhuyenMai / 100);
+//            
+//            // Cập nhật giá vào TextField
+//            txtGiaBan.setText(String.valueOf(giasaukhikhuyenmai));
+//                System.out.print("hello");
+//            }
+//        });
+         //  this.txtGiaNhap.setText(gianhap+"");
         
     }
     
@@ -439,20 +439,48 @@ public final class TaoMaKhuyenMai extends JPanel implements ItemListener, Action
         }
     }
 
-    public boolean validateNhap() {
-        if (Validation.isEmpty(txtMaSp.getText())) {
-            JOptionPane.showMessageDialog(this, "Vui lòng chọn sản phẩm", "Chọn sản phẩm", JOptionPane.WARNING_MESSAGE);
-            return false;
-        } else if (Validation.isEmpty(txtPTG.getText()) || Integer.parseInt(txtPTG.getText()) > 100 || Integer.parseInt(txtPTG.getText()) < 0) {
-                JOptionPane.showMessageDialog(this, "Phần trăm giảm không được để rỗng và phải lốn hơn 0%, nhỏ hơn 100%!", "Cảnh báo !", JOptionPane.WARNING_MESSAGE);
-                return false;
-            }
-        else if (Validation.isEmpty(txtMaKM.getText())) {
-                JOptionPane.showMessageDialog(this, "Mã khuyến mãi không được để rỗng", "Cảnh báo !", JOptionPane.WARNING_MESSAGE);
-                return false;
-            }
-        return true;
+  public boolean validateNhap() {
+    // Kiểm tra nếu trường mã sản phẩm bị rỗng
+    if (Validation.isEmpty(txtMaSp.getText())) {
+        JOptionPane.showMessageDialog(this, "Vui lòng chọn sản phẩm", "Chọn sản phẩm", JOptionPane.WARNING_MESSAGE);
+        return false;
     }
+    
+    // Kiểm tra lỗi cho phần trăm giảm
+    String ptgText = txtPTG.getText();
+    
+    if (Validation.isEmpty(ptgText)) {
+        JOptionPane.showMessageDialog(this, "Phần trăm giảm không được để rỗng!", "Cảnh báo !", JOptionPane.WARNING_MESSAGE);
+        return false;
+    }
+    
+    try {
+        int ptgValue = Integer.parseInt(ptgText);
+        
+        if (ptgValue <= 0) {
+            JOptionPane.showMessageDialog(this, "Phần trăm giảm phải lớn hơn 0%!", "Cảnh báo !", JOptionPane.WARNING_MESSAGE);
+            return false;
+        }
+
+        if (ptgValue > 100) {
+            JOptionPane.showMessageDialog(this, "Phần trăm giảm phải nhỏ hơn hoặc bằng 100%!", "Cảnh báo !", JOptionPane.WARNING_MESSAGE);
+            return false;
+        }
+        
+    } catch (NumberFormatException e) {
+        JOptionPane.showMessageDialog(this, "Phần trăm giảm phải là số nguyên hợp lệ!", "Cảnh báo !", JOptionPane.WARNING_MESSAGE);
+        return false;
+    }
+    
+    // Kiểm tra nếu trường mã khuyến mãi bị rỗng
+    if (Validation.isEmpty(txtMaKM.getText())) {
+        JOptionPane.showMessageDialog(this, "Mã khuyến mãi không được để rỗng", "Cảnh báo !", JOptionPane.WARNING_MESSAGE);
+        return false;
+    }
+
+    return true;
+}
+
 
 
     public void resetForm() {
@@ -513,28 +541,34 @@ public final class TaoMaKhuyenMai extends JPanel implements ItemListener, Action
         } 
     }
     
-    public boolean validateSelectDate() throws ParseException {
-        Date time_start = dateStart.getDate();
-        Date time_end = dateEnd.getDate();
+public boolean validateSelectDate() throws ParseException {
+    Date time_start = dateStart.getDate();
+    Date time_end = dateEnd.getDate();
+    
+    Date current_date = new Date();
 
-        Date current_date = new Date();
-//        if (time_start != null && time_start.after(current_date)) {
-//            JOptionPane.showMessageDialog(this, "Ngày bắt đầu không được lớn hơn ngày hiện tại", "Lỗi !", JOptionPane.ERROR_MESSAGE);
-//            dateStart.getDateChooser().setCalendar(null);
-//            return false;
-//        }
-//        if (time_end != null && time_end.after(current_date)) {
-//            JOptionPane.showMessageDialog(this, "Ngày kết thúc không được lớn hơn ngày hiện tại", "Lỗi !", JOptionPane.ERROR_MESSAGE);
-//            dateEnd.getDateChooser().setCalendar(null);
-//            return false;
-//        }
-        if (time_start != null && time_end != null && time_start.after(time_end)) {
-            JOptionPane.showMessageDialog(this, "Ngày kết thúc phải lớn hơn ngày bắt đầu", "Lỗi !", JOptionPane.ERROR_MESSAGE);
-            dateEnd.getDateChooser().setCalendar(null);
-            return false;
-        }
-        return true;
+    // Kiểm tra nếu ngày bắt đầu hoặc ngày kết thúc là null (rỗng)
+    if (time_start == null) {
+        JOptionPane.showMessageDialog(this, "Ngày bắt đầu không được để rỗng!", "Lỗi !", JOptionPane.ERROR_MESSAGE);
+        return false;
     }
+
+    if (time_end == null) {
+        JOptionPane.showMessageDialog(this, "Ngày kết thúc không được để rỗng!", "Lỗi !", JOptionPane.ERROR_MESSAGE);
+        return false;
+    }
+
+    // Kiểm tra ngày bắt đầu không được lớn hơn ngày kết thúc
+    if (time_start.after(time_end)) {
+        JOptionPane.showMessageDialog(this, "Ngày kết thúc phải lớn hơn ngày bắt đầu", "Lỗi !", JOptionPane.ERROR_MESSAGE);
+        dateEnd.getDateChooser().setCalendar(null); // Reset ngày kết thúc
+        return false;
+    }
+
+    return true;
+}
+
+
     public void eventBtnTao() throws ParseException {
         if (chitietMKM.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Chưa có sản phẩm nào trong mã !", "Cảnh báo !", JOptionPane.ERROR_MESSAGE);
@@ -552,7 +586,7 @@ public final class TaoMaKhuyenMai extends JPanel implements ItemListener, Action
                 Date time_end_tmp = dateEnd.getDate() != null ? dateEnd.getDate() : calendar.getTime();
                 Timestamp time_start = new Timestamp(time_start_tmp.getTime());
                 Timestamp time_end = new Timestamp(time_end_tmp.getTime());
-                MaKhuyenMaiDTO MKM = new MaKhuyenMaiDTO(txtMaKM.getText(), nvDto.getMNV(), time_start, time_end);
+                MaKhuyenMaiDTO MKM = new MaKhuyenMaiDTO(txtMaKM.getText(), nvDto.getMNV(), time_start, time_end, 1 );
                 boolean result = MaKhuyenMaiBus.add(MKM, chitietMKM);
                 if (result) {
                     JOptionPane.showMessageDialog(this, "Tạo mã thành công !");
