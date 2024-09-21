@@ -32,6 +32,7 @@ import BUS.MaKhuyenMaiBUS;
 import BUS.SanPhamBUS;
 import DAO.ChiTietLoHangDAO;
 import DAO.KhuVucSach1DAO;
+import DAO.MaKhuyenMaiDAO;
 import DAO.SanPhamDAO;
 import DTO.ChiTietLoHangDTO;
 import DTO.ChiTietMaKhuyenMaiDTO;
@@ -80,7 +81,7 @@ public final class TaoMaKhuyenMai extends JPanel implements ItemListener, Action
         this.m = m;
         chitietMKM = new ArrayList<>();
        
-          arrmlh = kvs1dao.getAll1();
+        arrmlh = kvs1dao.getAll1();
         initComponent(type);
         
           loadDataTalbeSanPham(listSp_lonhon0);
@@ -92,6 +93,9 @@ public final class TaoMaKhuyenMai extends JPanel implements ItemListener, Action
         this.setBackground(BackgroundColor);
         this.setLayout(new BorderLayout(0, 0));
         this.setOpaque(true);
+        
+        
+       
         
         //Phieu Nhap
         tableMKM = new JTable();
@@ -318,6 +322,9 @@ public final class TaoMaKhuyenMai extends JPanel implements ItemListener, Action
 
         contentCenter.add(left, BorderLayout.CENTER);
         contentCenter.add(right, BorderLayout.EAST);
+         int MKM = MaKhuyenMaiDAO.getMaxMaKhuyenMai()+1;
+        txtMaKM.setText(MKM+"");
+        
     }
 
     public void actionbtn(String type) { //ẩn hiện button

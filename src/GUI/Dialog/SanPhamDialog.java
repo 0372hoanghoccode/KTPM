@@ -73,9 +73,8 @@ public final class SanPhamDialog extends JDialog implements ActionListener {
     
     public void init(SanPham jpSP) {
         this.jpSP = jpSP;
-      //  masp = jpSP.spBUS.spDAO.getAutoIncrement();
-      
-        System.out.print(masp);
+       masp = SanPhamDAO.getMaxMaSanPham()+1;
+    
         arrkhuvuc = kvkhoBus.getArrTenKhuVuc();
         arrnxb = nxbBus.getArrTenNhaXuatBan();        
         arrmlh = kvs1dao.getArrMLH();
@@ -123,14 +122,13 @@ public final class SanPhamDialog extends JDialog implements ActionListener {
         txtsoluong.setDisable();
         PlainDocument nhap = (PlainDocument)txtsoluong.getTxtForm().getDocument();
         nhap.setDocumentFilter((new NumericDocumentFilter()));
-        txtgiaxuat = new InputForm("Giá bán");
-      txtgiaxuat.setDisable();
-        PlainDocument xuat = (PlainDocument)txtgiaxuat.getTxtForm().getDocument();
-        xuat.setDocumentFilter((new NumericDocumentFilter()));
-        cbbLoHang = new SelectForm("Lô Hàng",  arrmlh); //Hieusua -thêm cái string lo hang vo
+
+//        PlainDocument xuat = (PlainDocument)txtgiaxuat.getTxtForm().getDocument();
+      //  xuat.setDocumentFilter((new NumericDocumentFilter()));
+  //      cbbLoHang = new SelectForm("Lô Hàng",  arrmlh); //Hieusua -thêm cái string lo hang vo
         txtgiabia = new InputForm("Giá Bìa");
-        txtgiabia.setDisable();
-        cbbMKM = new SelectForm("Mã Khuyến Mãi",  new String[]{"MKM1", "MKM2", "MKM3"});//Hieusua -thêm cái string mkm zo
+//        txtgiabia.setDisable();
+        //cbbMKM = new SelectForm("Mã Khuyến Mãi",  new String[]{"MKM1", "MKM2", "MKM3"});//Hieusua -thêm cái string mkm zo
      
   masp1 = new InputForm("Mã sản phẩm");
         masp1.setVisible(false);
@@ -144,9 +142,10 @@ public final class SanPhamDialog extends JDialog implements ActionListener {
         pninfosanpham.add(khuvuc);
         pninfosanpham.add(txtsoluong);
         pninfosanpham.add(txtgiabia);
-        pninfosanpham.add(cbbLoHang);
-        pninfosanpham.add(txtgiaxuat);
-        pninfosanpham.add(cbbMKM);
+   //     pninfosanpham.add(cbbLoHang);
+   //   pninfosanpham.add(cbbMKM);
+
+     
         pninfosanphamright.add(hinhanh);
         
 
@@ -189,7 +188,17 @@ public final class SanPhamDialog extends JDialog implements ActionListener {
         pnmain.add(pnCenter);
 
         switch (type) {
-            case "view" -> setInfo(sp);
+            case "view" -> {
+                   cbbLoHang = new SelectForm("Lô Hàng",  arrmlh); //Hieusua -thêm cái string lo hang vo
+       
+        txtgiabia.setDisable();
+        cbbMKM = new SelectForm("Mã Khuyến Mãi",  new String[]{"MKM1", "MKM2", "MKM3"});//Hieusua -thêm cái string mkm zo
+        pninfosanpham.add(txtgiabia);
+        pninfosanpham.add(cbbLoHang);
+        pninfosanpham.add(cbbMKM);
+        setInfo(sp);
+                 
+            }
             case "update" -> setInfo(sp);
             default -> {
             }
@@ -260,7 +269,7 @@ public final class SanPhamDialog extends JDialog implements ActionListener {
     }
 
     public void eventAddSanPham() {
-        SanPhamDTO sp = getInfo();
+        SanPhamDTO sp = LayThongTinDeThem();
         sp.setHINHANH(addImage(sp.getHINHANH()));
         if (jpSP.spBUS.add(sp)) {
             JOptionPane.showMessageDialog(this, "Thêm sản phẩm thành công !");
@@ -269,6 +278,30 @@ public final class SanPhamDialog extends JDialog implements ActionListener {
         }
     }
 
+     public SanPhamDTO LayThongTinDeThem() {
+        String vtensp = tenSP.getText();
+        String hinhanh = this.hinhanh.getUrl_img();
+        String danhMuc = danhmuc.getText();
+        int naMXB  = Integer.parseInt(namXB.getText());
+        int MNXB = nxbBus.getAll().get(this.cbNXB.getSelectedIndex()).getManxb();
+        String TenTG = tenTG.getText();
+        int MKVK = kvkhoBus.getAll().get(this.khuvuc.getSelectedIndex()).getMakhuvuc();
+        int tIENX = Integer.parseInt(txtgiabia.getText());
+       //    ChiTietLoHangDAO dao = new ChiTietLoHangDAO();
+    
+       // ArrayList<String> mlhList = dao.findMLHByMSP(masp);
+   
+ 
+        SanPhamDTO result = new SanPhamDTO(masp, vtensp, hinhanh, danhMuc, naMXB, MNXB, TenTG, MKVK, tIENX, 0);
+        // Sản phẩm : int MSP, String TEN, String HINHANH, 
+        //String DANHMUC, int NAMXB, int MNXB, String TENTG, int MKVS, int TIENX, String MLH, int SL
+        return result;
+    }
+    
+    
+    
+    
+    
     public SanPhamDTO getInfo() {
         String vtensp = tenSP.getText();
         String hinhanh = this.hinhanh.getUrl_img();
@@ -277,12 +310,12 @@ public final class SanPhamDialog extends JDialog implements ActionListener {
         int MNXB = nxbBus.getAll().get(this.cbNXB.getSelectedIndex()).getManxb();
         String TenTG = tenTG.getText();
         int MKVK = kvkhoBus.getAll().get(this.khuvuc.getSelectedIndex()).getMakhuvuc();
-        int tIENX = Integer.parseInt(txtgiaxuat.getText());
+        int tIENX = Integer.parseInt(txtgiabia.getText());
            ChiTietLoHangDAO dao = new ChiTietLoHangDAO();
     
         ArrayList<String> mlhList = dao.findMLHByMSP(masp);
    
-    // Cập nhật ComboBox với danh sách mã lô hàng
+  //   Cập nhật ComboBox với danh sách mã lô hàng
         cbbLoHang.setArr(mlhList);
         
         cbbLoHang.addActionListener(new ActionListener() {
@@ -303,6 +336,9 @@ public final class SanPhamDialog extends JDialog implements ActionListener {
     }
 
     public void setInfo(SanPhamDTO sp) {
+        txtgiaxuat = new InputForm("Giá bán");
+        txtgiaxuat.setDisable();
+        pninfosanpham.add(txtgiaxuat);
         hinhanh.setUrl_img(sp.getHINHANH());
         tenSP.setText(sp.getTEN());
         danhmuc.setText(sp.getDANHMUC()); 
@@ -310,10 +346,8 @@ public final class SanPhamDialog extends JDialog implements ActionListener {
         cbNXB.setSelectedIndex(nxbBus.getIndexByMaNXB(sp.getMNXB()));
         tenTG.setText(sp.getTENTG());
         khuvuc.setSelectedIndex(kvkhoBus.getIndexByMaKVK(sp.getMKVS()));
-        txtgiaxuat.setText(Integer.toString(sp.getTIENX()));
-       
+        txtgiabia.setText(Integer.toString(sp.getTIENX()));
         ChiTietLoHangDAO dao = new ChiTietLoHangDAO();
-      
         ArrayList<String> mlhList = dao.findMLHByMSP(masp);
    
     // Cập nhật ComboBox với danh sách mã lô hàng
@@ -346,8 +380,8 @@ public final class SanPhamDialog extends JDialog implements ActionListener {
         boolean check = true;
         if (Validation.isEmpty(tenSP.getText()) || Validation.isEmpty((String) cbNXB.getSelectedItem())
                 || Validation.isEmpty(danhmuc.getText()) || Validation.isEmpty(namXB.getText())
-                || Validation.isEmpty(tenTG.getText()) || Validation.isEmpty(txtsoluong.getText())
-                || Validation.isEmpty(txtgiaxuat.getText()) 
+                || Validation.isEmpty(tenTG.getText()) 
+                || Validation.isEmpty(txtgiabia.getText()) 
                 ) {
         //    || Validation.isEmpty(isbn.getText())
             check = false;

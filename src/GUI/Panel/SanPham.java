@@ -153,15 +153,36 @@ System.out.print("hello");
             new SanPhamDialog(this, owner, "Chỉnh sửa sản phẩm", true, "update", listSP.get(index));
             }
         } else if (e.getSource() == mainFunction.btn.get("delete")) {
-            int index = getRowSelected();
-            if (index != -1) {
-                int input = JOptionPane.showConfirmDialog(null, "Bạn có chắc chắn muốn xóa Sản phẩm :)!", "Xóa sản phẩm", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
-                if (input == 0) {
-                    spBUS.delete(listSP.get(index));
-                    loadDataTalbe(listSP);
-                }
+    int index = getRowSelected();
+    if (index != -1) {
+        int input = JOptionPane.showConfirmDialog(null, "Bạn có chắc chắn muốn xóa Sản phẩm :)!", "Xóa sản phẩm", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
+        if (input == 0) {
+
+            // Lấy tổng số lượng của sản phẩm
+            int sum = 0;
+            try {
+                sum = ChiTietLoHangDAO.getTotalQuantityByProduct(listSP.get(index).getMSP());
+            } catch (SQLException ex) {
+                Logger.getLogger(SanPham.class.getName()).log(Level.SEVERE, null, ex);
             }
-        } else if (e.getSource() == mainFunction.btn.get("detail")) {
+
+            // Kiểm tra xem số lượng có bằng 0 hay không
+            if (sum == 0) {
+                boolean i = spBUS.delete(listSP.get(index));  
+                if (i) {
+                    System.out.println("Xóa thành công!");
+                    loadDataTalbe(listSP);
+                } else {
+                    System.out.println("Xóa thất bại!");
+                }
+            } else {
+                // Thông báo khi sản phẩm vẫn còn số lượng
+                JOptionPane.showMessageDialog(null, "Sản phẩm vẫn còn số lượng, không thể xóa!", "Không thể xóa", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }
+}
+ else if (e.getSource() == mainFunction.btn.get("detail")) {
             int index = getRowSelected();
              if (index != -1) {
             // Lấy sản phẩm từ danh sách bằng chỉ số
