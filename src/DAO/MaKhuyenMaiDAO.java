@@ -179,4 +179,25 @@ public class MaKhuyenMaiDAO implements DAOinterface<MaKhuyenMaiDTO> {
         }
         return result;
     }
+    public static int getMaxMaKhuyenMai() {
+    int result = -1;
+    try {
+        Connection con = JDBCUtil.getConnection(); // Giả định rằng JDBCUtil đã kết nối thành công
+        String sql = "SELECT MAX(MKM) AS maxMaKhuyenMai FROM MAKHUYENMAI"; // Thay 'maKhuyenMai' bằng tên cột thực tế
+        PreparedStatement pst = con.prepareStatement(sql);
+        ResultSet rs = pst.executeQuery();
+
+        if (!rs.isBeforeFirst()) { 
+            System.out.println("No data");
+        } else {
+            while (rs.next()) {
+                result = rs.getInt("maxMaKhuyenMai"); // Lấy giá trị max của cột maKhuyenMai
+            }
+        }
+    } catch (SQLException ex) {
+        Logger.getLogger(MaKhuyenMaiDAO.class.getName()).log(Level.SEVERE, null, ex);
+    }
+    return result;
+}
+
 }

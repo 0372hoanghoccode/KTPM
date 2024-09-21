@@ -193,6 +193,29 @@ public class SanPhamDAO implements DAOinterface<SanPhamDTO> {
         return result;
     }
 
+    
+  
+    public static int getMaxMaSanPham() {
+        int result = -1;
+        try {
+            Connection con = JDBCUtil.getConnection(); // Giả định rằng JDBCUtil đã kết nối thành công
+            String sql = "SELECT MAX(MSP) AS maxMaSanPham FROM SANPHAM"; // Thay 'maSanPham' bằng tên cột tương ứng
+            PreparedStatement pst = con.prepareStatement(sql);
+            ResultSet rs = pst.executeQuery();
+
+            if (!rs.isBeforeFirst()) { 
+                System.out.println("No data");
+            } else {
+                while (rs.next()) {
+                    result = rs.getInt("maxMaSanPham"); // Lấy giá trị max của cột maSanPham
+                }
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(SanPhamDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    return result;
+}
+
 //    public int updateSoLuongTon(int MSP, int soluong) {
 //        int quantity_current = this.selectById(Integer.toString(MSP)).getSL();
 ////        System.out.print("Còn nhiêu sau khi bán:" + quantity_current);
