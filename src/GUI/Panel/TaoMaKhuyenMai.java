@@ -218,7 +218,7 @@ public final class TaoMaKhuyenMai extends JPanel implements ItemListener, Action
         txtMaSp.setEditable(false);
         txtGiaNhap = new InputForm("Giá Nhập");
         txtGiaNhap.setEditable(false);
-        txtGiaBan = new InputForm("Giá Bán");
+        // txtGiaBan = new InputForm("Giá Bán");
         // txtGiaBan.setEditable(false);
         txtGiaBia = new InputForm("Giá Bìa");
         txtGiaBia.setEditable(false);
@@ -235,7 +235,7 @@ public final class TaoMaKhuyenMai extends JPanel implements ItemListener, Action
         merge2.setPreferredSize(new Dimension(100, 80));
         merge2.add(txtGiaNhap, BorderLayout.WEST);
         merge2.add(txtGiaBia,BorderLayout.CENTER);
-        merge2.add(txtGiaBan, BorderLayout.EAST);
+        // merge2.add(txtGiaBan, BorderLayout.EAST);
         
 
         content_right_top.add(txtTenSp, BorderLayout.NORTH);
