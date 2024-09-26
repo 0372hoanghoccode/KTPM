@@ -198,14 +198,17 @@ public class login_page extends JFrame implements KeyListener{
 public void checkLogin() throws UnsupportedLookAndFeelException {
     String usernameCheck = txtUsername.getText();
     String passwordCheck = txtPassword.getPass();
-    //printAllAccounts();
 
-    if (usernameCheck.equals("") || passwordCheck.equals("")) {
-        JOptionPane.showMessageDialog(this, "Vui lòng nhập thông tin đầy đủ", "Cảnh báo!", JOptionPane.WARNING_MESSAGE);
+    // Check for empty fields and provide specific feedback
+    if (usernameCheck.equals("") && passwordCheck.equals("")) {
+        JOptionPane.showMessageDialog(this, "Vui lòng nhập tên đăng nhập và mật khẩu", "Cảnh báo!", JOptionPane.WARNING_MESSAGE);
+    } else if (usernameCheck.equals("")) {
+        JOptionPane.showMessageDialog(this, "Vui lòng nhập tên đăng nhập", "Cảnh báo!", JOptionPane.WARNING_MESSAGE);
+    } else if (passwordCheck.equals("")) {
+        JOptionPane.showMessageDialog(this, "Vui lòng nhập mật khẩu", "Cảnh báo!", JOptionPane.WARNING_MESSAGE);
     } else {
         TaiKhoanDTO tk = TaiKhoanDAO.getInstance().selectByUser(usernameCheck);
         if (tk == null) {
-           // System.out.print("hello");
             TaiKhoanDTO tkkh = TaiKhoanKHDAO.getInstance().selectByUser(usernameCheck);
             if (tkkh == null) {
                 JOptionPane.showMessageDialog(this, "Tài khoản của bạn không tồn tại trên hệ thống", "Cảnh báo!", JOptionPane.WARNING_MESSAGE);
@@ -213,9 +216,6 @@ public void checkLogin() throws UnsupportedLookAndFeelException {
                 if (tkkh.getTT() == 0) {
                     JOptionPane.showMessageDialog(this, "Tài khoản của bạn đang bị khóa", "Cảnh báo!", JOptionPane.WARNING_MESSAGE);
                 } else {
-                    // In thông tin nhân viên dù mật khẩu không khớp
-
-
                     if (passwordCheck.equals(tkkh.getMK())) { // So sánh trực tiếp
                         try {
                             this.dispose();
@@ -225,7 +225,6 @@ public void checkLogin() throws UnsupportedLookAndFeelException {
                             Logger.getLogger(login_page.class.getName()).log(Level.SEVERE, null, ex);
                         }
                     } else {
-                        // Thực hiện hành động khi mật khẩu không khớp
                         JOptionPane.showMessageDialog(this, "Mật khẩu không chính xác.");
                     }                    
                 }
@@ -234,13 +233,6 @@ public void checkLogin() throws UnsupportedLookAndFeelException {
             if (tk.getTT() == 0) {
                 JOptionPane.showMessageDialog(this, "Tài khoản của bạn đang bị khóa", "Cảnh báo!", JOptionPane.WARNING_MESSAGE);
             } else {
-                // In thông tin nhân viên dù mật khẩu không khớp
-//                StringBuilder info = new StringBuilder();
-//                info.append("Mã nhân viên: ").append(tk.getMNV()).append("\n");
-//                info.append("Tên tài khoản: ").append(tk.getTDN()).append("\n");
-//                info.append("Mật khẩu chưa mã hóa: ").append(tk.getMK()).append("\n");
-//                JOptionPane.showMessageDialog(this, info.toString(), "Thông tin nhân viên", JOptionPane.INFORMATION_MESSAGE);
-
                 if (BCrypt.checkpw(passwordCheck, tk.getMK())) {
                     try {
                         this.dispose();
@@ -256,6 +248,7 @@ public void checkLogin() throws UnsupportedLookAndFeelException {
         }
     }
 }
+
 
 
     

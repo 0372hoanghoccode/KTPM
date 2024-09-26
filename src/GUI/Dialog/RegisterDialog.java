@@ -30,6 +30,11 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.text.PlainDocument;
 
 import java.awt.Frame;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import javax.swing.SwingUtilities;
 
 
 
@@ -95,7 +100,7 @@ public class RegisterDialog extends JDialog implements ActionListener {
         panel[3].setPreferredSize(new Dimension(400, 100));
         email = new InputForm(opt[3]);
         panel[3].add(email);
-
+     
         panel[4] = new JPanel(new GridLayout(1, 1));
         panel[4].setPreferredSize(new Dimension(400, 100));
         password = new InputForm(opt[4], "password");
@@ -123,8 +128,16 @@ public class RegisterDialog extends JDialog implements ActionListener {
         bottom.add(save);
         this.add(bottom, BorderLayout.SOUTH);
         this.setLocationRelativeTo(null);
+        
+        
+          SwingUtilities.invokeLater(() -> {
+        tnd.getTxtForm().requestFocusInWindow();
+      });
         this.setVisible(true);
+       
+        
     }
+    
 
     @Override
  
@@ -134,71 +147,15 @@ public void actionPerformed(ActionEvent e) {
         KhachHangBUS khBUS = new KhachHangBUS();
 
         String tdn = tnd.getText().trim();
-        // Lấy dữ liệu từ các trường nhập liệu
         String HOTEN = hoten.getText().trim();
         String phoneNumber = phone.getText().trim();
         String emailAddress = email.getText().trim();
         String passwordText = password.getPass().trim();
         String confirmPasswordText = confirm.getPass().trim();
 
-        // Kiểm tra tên đăng nhập
-        if (Validation.isEmpty(tdn) || tdn.length() <= 3) {
-            JOptionPane.showMessageDialog(this, "Tên đăng nhập không được rỗng và phải dài hơn 3 ký tự", "Cảnh báo!", JOptionPane.WARNING_MESSAGE);
-            return;
-        }
-
-        // Kiểm tra sự tồn tại của tên đăng nhập
-        if (!tkBUS.checkTDN(tdn)) {
-            JOptionPane.showMessageDialog(this, "Tên đăng nhập đã tồn tại", "Cảnh báo!", JOptionPane.WARNING_MESSAGE);
-            return;
-        }
-
-        // Kiểm tra sự tồn tại của số điện thoại
-        if (!tkBUS.checkSDT(phoneNumber)) {
-            JOptionPane.showMessageDialog(this, "Số điện thoại đã tồn tại", "Cảnh báo!", JOptionPane.WARNING_MESSAGE);
-            return;
-        }
-
-        // Kiểm tra sự tồn tại của email
-        if (!tkBUS.checkEmail(emailAddress)) {
-            JOptionPane.showMessageDialog(this, "Email đã tồn tại", "Cảnh báo!", JOptionPane.WARNING_MESSAGE);
-            return;
-        }
-
-        // Kiểm tra họ tên
-        if (Validation.isEmpty(HOTEN)) {
-            JOptionPane.showMessageDialog(this, "Họ tên không được rỗng", "Cảnh báo!", JOptionPane.WARNING_MESSAGE);
-            return;
-        }
-
-        // Kiểm tra số điện thoại
-        if (Validation.isEmpty(phoneNumber)) {
-            JOptionPane.showMessageDialog(this, "Số điện thoại không được rỗng", "Cảnh báo!", JOptionPane.WARNING_MESSAGE);
-            return;
-        } else if (phoneNumber.length() != 10 || !Validation.isNumber(phoneNumber)) {
-            JOptionPane.showMessageDialog(this, "Số điện thoại phải có 10 ký tự số", "Cảnh báo!", JOptionPane.WARNING_MESSAGE);
-            return;
-        } else if (!phoneNumber.startsWith("0")) {
-            JOptionPane.showMessageDialog(this, "Số điện thoại phải bắt đầu bằng số 0", "Cảnh báo!", JOptionPane.WARNING_MESSAGE);
-            return;
-        }
-
-        // Kiểm tra email
-        if (!Validation.isEmail(emailAddress)) {
-            JOptionPane.showMessageDialog(this, "Email không đúng định dạng", "Cảnh báo!", JOptionPane.WARNING_MESSAGE);
-            return;
-        }
-
-        // Kiểm tra mật khẩu
-        if (Validation.isEmpty(passwordText) || passwordText.length() < 6) {
-            JOptionPane.showMessageDialog(this, "Mật khẩu không được rỗng và phải nhiều hơn 6 ký tự", "Cảnh báo!", JOptionPane.WARNING_MESSAGE);
-            return;
-        }
-
-        // Kiểm tra sự trùng khớp của mật khẩu
-        if (!passwordText.equals(confirmPasswordText)) {
-            JOptionPane.showMessageDialog(this, "Mật khẩu không trùng nhau", "Cảnh báo!", JOptionPane.WARNING_MESSAGE);
-            return;
+        // Kiểm tra các trường nhập liệu
+        if (!validateInput(tdn, HOTEN, phoneNumber, emailAddress, passwordText, confirmPasswordText, tkBUS)) {
+            return;  // Dừng lại nếu có lỗi
         }
 
         // Nếu tất cả các kiểm tra đều thành công, tiếp tục xử lý
@@ -221,5 +178,129 @@ public void actionPerformed(ActionEvent e) {
         }
     }
 }
+
+// Hàm kiểm tra đầu vào
+private boolean validateInput(String tdn, String HOTEN, String phoneNumber, String emailAddress, String passwordText, String confirmPasswordText, TaiKhoanBUS tkBUS) {
+    // Kiểm tra tên đăng nhập
+    if (!isUsernameValid(tdn, tkBUS)) {
+        return false;  // Nếu tên đăng nhập không hợp lệ, trả về false
+    }
+
+    // Kiểm tra họ tên
+    if (Validation.isEmpty(HOTEN)) {
+        showMessage("Họ tên không được rỗng");
+        return false; // Nếu họ tên rỗng, trả về false
+    }
+    
+    if (!Validation.isNameValid(HOTEN)) {
+        showMessage("Họ tên không hợp lệ (không được chứa số và ký tự đặc biệt)");
+        return false; // Nếu họ tên không hợp lệ, trả về false
+    }   
+    
+    // Kiểm tra số điện thoại
+    if (Validation.isEmpty(phoneNumber)) {
+        showMessage("Số điện thoại không được rỗng");
+        return false; // Nếu số điện thoại rỗng, trả về false
+    }
+
+    // Kiểm tra tính hợp lệ của số điện thoại
+    if (!Validation.isPhoneNumber(phoneNumber)) {
+        showMessage("Số điện thoại không hợp lệ");
+        return false;  // Nếu số điện thoại không hợp lệ, trả về false
+    }
+
+    // Kiểm tra sự tồn tại của số điện thoại
+    if (!tkBUS.checkSDT(phoneNumber)) {
+        showMessage("Số điện thoại đã tồn tại");
+        return false; // Nếu số điện thoại đã tồn tại, trả về false
+    }
+
+    // Kiểm tra email
+     if (Validation.isEmpty(emailAddress)) {
+        showMessage("Email không được rỗng");
+        return false; // Nếu email rỗng, trả về false
+    }
+
+    // Kiểm tra định dạng email
+    if (!Validation.isEmail(emailAddress)) {
+        showMessage("Email không đúng định dạng");
+        return false; // Nếu email không đúng định dạng, trả về false
+    }
+
+    // Kiểm tra sự tồn tại của email
+    if (!tkBUS.checkEmail(emailAddress)) {
+        showMessage("Email đã tồn tại");
+        return false; // Nếu email đã tồn tại, trả về false
+    }
+     
+
+    // Kiểm tra mật khẩu
+    if (Validation.isEmpty(passwordText)) {
+        showMessage("Mật khẩu không được rỗng");
+        return false; // Trả về false nếu mật khẩu rỗng
+    }
+
+    // Kiểm tra độ dài mật khẩu
+    if (passwordText.length() < 6) {
+        showMessage("Mật khẩu phải dài hơn 6 ký tự");
+        return false; // Trả về false nếu mật khẩu ngắn hơn 6 ký tự
+    }
+
+    // Kiểm tra sự trùng khớp của mật khẩu
+    if (!passwordText.equals(confirmPasswordText)) {
+        showMessage("Mật khẩu không trùng nhau");
+        return false; // Nếu mật khẩu không trùng nhau, trả về false
+    }
+
+    return true;  // Tất cả các kiểm tra đều thành công
+}
+
+
+// Hàm hiển thị thông báo
+private void showMessage(String message) {
+    JOptionPane.showMessageDialog(this, message, "Cảnh báo!", JOptionPane.WARNING_MESSAGE);
+}
+
+private boolean isUsernameValid(String tdn, TaiKhoanBUS tkBUS) {
+    if (tdn == null) {
+        return true; // Không báo lỗi
+    }
+    // Kiểm tra xem tên đăng nhập có rỗng hay không
+    if (Validation.isEmpty(tdn)) {
+        showMessage("Tên đăng nhập không được rỗng");
+        return false;
+    }
+
+    // Kiểm tra độ dài tên đăng nhập
+    if (tdn.length() < 5) {
+        showMessage("Tên đăng nhập phải dài ít nhất 5 ký tự");
+        return false;
+    }
+
+    // Kiểm tra ký tự hợp lệ
+    if (!tdn.matches("^[a-zA-Z0-9._-]+$")) {
+        showMessage("Tên đăng nhập chỉ cho phép ký tự chữ cái, số, dấu chấm, dấu gạch dưới và dấu gạch ngang");
+        return false;
+    }
+
+    // Kiểm tra sự tồn tại của tên đăng nhập
+    if (!tkBUS.checkTDN(tdn)) {
+        showMessage("Tên đăng nhập đã tồn tại");
+        return false;
+    }
+
+    return true; // Tên đăng nhập hợp lệ
+}
+private boolean validateEmail(String emailAddress) {
+    
+      TaiKhoanBUS tkBUS = new TaiKhoanBUS();
+        KhachHangBUS khBUS = new KhachHangBUS();
+    // Kiểm tra email không được rỗng
+   
+
+    // Nếu tất cả các kiểm tra đều thành công, trả về true
+    return true;
+}
+
 
 }

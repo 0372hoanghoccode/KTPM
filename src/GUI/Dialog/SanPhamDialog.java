@@ -127,6 +127,8 @@ public final class SanPhamDialog extends JDialog implements ActionListener {
       //  xuat.setDocumentFilter((new NumericDocumentFilter()));
   //      cbbLoHang = new SelectForm("Lô Hàng",  arrmlh); //Hieusua -thêm cái string lo hang vo
         txtgiabia = new InputForm("Giá Bìa");
+          PlainDocument nhap1 = (PlainDocument)txtgiabia.getTxtForm().getDocument();
+        nhap1.setDocumentFilter((new NumericDocumentFilter()));
 //        txtgiabia.setDisable();
         //cbbMKM = new SelectForm("Mã Khuyến Mãi",  new String[]{"MKM1", "MKM2", "MKM3"});//Hieusua -thêm cái string mkm zo
      
@@ -192,11 +194,34 @@ public final class SanPhamDialog extends JDialog implements ActionListener {
                    cbbLoHang = new SelectForm("Lô Hàng",  arrmlh); //Hieusua -thêm cái string lo hang vo
        
         txtgiabia.setDisable();
-        cbbMKM = new SelectForm("Mã Khuyến Mãi",  new String[]{"MKM1", "MKM2", "MKM3"});//Hieusua -thêm cái string mkm zo
+       // cbbMKM = new SelectForm("Mã Khuyến Mãi",  new String[]{"MKM1", "MKM2", "MKM3"});//Hieusua -thêm cái string mkm zo
         pninfosanpham.add(txtgiabia);
         pninfosanpham.add(cbbLoHang);
-        pninfosanpham.add(cbbMKM);
+       // pninfosanpham.add(cbbMKM);
         setInfo(sp);
+             ChiTietLoHangDAO dao = new ChiTietLoHangDAO();
+        ArrayList<String> mlhList = dao.findMLHByMSP(masp);
+        cbbLoHang.setArr(mlhList);
+         String selectedLotCode = (String) cbbLoHang.getSelectedItem();
+          int quantity = dao.getProductQuantityInLot(selectedLotCode, masp);
+                txtsoluong.setText(Integer.toString(quantity));
+                //                int gianhap = dao.TuMaLayGiaNhap(selectedLotCode, masp);
+             //   int giaBan = gianhap * 2 ; 
+             //     txtgiaxuat.setText(Integer.toString(giaBsan));
+        cbbLoHang.addActionListener(new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            String selectedLotCode = (String) cbbLoHang.getSelectedItem();
+            if (selectedLotCode != null) {
+                // Hiển thị số lượng sản phẩm của mã lô hàng đã chọn
+                int quantity = dao.getProductQuantityInLot(selectedLotCode, masp);
+               // int gianhap = dao.TuMaLayGiaNhap(selectedLotCode, masp);
+               // int giaBan = gianhap * 2 ; 
+                txtsoluong.setText(Integer.toString(quantity));
+                  //   txtgiaxuat.setText(Integer.toString(giaBan));
+            }
+        }
+    });
                  
             }
             case "update" -> setInfo(sp);
@@ -311,24 +336,24 @@ public final class SanPhamDialog extends JDialog implements ActionListener {
         String TenTG = tenTG.getText();
         int MKVK = kvkhoBus.getAll().get(this.khuvuc.getSelectedIndex()).getMakhuvuc();
         int tIENX = Integer.parseInt(txtgiabia.getText());
-           ChiTietLoHangDAO dao = new ChiTietLoHangDAO();
-    
-        ArrayList<String> mlhList = dao.findMLHByMSP(masp);
+//           ChiTietLoHangDAO dao = new ChiTietLoHangDAO();
+//    
+//        ArrayList<String> mlhList = dao.findMLHByMSP(masp);
    
   //   Cập nhật ComboBox với danh sách mã lô hàng
-        cbbLoHang.setArr(mlhList);
-        
-        cbbLoHang.addActionListener(new ActionListener() {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            String selectedLotCode = (String) cbbLoHang.getSelectedItem();
-            if (selectedLotCode != null) {
-                // Hiển thị số lượng sản phẩm của mã lô hàng đã chọn
-                int quantity = dao.getProductQuantityInLot(selectedLotCode, masp);
-                txtsoluong.setText(Integer.toString(quantity));
-            }
-        }
-    });
+//        cbbLoHang.setArr(mlhList);
+//        
+//        cbbLoHang.addActionListener(new ActionListener() {
+//        @Override
+//        public void actionPerformed(ActionEvent e) {
+//            String selectedLotCode = (String) cbbLoHang.getSelectedItem();
+//            if (selectedLotCode != null) {
+//                // Hiển thị số lượng sản phẩm của mã lô hàng đã chọn
+//                int quantity = dao.getProductQuantityInLot(selectedLotCode, masp);
+//                txtsoluong.setText(Integer.toString(quantity));
+//            }
+//        }
+//    });
         SanPhamDTO result = new SanPhamDTO(masp, vtensp, hinhanh, danhMuc, naMXB, MNXB, TenTG, MKVK, tIENX, 0);
         // Sản phẩm : int MSP, String TEN, String HINHANH, 
         //String DANHMUC, int NAMXB, int MNXB, String TENTG, int MKVS, int TIENX, String MLH, int SL
@@ -336,9 +361,9 @@ public final class SanPhamDialog extends JDialog implements ActionListener {
     }
 
     public void setInfo(SanPhamDTO sp) {
-        txtgiaxuat = new InputForm("Giá bán");
-        txtgiaxuat.setDisable();
-        pninfosanpham.add(txtgiaxuat);
+      //  txtgiaxuat = new InputForm("Giá bán");
+       // txtgiaxuat.setDisable();
+     //   pninfosanpham.add(txtgiaxuat);
         hinhanh.setUrl_img(sp.getHINHANH());
         tenSP.setText(sp.getTEN());
         danhmuc.setText(sp.getDANHMUC()); 
@@ -347,31 +372,30 @@ public final class SanPhamDialog extends JDialog implements ActionListener {
         tenTG.setText(sp.getTENTG());
         khuvuc.setSelectedIndex(kvkhoBus.getIndexByMaKVK(sp.getMKVS()));
         txtgiabia.setText(Integer.toString(sp.getTIENX()));
-        ChiTietLoHangDAO dao = new ChiTietLoHangDAO();
-        ArrayList<String> mlhList = dao.findMLHByMSP(masp);
+       
    
     // Cập nhật ComboBox với danh sách mã lô hàng
-        cbbLoHang.setArr(mlhList);
-         String selectedLotCode = (String) cbbLoHang.getSelectedItem();
-          int quantity = dao.getProductQuantityInLot(selectedLotCode, masp);
-                txtsoluong.setText(Integer.toString(quantity));
-                //                int gianhap = dao.TuMaLayGiaNhap(selectedLotCode, masp);
-             //   int giaBan = gianhap * 2 ; 
-             //     txtgiaxuat.setText(Integer.toString(giaBan));
-        cbbLoHang.addActionListener(new ActionListener() {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            String selectedLotCode = (String) cbbLoHang.getSelectedItem();
-            if (selectedLotCode != null) {
-                // Hiển thị số lượng sản phẩm của mã lô hàng đã chọn
-                int quantity = dao.getProductQuantityInLot(selectedLotCode, masp);
-               // int gianhap = dao.TuMaLayGiaNhap(selectedLotCode, masp);
-               // int giaBan = gianhap * 2 ; 
-                txtsoluong.setText(Integer.toString(quantity));
-                  //   txtgiaxuat.setText(Integer.toString(giaBan));
-            }
-        }
-    });
+//        cbbLoHang.setArr(mlhList);
+//         String selectedLotCode = (String) cbbLoHang.getSelectedItem();
+//          int quantity = dao.getProductQuantityInLot(selectedLotCode, masp);
+//                txtsoluong.setText(Integer.toString(quantity));
+//                //                int gianhap = dao.TuMaLayGiaNhap(selectedLotCode, masp);
+//             //   int giaBan = gianhap * 2 ; 
+//             //     txtgiaxuat.setText(Integer.toString(giaBan));
+//        cbbLoHang.addActionListener(new ActionListener() {
+//        @Override
+//        public void actionPerformed(ActionEvent e) {
+//            String selectedLotCode = (String) cbbLoHang.getSelectedItem();
+//            if (selectedLotCode != null) {
+//                // Hiển thị số lượng sản phẩm của mã lô hàng đã chọn
+//                int quantity = dao.getProductQuantityInLot(selectedLotCode, masp);
+//               // int gianhap = dao.TuMaLayGiaNhap(selectedLotCode, masp);
+//               // int giaBan = gianhap * 2 ; 
+//                txtsoluong.setText(Integer.toString(quantity));
+//                  //   txtgiaxuat.setText(Integer.toString(giaBan));
+//            }
+//        }
+//    });
   
     }
 
