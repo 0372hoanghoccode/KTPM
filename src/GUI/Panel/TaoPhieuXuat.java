@@ -209,15 +209,16 @@ public final class TaoPhieuXuat extends JPanel {
 
         txtTimKiem = new JTextField();
         txtTimKiem.setPreferredSize(new Dimension(100, 40));
-        txtTimKiem.putClientProperty("JTextField.placeholderText", "Tên sản phẩm, mã sản phẩm, ...");
+        txtTimKiem.putClientProperty("JTextField.placeholderText", "Tên sản phẩm ");
         txtTimKiem.putClientProperty("JTextField.showClearButton", true);
         txtTimKiem.putClientProperty("JTextField.leadingIcon", new FlatSVGIcon("./icon/search.svg"));
 
         txtTimKiem.addKeyListener(new KeyAdapter() {
             @Override
             public void keyReleased(KeyEvent event) { //chạy khi nhả phím trong tìm kiếm
-                ArrayList<SanPhamDTO> rs = spBUS.search(txtTimKiem.getText(), "Tất cả");
-                loadDataTableSanPham(rs);
+                ArrayList<SanPhamDTO> rs = spBUS.search(txtTimKiem.getText(), "Tên sản phẩm");
+                 ArrayList<SanPhamDTO> sanphamtimkiemlonhon0 = SanPhamDAO.filterProductsWithPositiveQuantity(rs);
+                loadDataTableSanPham(sanphamtimkiemlonhon0);
             }
         });
 
@@ -231,15 +232,18 @@ public final class TaoPhieuXuat extends JPanel {
         content_right_top = new JPanel(new BorderLayout());
         content_right_top.setPreferredSize(new Dimension(100, 335));
         txtTenSp = new InputForm("Tên sản phẩm");
+         txtTenSp.setDisable();
         txtTenSp.setEditable(false);
         txtTenSp.setPreferredSize(new Dimension(100, 90));
         txtMaSp = new InputForm("Mã sản phẩm");
+         txtMaSp.setDisable();
         txtMaSp.setEditable(false);
         txtMaISBN = new InputForm("Mã ISBN");
          txtMaISBN.setEditable(false);
         txtMaISBN.setVisible(false); // Ẩn thành phần InputForm
 
         txtGiaXuat = new InputForm("Giá xuất");
+           txtGiaXuat.setDisable();
          txtGiaXuat.setEditable(false);
        
         txtSoLuongSPxuat = new InputForm("Số lượng");
@@ -249,6 +253,7 @@ public final class TaoPhieuXuat extends JPanel {
         String[] maGiamGia = {"Chọn"};
         cbxMaKM = new SelectForm("Mã giảm giá", maGiamGia);
         txtGiaGiam = new InputForm("Giá giảm");
+          txtGiaGiam.setDisable();
         txtGiaGiam.setText("");
         txtGiaGiam.setEditable(false);
         cbxMaKM.cbb.addItemListener((ItemListener) new ItemListener() {
@@ -383,8 +388,10 @@ public final class TaoPhieuXuat extends JPanel {
         right_top.setPreferredSize(new Dimension(300, 180));
         txtMaphieu = new InputForm("Mã phiếu xuất");
         txtMaphieu.setEditable(false);
+        txtMaphieu.setDisable();
         txtNhanVien = new InputForm("Nhân viên xuất");
-        txtNhanVien.setEditable(false);
+      //  txtNhanVien.setEditable(false);
+        txtNhanVien.setDisable();
         //maphieu = PhieuXuatDAO.getInstance().getAutoIncrement();
         manv = tk.getMNV();
         txtMaphieu.setText("PX" + maphieu);
@@ -415,9 +422,16 @@ public final class TaoPhieuXuat extends JPanel {
          btnaddKH.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                int maKhachHangBanDau = KhachHangDAO.getMaxMaKhachHang();
+                System.out.print("Mã khách hàng ban đầu là : " + maKhachHangBanDau);
                 KhachHang KhachHang = new KhachHang(mainChinh);
                 new KhachHangDialog(KhachHang, owner, "Thêm khách hàng", true,"create");
-                     setKhachHang(KhachHangDAO.getMaxMaKhachHang());
+                 int maKhachHangSauKhiNhanNut = KhachHangDAO.getMaxMaKhachHang();
+                     System.out.print("Mã khách hàng sau khi nhấn nút là : " + maKhachHangSauKhiNhanNut);
+                 if (maKhachHangBanDau!=maKhachHangSauKhiNhanNut)
+                     setKhachHang(maKhachHangSauKhiNhanNut);
+                 else
+                     return;
                 
             }
         });
@@ -429,9 +443,12 @@ public final class TaoPhieuXuat extends JPanel {
         JPanel khPanel = new JPanel(new GridLayout(3, 1, 5, 0));
         khPanel.setBackground(Color.WHITE);
         khPanel.setPreferredSize(new Dimension(0, 120));
-        JLabel khachKhangJLabel = new JLabel("Khách hàng");
+      JLabel khachKhangJLabel = new JLabel("Khách hàng");
+//khachKhangJLabel.setFocusable(false); // Không cho phép lấy focus
+//khachKhangJLabel.setEnabled(false); // Không cho tương tác
+
         khachKhangJLabel.setBorder(new EmptyBorder(0, 10, 0, 10));
-        
+       
 
         khPanel.add(khachKhangJLabel);
         khPanel.add(khachJPanel);
@@ -677,13 +694,13 @@ lbltongtien.setText(Formater.FormatVND(sum));
     int availableQuantity = 0;  // Khai báo biến lưu số lượng có sẵn
     System.out.println("Hello mã " + txtMaSp.getText());
     String text = txtMaSp.getText(); // Lấy giá trị từ trường văn bản
-int number = Integer.parseInt(text); // Chuyển đổi giá trị thành kiểu int
+    
 
     if (txtMaSp.getText().trim().isEmpty()) {
         JOptionPane.showMessageDialog(null, "Vui lòng chọn sản phẩm", "Cảnh báo!", JOptionPane.WARNING_MESSAGE);
         check = false;
     } else {
-      
+      int number = Integer.parseInt(text); // Chuyển đổi giá trị thành kiểu int
             ChiTietLoHangDAO chiTietLoHangDAO = new ChiTietLoHangDAO();
             ArrayList<ChiTietLoHangDTO> loHangList = chiTietLoHangDAO.findLohangByMSP(Integer.parseInt(txtMaSp.getText()));
             ChiTietLoHangDTO minLohang = findMinLohangWithValidQuantity(number);
@@ -698,21 +715,25 @@ int number = Integer.parseInt(text); // Chuyển đổi giá trị thành kiểu
                 System.out.print("hello " + availableQuantity);
             }
 
-            if (txtSoLuongSPxuat.getText().trim().isEmpty()) {
-                JOptionPane.showMessageDialog(null, "Số lượng không được để rỗng!", "Cảnh báo!", JOptionPane.WARNING_MESSAGE);
-                check = false;
-            } else {
-                try {
-                    int exportQuantity = Integer.parseInt(txtSoLuongSPxuat.getText());
-                    if (exportQuantity > availableQuantity) {
-                        JOptionPane.showMessageDialog(null, "Số lượng không được lớn hơn số lượng hiện có!", "Cảnh báo!", JOptionPane.WARNING_MESSAGE);
-                        check = false;
-                    }
-                } catch (NumberFormatException e) {
-                    JOptionPane.showMessageDialog(null, "Số lượng xuất phải là một số hợp lệ!", "Cảnh báo!", JOptionPane.WARNING_MESSAGE);
-                    check = false;
-                }
-            }
+           if (txtSoLuongSPxuat.getText().trim().isEmpty()) {
+    JOptionPane.showMessageDialog(null, "Số lượng không được để rỗng!", "Cảnh báo!", JOptionPane.WARNING_MESSAGE);
+    check = false;
+} else {
+    try {
+        int exportQuantity = Integer.parseInt(txtSoLuongSPxuat.getText());
+        if (exportQuantity <= 0) {
+            JOptionPane.showMessageDialog(null, "Số lượng phải lớn hơn 0!", "Cảnh báo!", JOptionPane.WARNING_MESSAGE);
+            check = false;
+        } else if (exportQuantity > availableQuantity) {
+            JOptionPane.showMessageDialog(null, "Số lượng không được lớn hơn số lượng hiện có!", "Cảnh báo!", JOptionPane.WARNING_MESSAGE);
+            check = false;
+        }
+    } catch (NumberFormatException e) {
+        JOptionPane.showMessageDialog(null, "Số lượng xuất phải là một số hợp lệ!", "Cảnh báo!", JOptionPane.WARNING_MESSAGE);
+        check = false;
+    }
+}
+
         
     }
 

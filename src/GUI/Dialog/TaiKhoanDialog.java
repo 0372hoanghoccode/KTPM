@@ -69,10 +69,14 @@ public class TaiKhoanDialog extends JDialog {
         pnmain = new JPanel(new GridLayout(4, 1, 5, 0));
         pnmain.setBackground(Color.white);
         username = new InputForm("Tên đăng nhập");
+      
         password = new InputForm("Mật khẩu", "password");
-        trangthai = new SelectForm("Trạng thái", new String[]{"Ngưng hoạt động", "Hoạt động", "Chờ xử lý"});
+        trangthai = new SelectForm("Trạng thái", new String[]{"Ngưng hoạt động", "Hoạt động"});
+        
         maNhomQuyen = new SelectForm("Nhóm quyền", getNhomQuyen());
         
+       
+         
         pnmain.add(username);
         pnmain.add(password);
         pnmain.add(trangthai);
@@ -131,9 +135,7 @@ btnThem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 if (!(username.getText().length() == 0)) {
                     String tendangnhap = username.getText();
-                    String pass;
-                    if(password.getPass().equals("")) pass = BCrypt.hashpw(tk.getMK(), BCrypt.gensalt(12));
-                    else pass = BCrypt.hashpw(password.getPass(), BCrypt.gensalt(12));
+                    String pass = password.getText();
                     int manhom = listNq.get(maNhomQuyen.getSelectedIndex()).getManhomquyen();
                     int tt = trangthai.getSelectedIndex();
                     TaiKhoanDTO tk = new TaiKhoanDTO(manv, tendangnhap, pass, manhom, tt);
@@ -157,10 +159,16 @@ btnThem.addActionListener(new ActionListener() {
             case "create" ->
                 pnbottom.add(btnThem);
             case "update" -> {
+                  username.setDisable();
                 pnbottom.add(btnCapNhat);
+                if (maNhomQuyen.getValue().equals("Quản lý cửa hàng")){
+                    System.out.print("Quyền admin không cho sửa ");
+                       maNhomQuyen.setDisable();
+                }
+              
             }
             case "view" -> {
-                username.setEditable(false);
+                username.setDisable();
                 pnmain.remove(password);
                 maNhomQuyen.setDisable();
                 trangthai.setDisable();

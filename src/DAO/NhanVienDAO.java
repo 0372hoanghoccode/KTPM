@@ -127,7 +127,7 @@ public class NhanVienDAO implements DAOinterface<NhanVienDTO>{
         return result;
     }
     
-    public ArrayList<NhanVienDTO> selectAllNV() {
+    public ArrayList<NhanVienDTO> selectAllNVcotaikhoan() {
         ArrayList<NhanVienDTO> result = new ArrayList<NhanVienDTO>();
         try {
             Connection con = (Connection) JDBCUtil.getConnection();

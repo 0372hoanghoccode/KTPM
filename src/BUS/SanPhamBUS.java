@@ -93,13 +93,13 @@ public class SanPhamBUS {
                     }
                 }
             }
-            // case "Mã sản phẩm" -> {
-            //     for (SanPhamDTO i : this.listSP) {
-            //         if (Integer.toString(i.getMSP()).toLowerCase().contains(text)) {
-            //             result.add(i);
-            //         }
-            //     }
-            // }
+             case "Mã sản phẩm" -> {
+                 for (SanPhamDTO i : this.listSP) {
+                     if (Integer.toString(i.getMSP()).toLowerCase().contains(text)) {
+                         result.add(i);
+                     }
+                 }
+             }
             case "Tên sản phẩm" -> {
                 for (SanPhamDTO i : this.listSP) {
                     if (i.getTEN().toLowerCase().contains(text)) {

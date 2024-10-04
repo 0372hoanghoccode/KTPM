@@ -34,7 +34,7 @@ public class ListNhanVien extends JDialog implements MouseListener {
     private JTable tableNhanVien;
     private JScrollPane scrollTableSanPham;
     private DefaultTableModel tblModel;
-    private ArrayList<NhanVienDTO> listnv = NhanVienDAO.getInstance().selectAllNV();
+    private ArrayList<NhanVienDTO> listnv = NhanVienDAO.getInstance().selectAllNVcotaikhoan();
     DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
     
     public ListNhanVien(TaiKhoan taiKhoan, JFrame owner, String title, boolean modal){
@@ -134,7 +134,7 @@ public class ListNhanVien extends JDialog implements MouseListener {
         }
         return result;
         } else {
-            return NhanVienDAO.getInstance().selectAll();
+            return  NhanVienDAO.getInstance().selectAllNVcotaikhoan();
         }
         
     }

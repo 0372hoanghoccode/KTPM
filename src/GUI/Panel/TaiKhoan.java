@@ -158,9 +158,9 @@ public class TaiKhoan extends JPanel implements ActionListener, ItemListener {
                 case 0 -> {
                     trangthaiString = "Ngưng hoạt động";
                 }
-                case 2 -> {
-                    trangthaiString = "Chờ xử lý";
-                }
+//                case 2 -> {
+//                    trangthaiString = "Chờ xử lý";
+//                }
             }
             tblModel.addRow(new Object[]{
                 taiKhoanDTO.getMNV(), taiKhoanDTO.getTDN(), taiKhoanBus.getNhomQuyenDTO(taiKhoanDTO.getMNQ()).getTennhomquyen(), trangthaiString
@@ -192,6 +192,7 @@ public class TaiKhoan extends JPanel implements ActionListener, ItemListener {
         } else if (e.getSource() == mainFunction.btn.get("update")) {
             int index = getRowSelected();
             if (index != -1) {
+                listTk = taiKhoanBus.getTaiKhoanAll();
                 new TaiKhoanDialog(this, owner, "Cập nhật tài khoản", true, "update", listTk.get(index));
             }
         // } else if (e.getSource() == mainFunction.btn.get("delete")) {
@@ -208,6 +209,7 @@ public class TaiKhoan extends JPanel implements ActionListener, ItemListener {
         } else if (e.getSource() == mainFunction.btn.get("detail")) {
             int index = getRowSelected();
             if (index != -1) {
+                 listTk = taiKhoanBus.getTaiKhoanAll();
                 new TaiKhoanDialog(this, owner, "Chi tiết tài khoản", true, "view", listTk.get(index));
             }
         } else if (e.getSource() == mainFunction.btn.get("export")) {
