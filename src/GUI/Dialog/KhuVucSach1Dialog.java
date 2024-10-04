@@ -328,20 +328,11 @@ public void actionPerformed(ActionEvent e) {
     if (e.getSource() == btnThem && Validation()) {
         String maPhieuText = txtMaPhieu.getText();
         String thoiGianText = txtThoiGian.getText();
-        
         // Kiểm tra dữ liệu từ các ô nhập liệu
         if (maPhieuText.isEmpty() || thoiGianText.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Vui lòng nhập đầy đủ thông tin.", "Lỗi", JOptionPane.ERROR_MESSAGE);
             return;
-        }
-        
-        // Kiểm tra tên khu vực có bị trùng không
-//        if (dao.doesNameExist(maPhieuText)) {
-//            JOptionPane.showMessageDialog(this, "Tên khu vực đã tồn tại. Vui lòng chọn tên khác.");
-//            return;
-//        }
-        
-        // Chuyển đổi chuỗi thời gian thành Timestamp
+        }     
         Timestamp thoiGian;
         try {
             thoiGian = Timestamp.valueOf(thoiGianText);
@@ -349,26 +340,23 @@ public void actionPerformed(ActionEvent e) {
             JOptionPane.showMessageDialog(this, "Thời gian không hợp lệ. Vui lòng nhập đúng định dạng.", "Lỗi", JOptionPane.ERROR_MESSAGE);
             return;
         }
-        
-        // Tạo đối tượng DTO mới
         KhuVucSach1DTO newKhuVuc = new KhuVucSach1DTO(
             maPhieuText, // Mã khu vực mới
             thoiGian,    // Thời gian hiện tại
             1            // Trạng thái
         );
-
-        // Thực hiện thêm dữ liệu vào cơ sở dữ liệu
         int result = KhuVucSach1DAO.insert1(newKhuVuc);
-
         // Kiểm tra kết quả và thông báo thành công
         if (result > 0) {
-            JOptionPane.showMessageDialog(this, "Thêm khu vực sách thành công!", "Thành công", JOptionPane.INFORMATION_MESSAGE);
-            jpkvk.loadDataTable(jpkvk.listKVK);
+            JOptionPane.showMessageDialog(this, "Thêm lô thành công!", "Thành công", JOptionPane.INFORMATION_MESSAGE);
             dispose();
+             
+   
+            jpkvk.loadDataTable(jpkvk.listKVK);
+           
         } else {
-            JOptionPane.showMessageDialog(this, "Thêm khu vực sách không thành công!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Thêm lô không thành công!", "Lỗi", JOptionPane.ERROR_MESSAGE);
         }
-
     } else if (e.getSource() == btnCapNhat && Validation()) {
         String maPhieuText = txtMaPhieu.getText();
         String thoiGianText = txtThoiGian.getText();

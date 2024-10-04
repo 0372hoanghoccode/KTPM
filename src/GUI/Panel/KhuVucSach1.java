@@ -184,6 +184,8 @@ tableKhuvuc.addMouseListener(new MouseAdapter() {
     }
 
     public void loadDataTable(ArrayList<KhuVucSach1DTO> result) {
+        //listKVK = lohangBUS.getAll();
+           
         tblModel.setRowCount(0);
         for (KhuVucSach1DTO kvk : result) {
             tblModel.addRow(new Object[]{
