@@ -137,24 +137,25 @@ public final class SanPhamKH extends JPanel implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == mainFunction.btn.get("create")) {
-            int index = getRowSelected();
-            if (index != -1) {
-                long now = System.currentTimeMillis();
-                Timestamp currenTime = new Timestamp(now);
-                giohangBUS.add(new GioHangDTO(m.user.getMNV(), 0, currenTime, 1));
-                ChiTietGioHangDTO tmp = giohangBUS.checkTT(m.user.getMNV(), listSP.get(index).getMSP());
-                if(tmp != null) {
-                    tmp.setSL(tmp.getSL()+1);
-                    giohangBUS.updateCT(tmp);
-                }
-                else {
-                    tmp = new ChiTietGioHangDTO(m.user.getMNV(), listSP.get(index).getMSP(), "", 1, listSP.get(index).getTIENX());
-                    giohangBUS.addCT(tmp);
-                }
-                JOptionPane.showMessageDialog(null, "Thêm sản phẩm thành công !");
-            }
-        } else if (e.getSource() == mainFunction.btn.get("detail")) {
+//        if (e.getSource() == mainFunction.btn.get("create")) {
+//            int index = getRowSelected();
+//            if (index != -1) {
+//                long now = System.currentTimeMillis();
+//                Timestamp currenTime = new Timestamp(now);
+//                giohangBUS.add(new GioHangDTO(m.user.getMNV(), 0, currenTime, 1));
+//                ChiTietGioHangDTO tmp = giohangBUS.checkTT(m.user.getMNV(), listSP.get(index).getMSP());
+//                if(tmp != null) {
+//                    tmp.setSL(tmp.getSL()+1);
+//                    giohangBUS.updateCT(tmp);
+//                }
+//                else {
+//                    tmp = new ChiTietGioHangDTO(m.user.getMNV(), listSP.get(index).getMSP(), "", 1, listSP.get(index).getTIENX());
+//                    giohangBUS.addCT(tmp);
+//                }
+//                JOptionPane.showMessageDialog(null, "Thêm sản phẩm thành công !");
+//            }
+//        } else
+            if (e.getSource() == mainFunction.btn.get("detail")) {
             int index = getRowSelected();
             if (index != -1) {
                 new SanPhamKHDialog(this, owner, "Xem chi tiết sản phẩm", true, "view", listSP.get(index));

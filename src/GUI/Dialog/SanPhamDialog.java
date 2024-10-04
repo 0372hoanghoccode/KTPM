@@ -399,30 +399,124 @@ public final class SanPhamDialog extends JDialog implements ActionListener {
   
     }
 
-
-    public boolean checkCreate() {
-        boolean check = true;
-        if (Validation.isEmpty(tenSP.getText()) || Validation.isEmpty((String) cbNXB.getSelectedItem())
-                || Validation.isEmpty(danhmuc.getText()) || Validation.isEmpty(namXB.getText())
-                || Validation.isEmpty(tenTG.getText()) 
-                || Validation.isEmpty(txtgiabia.getText()) 
-                ) {
-        //    || Validation.isEmpty(isbn.getText())
-            check = false;
-            JOptionPane.showMessageDialog(this, "Vui lòng nhập đầy đủ thông tin !");
-        } 
-//        else if(!spBus.checkISBN(isbn.getText())) {
-//                JOptionPane.showMessageDialog(this, "Mã ISBN đã tồn tại!"); 
-//                check = false;
-//            }
-            else {
-                if(hinhanh.getUrl_img() == null) {
-                    JOptionPane.showMessageDialog(this, "Chưa thêm ảnh sản phẩm!"); 
-                    check = false;
-                }
+     public boolean checkCreate() {
+           if (Validation.isEmpty(tenSP.getText()) 
+                   
+                    && Validation.isEmpty(danhmuc.getText()) 
+                    && Validation.isEmpty(namXB.getText())
+                    && Validation.isEmpty(tenTG.getText()) 
+                    && Validation.isEmpty(txtgiabia.getText())) {
+                JOptionPane.showMessageDialog(this, "Vui lòng nhập đầy đủ thông tin!");
+                return false;
             }
-        return check;
+
+           if (Validation.isEmpty(tenSP.getText())) {
+    JOptionPane.showMessageDialog(this, "Vui lòng nhập tên sản phẩm!");
+    return false;
+} else {
+    String productName = tenSP.getText();
+
+    // Kiểm tra dấu cách ở đầu
+    if (productName.startsWith(" ")) {
+        JOptionPane.showMessageDialog(this, "Tên sản phẩm không được có dấu cách ở đầu!");
+        return false;
     }
+
+    // Kiểm tra dấu cách ở cuối
+    if (productName.endsWith(" ")) {
+        JOptionPane.showMessageDialog(this, "Tên sản phẩm không được có dấu cách ở cuối!");
+        return false;
+    }
+}
+
+
+            if (Validation.isEmpty((String) cbNXB.getSelectedItem())) {
+                JOptionPane.showMessageDialog(this, "Vui lòng chọn nhà xuất bản!");
+                return false;
+            }
+
+          if (Validation.isEmpty(danhmuc.getText())) {
+    JOptionPane.showMessageDialog(this, "Vui lòng nhập danh mục!");
+    return false;
+} else {
+    String categoryName = danhmuc.getText();
+
+    // Kiểm tra dấu cách ở đầu
+    if (categoryName.startsWith(" ")) {
+        JOptionPane.showMessageDialog(this, "Danh mục không được có dấu cách ở đầu!");
+        return false;
+    }
+
+    // Kiểm tra dấu cách ở cuối
+    if (categoryName.endsWith(" ")) {
+        JOptionPane.showMessageDialog(this, "Danh mục không được có dấu cách ở cuối!");
+        return false;
+    }
+}
+
+
+            if (Validation.isEmpty(namXB.getText())) {
+                JOptionPane.showMessageDialog(this, "Vui lòng nhập năm xuất bản!");
+                return false;
+            } else {
+             String yearText = namXB.getText();
+                try {
+                int year = Integer.parseInt(yearText);
+                int currentYear = java.time.Year.now().getValue();
+                if (yearText.length() != 4 || year > currentYear) {
+                    JOptionPane.showMessageDialog(this, "Năm xuất bản phải có 4 chữ số và không vượt quá năm hiện tại!");
+                    return false;
+                }
+                  } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(this, "Năm xuất bản phải là số!");
+                return false;
+                 }
+            }
+if (Validation.isEmpty(tenTG.getText())) {
+    JOptionPane.showMessageDialog(this, "Vui lòng nhập tên tác giả!");
+    return false;
+} else {
+    String authorName = tenTG.getText();
+
+    // Kiểm tra dấu cách ở đầu
+    if (authorName.startsWith(" ")) {
+        JOptionPane.showMessageDialog(this, "Tên tác giả không được có dấu cách ở đầu!");
+        return false;
+    }
+
+    // Kiểm tra dấu cách ở cuối
+    if (authorName.endsWith(" ")) {
+        JOptionPane.showMessageDialog(this, "Tên tác giả không được có dấu cách ở cuối!");
+        return false;
+    }
+
+    // Kiểm tra có chứa số
+    if (authorName.matches(".*\\d.*")) {
+        JOptionPane.showMessageDialog(this, "Tên tác giả không được chứa số!");
+        return false;
+    }
+
+    // Kiểm tra ký tự đặc biệt
+    if (!authorName.matches("[A-Za-zÀ-ỹ ]+")) {
+        JOptionPane.showMessageDialog(this, "Tên tác giả không được chứa ký tự đặc biệt!");
+        return false;
+    }
+}
+
+
+            if (Validation.isEmpty(txtgiabia.getText())) {
+                JOptionPane.showMessageDialog(this, "Vui lòng nhập giá bìa!");
+                return false;
+            }
+
+            if (hinhanh.getUrl_img() == null) {
+                JOptionPane.showMessageDialog(this, "Chưa thêm ảnh sản phẩm!");
+                return false;
+            }
+
+            return true;
+        }
+
 
     public boolean checkUpdate() {
         boolean check = true;

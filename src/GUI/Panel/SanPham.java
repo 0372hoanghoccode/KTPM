@@ -127,7 +127,7 @@ public final class SanPham extends JPanel implements ActionListener {
 
     public void loadDataTalbe(ArrayList<DTO.SanPhamDTO> result) {
         tblModel.setRowCount(0);
-System.out.print("hello");
+        System.out.print("hello");
         for (DTO.SanPhamDTO sp : result) {
             int tongsoluong = 0;
             try {
