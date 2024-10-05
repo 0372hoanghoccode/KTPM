@@ -61,8 +61,8 @@ public final class MaKhuyenMaiDialog extends JDialog implements ActionListener {
     public void initPhieuNhap() {
         txtMaPhieu.setText(this.makhuyenmai.getMKM());
         txtNhanVien.setText(NhanVienDAO.getInstance().selectById(makhuyenmai.getMNV() + "").getHOTEN());
-        txtThoiGianBD.setText(Formater.FormatTime(makhuyenmai.getTGBD()));
-        txtThoiGianKT.setText(Formater.FormatTime(makhuyenmai.getTGKT()));
+        txtThoiGianBD.setText(Formater.FormatTimeNgayThangNam(makhuyenmai.getTGBD()));
+        txtThoiGianKT.setText(Formater.FormatTimeNgayThangNam(makhuyenmai.getTGKT()));
     }
 
 
@@ -92,10 +92,15 @@ public final class MaKhuyenMaiDialog extends JDialog implements ActionListener {
         txtThoiGianBD = new InputForm("Thời gian bắt đầu");
         txtThoiGianKT = new InputForm("Thời gian kết thúc");
 
-        txtMaPhieu.setEditable(false);
-        txtNhanVien.setEditable(false);
-        txtThoiGianBD.setEditable(false);
-        txtThoiGianKT.setEditable(false);
+//        txtMaPhieu.setEditable(false);
+//        txtNhanVien.setEditable(false);
+//        txtThoiGianBD.setEditable(false);
+//        txtThoiGianKT.setEditable(false);
+        
+          txtMaPhieu.setDisable();
+        txtNhanVien.setDisable();
+        txtThoiGianBD.setDisable();
+        txtThoiGianKT.setDisable();
 
         pnmain_top.add(txtMaPhieu);
         pnmain_top.add(txtNhanVien);

@@ -187,10 +187,11 @@ int mlhInt;
         txtMaPhieu = new InputForm("Mã phiếu");
         txtNhanVien = new InputForm("Nhân viên nhập");
         txtThoiGian = new InputForm("Thời gian tạo");
+        
+        txtMaPhieu.setDisable();
+        txtNhanVien.setDisable();
+        txtThoiGian.setDisable();
 
-        txtMaPhieu.setEditable(false);
-        txtNhanVien.setEditable(false);
-        txtThoiGian.setEditable(false);
 
         pnmain_top.add(txtMaPhieu);
         pnmain_top.add(txtNhanVien);
@@ -251,9 +252,9 @@ int mlhInt;
     txtNhanVien = new InputForm("Nhân viên nhập");
     txtThoiGian = new InputForm("Thời gian tạo");
 
-    txtMaPhieu.setEditable(false);
-    txtNhanVien.setEditable(false);
-    txtThoiGian.setEditable(false);
+    txtMaPhieu.setDisable();
+    txtNhanVien.setDisable();
+    txtThoiGian.setDisable();
 
     pnmain_top.add(txtMaPhieu);
     pnmain_top.add(txtNhanVien);

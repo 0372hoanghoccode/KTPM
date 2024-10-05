@@ -111,7 +111,7 @@ public class NhomQuyenDAO implements DAOinterface<NhomQuyenDTO> {
         int result = -1;
         try {
             Connection con = (Connection) JDBCUtil.getConnection();
-            String sql = "SELECT `AUTO_INCREMENT` FROM  INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'quanlycuahangsach' AND TABLE_NAME = 'NHOMQUYEN'";
+            String sql = "SELECT `AUTO_INCREMENT` FROM  INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'testne' AND TABLE_NAME = 'NHOMQUYEN'";
             PreparedStatement pst = (PreparedStatement) con.prepareStatement(sql);
             ResultSet rs2 = pst.executeQuery(sql);
             if (!rs2.isBeforeFirst()) {
@@ -127,4 +127,24 @@ public class NhomQuyenDAO implements DAOinterface<NhomQuyenDTO> {
         }
         return result;
     }
+
+    public boolean isTenNhomQuyenExist(String tenNhomQuyen) {
+    String query = "SELECT COUNT(*) FROM NhomQuyen WHERE TEN = ?";
+    try ( Connection con = (Connection) JDBCUtil.getConnection();
+         PreparedStatement ps = con.prepareStatement(query)) {
+         
+        ps.setString(1, tenNhomQuyen);
+        ResultSet rs = ps.executeQuery();
+        
+        if (rs.next()) {
+            int count = rs.getInt(1);
+            return count > 0;  // Return true if there's already a group with this name
+        }
+        
+    } catch (SQLException e) {
+        e.printStackTrace();  // Handle SQL errors
+    }
+    return false;  // Return false if no duplicates found
+}
+
 }

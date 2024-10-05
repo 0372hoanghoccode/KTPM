@@ -201,8 +201,8 @@ public void loadDataTable(ArrayList<MaKhuyenMaiDTO> result) {
 
         tblModel.addRow(new Object[]{
             kvk.getMKM(), 
-            Formater.FormatTime(kvk.getTGBD()), 
-            Formater.FormatTime(kvk.getTGKT()), 
+            Formater.FormatTimeNgayThangNam(kvk.getTGBD()), 
+            Formater.FormatTimeNgayThangNam(kvk.getTGKT()), 
             stringTrangThai
         });
     }
@@ -322,6 +322,11 @@ public void Fillter() throws ParseException {
     if (time_start != null && time_end != null && time_start.after(time_end)) {
         JOptionPane.showMessageDialog(this, "Ngày kết thúc phải lớn hơn ngày bắt đầu", "Lỗi !", JOptionPane.ERROR_MESSAGE);
         dateEnd.getDateChooser().setCalendar(null);
+        return false;
+    }
+     if (time_start.equals(time_end)) {
+        JOptionPane.showMessageDialog(this, "Ngày kết thúc phải lớn hơn ngày bắt đầu", "Lỗi !", JOptionPane.ERROR_MESSAGE);
+        dateEnd.getDateChooser().setCalendar(null); // Reset ngày kết thúc
         return false;
     }
     

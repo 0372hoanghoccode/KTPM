@@ -2,6 +2,7 @@ package GUI.Panel;
 
 import BUS.KhuVucSachBUS;
 import BUS.SanPhamBUS;
+import DAO.ChiTietLoHangDAO;
 import DAO.KhuVucSachDAO;
 import DTO.KhuVucSachDTO;
 import DTO.SanPhamDTO;
@@ -34,6 +35,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.sql.SQLException;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumnModel;
 import org.apache.poi.xssf.usermodel.XSSFRow;
@@ -210,8 +212,14 @@ public class KhuVucSach extends JPanel implements ActionListener, ItemListener {
         itemTaskbar listItem[] = new itemTaskbar[result.size()];
         int i = 0;
         for (SanPhamDTO sp : result) {
-            if (sp.getSL() == 0) {
-                listItem[i] = new itemTaskbar(sp.getHINHANH(), sp.getTEN(), sp.getSL());
+            int soLuongCuaSanPhamTrongCacLo = 0;
+            try {
+                soLuongCuaSanPhamTrongCacLo = ChiTietLoHangDAO.getTotalQuantityByProduct(sp.getMSP());
+            } catch (SQLException ex) {
+                Logger.getLogger(KhuVucSach.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            if (soLuongCuaSanPhamTrongCacLo != 0) {
+                listItem[i] = new itemTaskbar(sp.getHINHANH(), sp.getTEN(), soLuongCuaSanPhamTrongCacLo);
                 right.add(listItem[i]);
                 i++;
             }

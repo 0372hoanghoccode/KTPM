@@ -47,6 +47,8 @@ import GUI.Component.NumericDocumentFilter;
 import GUI.Component.PanelBorderRadius;
 import GUI.Component.SelectForm;
 import helper.Validation;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 
 public final class TaoMaKhuyenMai extends JPanel implements ItemListener, ActionListener {
@@ -191,15 +193,16 @@ public final class TaoMaKhuyenMai extends JPanel implements ItemListener, Action
 
         txtTimKiem = new JTextField();
         txtTimKiem.setPreferredSize(new Dimension(100, 40));
-        txtTimKiem.putClientProperty("JTextField.placeholderText", "Tên sản phẩm, mã sản phẩm ...");
+        txtTimKiem.putClientProperty("JTextField.placeholderText", "Tên sản phẩm");
         txtTimKiem.putClientProperty("JTextField.showClearButton", true);
         txtTimKiem.putClientProperty("JTextField.leadingIcon", new FlatSVGIcon("./icon/search.svg"));
 
         txtTimKiem.addKeyListener(new KeyAdapter() {
             @Override
             public void keyReleased(KeyEvent event) { //chạy khi nhả phím trong tìm kiếm
-                ArrayList<SanPhamDTO> rs = spBUS.search(txtTimKiem.getText(), "Tất cả");
-                loadDataTalbeSanPham(rs);
+                 ArrayList<SanPhamDTO> rs = spBUS.search(txtTimKiem.getText(), "Tên sản phẩm");
+                 ArrayList<SanPhamDTO> sanphamtimkiemlonhon0 = SanPhamDAO.filterProductsWithPositiveQuantity(rs);
+                loadDataTalbeSanPham(sanphamtimkiemlonhon0);
             }
         });
 
@@ -302,6 +305,28 @@ public final class TaoMaKhuyenMai extends JPanel implements ItemListener, Action
         dateStart = new InputDate("Từ ngày");
         dateEnd = new InputDate("Đến ngày");
       //   cbbLoHang = new SelectForm("Lô Hàng", arrmlh); //Hieusua -thêm cái string lo hang vo
+       dateStart.addDateChangeListener(new PropertyChangeListener() {
+            @Override
+            public void propertyChange(PropertyChangeEvent evt) {
+                try {
+                    validateSelectDate();
+                } catch (ParseException ex) {
+                    Logger.getLogger(MaKhuyenMai.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        });
+
+        // Đăng ký PropertyChangeListener cho ngày kết thúc
+        dateEnd.addDateChangeListener(new PropertyChangeListener() {
+            @Override
+            public void propertyChange(PropertyChangeEvent evt) {
+                try {
+                    validateSelectDate();
+                } catch (ParseException ex) {
+                    Logger.getLogger(MaKhuyenMai.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        });
         right_top.add(txtMaKM);
         right_top.add(txtNhanVien);
         right_top.add(dateStart);
@@ -329,6 +354,9 @@ public final class TaoMaKhuyenMai extends JPanel implements ItemListener, Action
         contentCenter.add(right, BorderLayout.EAST);
          int MKM = MaKhuyenMaiDAO.getMaxMaKhuyenMai()+1;
         txtMaKM.setText(MKM+"");
+
+
+
         
     }
 
@@ -550,8 +578,6 @@ public boolean validateSelectDate() throws ParseException {
     Date time_start = dateStart.getDate();
     Date time_end = dateEnd.getDate();
     
-    Date current_date = new Date();
-
     // Kiểm tra nếu ngày bắt đầu hoặc ngày kết thúc là null (rỗng)
     if (time_start == null) {
         JOptionPane.showMessageDialog(this, "Ngày bắt đầu không được để rỗng!", "Lỗi !", JOptionPane.ERROR_MESSAGE);
@@ -569,14 +595,22 @@ public boolean validateSelectDate() throws ParseException {
         dateEnd.getDateChooser().setCalendar(null); // Reset ngày kết thúc
         return false;
     }
+    
+    // Kiểm tra nếu ngày bắt đầu bằng ngày kết thúc
+    if (time_start.equals(time_end)) {
+        JOptionPane.showMessageDialog(this, "Ngày kết thúc phải lớn hơn ngày bắt đầu", "Lỗi !", JOptionPane.ERROR_MESSAGE);
+        dateEnd.getDateChooser().setCalendar(null); // Reset ngày kết thúc
+        return false;
+    }
 
     return true;
 }
 
 
+
     public void eventBtnTao() throws ParseException {
         if (chitietMKM.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Chưa có sản phẩm nào trong mã !", "Cảnh báo !", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Chưa có sản phẩm nào trong chương trình khuyến mãi!", "Cảnh báo !", JOptionPane.ERROR_MESSAGE);
         } else if (Validation.isEmpty(txtMaKM.getText())) {
             JOptionPane.showMessageDialog(this, "Mã khuyến mãi không được để rỗng!", "Cảnh báo !", JOptionPane.ERROR_MESSAGE);
         }

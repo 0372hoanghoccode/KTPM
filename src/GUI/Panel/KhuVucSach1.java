@@ -175,12 +175,6 @@ tableKhuvuc.addMouseListener(new MouseAdapter() {
         initComponent();
         tableKhuvuc.setDefaultEditor(Object.class, null);
         loadDataTable(listKVK);
-            for (KhuVucSach1DTO khuVuc : listKVK) {
-            System.out.println("Mã Khu Vực: " + khuVuc.getMLH());
-            System.out.println("Tên Khu Vực: " + khuVuc.getTT());
-           
-            System.out.println("------------------------------");
-        }
     }
 
     public void loadDataTable(ArrayList<KhuVucSach1DTO> result) {

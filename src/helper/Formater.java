@@ -15,4 +15,8 @@ public class Formater {
         SimpleDateFormat formatDate = new SimpleDateFormat("dd/MM/YYYY HH:mm");
         return formatDate.format(thoigian);
     }
+    public static String FormatTimeNgayThangNam(Timestamp thoigian) { 
+        SimpleDateFormat formatDate = new SimpleDateFormat("dd/MM/YYYY");
+        return formatDate.format(thoigian);
+    }
 }

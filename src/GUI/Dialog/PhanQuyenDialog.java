@@ -23,6 +23,7 @@ import javax.swing.JCheckBox;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
@@ -148,17 +149,61 @@ public final class PhanQuyenDialog extends JDialog implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == btnAddNhomQuyen) {
-            ctQuyen = this.getListChiTietQuyen(NhomQuyenDAO.getInstance().getAutoIncrement());
-            nhomquyenBUS.add(txtTennhomquyen.getText(),ctQuyen);
-            this.jpPhanQuyen.loadDataTalbe(nhomquyenBUS.getAll());
-            dispose();
-        } else if(e.getSource() == btnUpdateNhomQuyen){
-            ctQuyen = this.getListChiTietQuyen(this.nhomquyenDTO.getManhomquyen());
+ if (e.getSource() == btnAddNhomQuyen) {
+    String tenNhomQuyen = txtTennhomquyen.getText().trim();
+
+    // Kiểm tra nếu tên nhóm quyền để rỗng
+    if (tenNhomQuyen.isEmpty()) {
+        JOptionPane.showMessageDialog(this, "Tên nhóm quyền không được để rỗng!", "Lỗi !", JOptionPane.ERROR_MESSAGE);
+        return;
+    }
+
+    // Kiểm tra trùng lặp tên nhóm quyền bằng DAO
+    if (NhomQuyenDAO.getInstance().isTenNhomQuyenExist(tenNhomQuyen)) {
+        JOptionPane.showMessageDialog(this, "Tên nhóm quyền không được trùng với tên đã có!", "Lỗi !", JOptionPane.ERROR_MESSAGE);
+        return;
+    }
+
+    // Nếu không có lỗi, tiếp tục thêm nhóm quyền
+    ctQuyen = this.getListChiTietQuyen(NhomQuyenDAO.getInstance().getAutoIncrement());
+    boolean isAdded = nhomquyenBUS.add(tenNhomQuyen, ctQuyen);
+
+    // Kiểm tra nếu thêm thành công
+    if (isAdded) {
+        JOptionPane.showMessageDialog(this, "Thêm nhóm quyền thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+        this.jpPhanQuyen.loadDataTalbe(nhomquyenBUS.getAll());
+        dispose();
+    } else {
+        JOptionPane.showMessageDialog(this, "Có lỗi xảy ra khi thêm nhóm quyền!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+    }
+}
+
+else if(e.getSource() == btnUpdateNhomQuyen){
+      String tenNhomQuyen = txtTennhomquyen.getText().trim();
+
+    // Kiểm tra nếu tên nhóm quyền để rỗng
+    if (tenNhomQuyen.isEmpty()) {
+        JOptionPane.showMessageDialog(this, "Tên nhóm quyền không được để rỗng!", "Lỗi !", JOptionPane.ERROR_MESSAGE);
+        return;
+    }
+
+    // Kiểm tra trùng lặp tên nhóm quyền bằng DAO
+    if (NhomQuyenDAO.getInstance().isTenNhomQuyenExist(tenNhomQuyen)) {
+        JOptionPane.showMessageDialog(this, "Tên nhóm quyền không được trùng với tên đã có!", "Lỗi !", JOptionPane.ERROR_MESSAGE);
+        return;
+    }
+
+      ctQuyen = this.getListChiTietQuyen(this.nhomquyenDTO.getManhomquyen());
             NhomQuyenDTO nhomquyen = new NhomQuyenDTO(this.nhomquyenDTO.getManhomquyen(),txtTennhomquyen.getText());
-            nhomquyenBUS.update(nhomquyen,ctQuyen,index);
-            this.jpPhanQuyen.loadDataTalbe(nhomquyenBUS.getAll());
+          boolean isUpdate =   nhomquyenBUS.update(nhomquyen,ctQuyen,index);
+             if (isUpdate) {
+        JOptionPane.showMessageDialog(this, "Cập nhật nhóm quyền thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+        this.jpPhanQuyen.loadDataTalbe(nhomquyenBUS.getAll());
             dispose();
+    } else {
+        JOptionPane.showMessageDialog(this, "Có lỗi xảy ra khi cập nhật nhóm quyền!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+    }
+           
         }
         //  else if (e.getSource() == btnHuybo) {
         //     dispose();

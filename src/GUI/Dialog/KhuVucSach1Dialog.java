@@ -36,6 +36,7 @@ import javax.swing.table.DefaultTableModel;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 //đây nè
 public final class KhuVucSach1Dialog extends JDialog implements ActionListener {
@@ -133,8 +134,8 @@ public void initComponents(String title, String type) {
     txtMaPhieu = new InputForm("Mã Lô Hàng");
     txtThoiGian = new InputForm("Thời gian tạo");
 
-    txtMaPhieu.setEditable(false);
-    txtThoiGian.setEditable(false);
+    txtMaPhieu.setDisable();
+    txtThoiGian.setDisable();
 
     pnmain_top.add(txtMaPhieu);
     pnmain_top.add(txtThoiGian);
@@ -289,32 +290,32 @@ private void updateLayoutForCreate() {
     // }
 
 
-    public void initInfo() {
-       //  Timestamp kvk1 = new Timestamp(System.currentTimeMillis());
-    //java.util.Date date = new java.util.Date(kvk.getNgay());
+public void initInfo() {
+    // Format date as "dd-MM-yyyy"
+       SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 
-        // Chọn định dạng ngày giờ mong muốn
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+    // Assuming kvk.getNgay() returns a Date or Timestamp object, format it
+    Date ngay = kvk.getNgay();  // Make sure kvk.getNgay() returns a Date or you convert it to Date
 
-        // Chuyển đổi Date thành String
-    //    String formattedDate = sdf.format(date);
-        txtMaPhieu.setText(kvk.getMLH());
-      //  txtThoiGian.setText(formattedDate);
-      int i = 0 ; 
-      ArrayList <ChiTietLoHangDTO> chitietlohang = ChiTietLoHangDAO.getByMaLoHang(kvk.getMLH());
-       for (ChiTietLoHangDTO product : chitietlohang) {
-            tblModel.addRow(new Object[]{
-                    i , 
-                    product.getMSP(),   product.getSoLuong(),
-                    product.getGiaNhap()
-                 
-                   
-            });
-            i++;
-        }
-      
+    // Format the date to the desired string format
+    String formattedDate = dateFormat.format(ngay);
+
+    // Set other fields
+    txtMaPhieu.setText(kvk.getMLH());
+    txtThoiGian.setText(formattedDate);  // Set the formatted date
+
+    int i = 0;
+    ArrayList<ChiTietLoHangDTO> chitietlohang = ChiTietLoHangDAO.getByMaLoHang(kvk.getMLH());
+    for (ChiTietLoHangDTO product : chitietlohang) {
+        tblModel.addRow(new Object[]{
+            i,
+            product.getMSP(),
+            product.getSoLuong(),
+            product.getGiaNhap()
+        });
+        i++;
     }
-
+}
        boolean Validation(){
         if (Validation.isEmpty(txtMaPhieu.getText())) {
             JOptionPane.showMessageDialog(this, "Tên khu vực sách không được rỗng", "Cảnh báo !", JOptionPane.WARNING_MESSAGE);
