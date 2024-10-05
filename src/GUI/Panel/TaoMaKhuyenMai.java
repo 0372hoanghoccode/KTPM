@@ -213,15 +213,18 @@ public final class TaoMaKhuyenMai extends JPanel implements ItemListener, Action
         content_right_top.setPreferredSize(new Dimension(100, 250));
         txtTenSp = new InputForm("Tên sản phẩm");
         txtTenSp.setEditable(false);
+        txtTenSp.setDisable();
         txtTenSp.setPreferredSize(new Dimension(100, 90));
         txtMaSp = new InputForm("Mã sản phẩm");
         txtMaSp.setEditable(false);
+        txtMaSp.setDisable();
 //        txtGiaNhap = new InputForm("Giá Nhập");
 //        txtGiaNhap.setEditable(false);
         // txtGiaBan = new InputForm("Giá Bán");
         // txtGiaBan.setEditable(false);
         txtGiaBia = new InputForm("Giá Bìa");
         txtGiaBia.setEditable(false);
+        txtGiaBia.setDisable();
         txtPTG = new InputForm("Phần trăm giảm");
         PlainDocument ptg = (PlainDocument) txtPTG.getTxtForm().getDocument();
         ptg.setDocumentFilter((new NumericDocumentFilter())); //chỉ cho nhập số
@@ -291,8 +294,10 @@ public final class TaoMaKhuyenMai extends JPanel implements ItemListener, Action
         right_top.setPreferredSize(new Dimension(300, 450));
         right_top.setOpaque(false);
         txtMaKM = new InputForm("Mã khuyến mãi");
+        txtMaKM.setDisable();
         txtNhanVien = new InputForm("Nhân viên tạo");
         txtNhanVien.setText(nvDto.getHOTEN());
+        txtNhanVien.setDisable();
         txtNhanVien.setEditable(false);
         dateStart = new InputDate("Từ ngày");
         dateEnd = new InputDate("Đến ngày");
