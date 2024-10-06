@@ -48,7 +48,7 @@ public final class PhanQuyenDialog extends JDialog implements ActionListener {
     public void initComponents(String type) {
         dmcn = DanhMucChucNangDAO.getInstance().selectAll();
 
-        String[] hanhdong = {"Xem", "Tạo mới"};
+        String[] hanhdong = {"Xem", "Tạo mới", "Cập nhật", "Xoá"};
 
         this.setSize(new Dimension(1000, 580));
         this.setLocationRelativeTo(null);
