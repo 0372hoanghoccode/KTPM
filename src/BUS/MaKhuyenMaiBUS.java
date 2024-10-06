@@ -21,7 +21,7 @@ public class MaKhuyenMaiBUS {
     }
 
     public ArrayList<MaKhuyenMaiDTO> getAll() {
-        listMKM = mkmDAO.selectAll();
+        listMKM = mkmDAO.selectAllFullTrangThai();
         return this.listMKM;
     }
 
