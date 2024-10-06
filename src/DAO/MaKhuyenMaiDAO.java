@@ -72,6 +72,30 @@ public class MaKhuyenMaiDAO implements DAOinterface<MaKhuyenMaiDTO> {
         }
         return result;
     }
+    
+        
+    public ArrayList<MaKhuyenMaiDTO> selectAllFullTrangThai() {
+        ArrayList<MaKhuyenMaiDTO> result = new ArrayList<MaKhuyenMaiDTO>();
+        try {
+            Connection con = (Connection) JDBCUtil.getConnection();
+            String sql = "SELECT * FROM MAKHUYENMAI";
+            PreparedStatement pst = (PreparedStatement) con.prepareStatement(sql);
+            ResultSet rs = (ResultSet) pst.executeQuery();
+            while(rs.next()){
+                String MKM = rs.getString("MKM");
+                int MNV = rs.getInt("MNV");
+                Timestamp TGBD = rs.getTimestamp("TGBD");
+                Timestamp TGKT = rs.getTimestamp("TGKT");
+                 int TT = rs.getInt("TT");
+                MaKhuyenMaiDTO kh = new MaKhuyenMaiDTO(MKM, MNV, TGBD, TGKT , TT );
+                result.add(kh);
+            }
+            JDBCUtil.closeConnection(con);
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        return result;
+    }
 
     @Override
     public ArrayList<MaKhuyenMaiDTO> selectAll() {
