@@ -222,6 +222,17 @@ public final class SanPhamDialog extends JDialog implements ActionListener {
             }
         }
     });
+
+   
+    khuvuc.setDisable();
+    tenSP.setDisable();
+    tenTG.setDisable();
+    namXB.setDisable();
+    danhmuc.setDisable();;
+    masp1.setDisable();
+    cbNXB.setDisable();
+    cbbLoHang.setDisable();
+    hinhanh.setUnable();
                  
             }
             case "update" -> setInfo(sp);

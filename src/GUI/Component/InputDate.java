@@ -73,13 +73,18 @@ public class InputDate extends JPanel {
         JTextFieldDateEditor editor = (JTextFieldDateEditor) date.getDateEditor();
         editor.setEditable(false);
     }
-  public void addDateChangeListener(PropertyChangeListener listener) {
+
+    public void setUnable() {
+        date.setEnabled(false); // vứt datechooser
+        JTextFieldDateEditor editor = (JTextFieldDateEditor) date.getDateEditor();
+        editor.setEditable(false); // vứt chỉnh sửa 
+    }
+
+    public void addDateChangeListener(PropertyChangeListener listener) {
         date.addPropertyChangeListener("date", listener);
     }
-    
-    // Phương thức để hủy đăng ký PropertyChangeListener
+
     public void removeDateChangeListener(PropertyChangeListener listener) {
         date.removePropertyChangeListener("date", listener);
     }
-   
 }

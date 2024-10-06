@@ -87,6 +87,10 @@ public class NhaXuatBanDialog extends JDialog implements ActionListener {
             case "view" -> {
                 initInfo();
                 initView();
+                tennxb.setDisable();
+                diachi.setDisable();
+                email.setDisable();
+                sodienthoai.setDisable();
             }
             default ->
                 throw new AssertionError();

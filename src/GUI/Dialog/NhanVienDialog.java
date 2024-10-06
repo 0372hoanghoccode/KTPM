@@ -226,7 +226,7 @@ public class NhanVienDialog extends JDialog {
                 while (enumeration.hasMoreElements()) {
                     enumeration.nextElement().setEnabled(false);
                 }
-                jcBd.setDisable();
+                jcBd. setUnable();
             }
             default ->
                 throw new AssertionError();

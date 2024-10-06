@@ -244,6 +244,7 @@ public final class NhaXuatBan extends JPanel implements ActionListener, ItemList
             if (index != -1) {
                 new NhaXuatBanDialog(this, owner, "Chi tiết nhà xuất bản", true, "view", listnxb.get(index));
             }
+            
         } else if (e.getSource() == search.btnReset) {
             search.txtSearchForm.setText("");
             listnxb = nxbBUS.getAll();

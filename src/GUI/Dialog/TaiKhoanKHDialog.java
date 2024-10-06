@@ -149,6 +149,7 @@ public class TaiKhoanKHDialog extends JDialog {
                 pnmain.remove(password);
                 maNhomQuyen.setDisable();
                 trangthai.setDisable();
+                username.setDisable();
                 this.setSize(new Dimension(500, 550));
             }
             default ->
