@@ -111,6 +111,14 @@ public final class PhanQuyenDialog extends JDialog implements ActionListener {
                 initUpdate();
             }
             case "view" -> {
+                txtTennhomquyen.setEnabled(false);
+
+                for (int i = 0; i < sizeDmCn; i++) {
+                    for (int j = 0; j < sizeHanhdong; j++) {
+                        listCheckBox[i][j].setEnabled(false);
+                    }
+                }
+
                 initUpdate();
             }
             default -> throw new AssertionError();
