@@ -103,11 +103,32 @@ public final class PhanQuyenDialog extends JDialog implements ActionListener {
                 btnAddNhomQuyen = new ButtonCustom("Thêm nhóm quyền", "success", 14);
                 btnAddNhomQuyen.addActionListener(this);
                 jpBottom.add(btnAddNhomQuyen);
+
+                for (int i = 0; i < sizeDmCn; i++) {
+                    for (int j = 0; j < sizeHanhdong; j++) {
+                        if (j == 2 || j == 3) {// enabled cập nhật , xoá
+                            listCheckBox[i][j].setEnabled(false); 
+                        } else {
+                            listCheckBox[i][j].setEnabled(true); 
+                        }
+                    }
+                }
             }
             case "update" -> {
                 btnUpdateNhomQuyen = new ButtonCustom("Cập nhật nhóm quyền", "success", 14);
                 btnUpdateNhomQuyen.addActionListener(this);
                 jpBottom.add(btnUpdateNhomQuyen);
+
+                for (int i = 0; i < sizeDmCn; i++) {
+                    for (int j = 0; j < sizeHanhdong; j++) {
+                        if (j == 2 || j == 3) { 
+                            listCheckBox[i][j].setEnabled(false); 
+                        } else {
+                            listCheckBox[i][j].setEnabled(true); 
+                        }
+                    }
+                }
+
                 initUpdate();
             }
             case "view" -> {
