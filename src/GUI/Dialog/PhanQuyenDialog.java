@@ -129,6 +129,8 @@ public final class PhanQuyenDialog extends JDialog implements ActionListener {
                     }
                 }
 
+                txtTennhomquyen.setEnabled(false);
+
                 initUpdate();
             }
             case "view" -> {
