@@ -79,6 +79,13 @@ public class SelectForm extends JPanel{
   public void addActionListener(ActionListener listener) {
         cbb.addActionListener(listener);
     }
-    
+public void clearAndAddItems(int[] items) {
+    cbb.removeAllItems(); // Xóa tất cả các mục hiện tại
+    for (int item : items) {
+        cbb.addItem(String.valueOf(item)); // Chuyển đổi int thành String và thêm vào JComboBox
+    }
+}
+
+
   
 }

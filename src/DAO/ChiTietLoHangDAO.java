@@ -48,7 +48,35 @@ public class ChiTietLoHangDAO implements ChiTietInterface<ChiTietLoHangDTO>{
         return totalQuantity;
     }
 
-    
+  
+public static int getMaxLotForProduct(int maSP) throws SQLException {
+    String sql = "SELECT MAX(MLH) AS MaxLot FROM LoHang WHERE MLH IN (SELECT MLH FROM ctphieunhap WHERE MSP = ?)";
+
+    int maxLot = -1;  // Giá trị mặc định nếu không tìm thấy lô hàng
+
+    try (Connection con = JDBCUtil.getConnection();
+         PreparedStatement pstmt = con.prepareStatement(sql)) {
+
+        // Gán mã sản phẩm vào tham số của câu truy vấn
+        pstmt.setInt(1, maSP);
+
+        // Thực thi truy vấn
+        try (ResultSet rs = pstmt.executeQuery()) {
+            if (rs.next()) {
+                // Lấy lô hàng lớn nhất từ kết quả truy vấn
+                maxLot = rs.getInt("MaxLot");
+            }
+        }
+    } catch (SQLException e) {
+        // Xử lý lỗi
+        e.printStackTrace();
+        throw e;
+    }
+
+    return maxLot;
+}
+
+      
   public static void updateQuantity(int maSP, String maLoHang, int soLuongChange) throws SQLException {
     // Câu lệnh SQL để cập nhật số lượng lô hàng
     String updateQuantitySQL = "UPDATE ctlohang SET SoLuong = SoLuong + ? WHERE MSP = ? AND MLH = ?";

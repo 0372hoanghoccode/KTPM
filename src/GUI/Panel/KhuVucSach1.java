@@ -69,7 +69,7 @@ public final class KhuVucSach1 extends JPanel implements ActionListener, ItemLis
         tableKhuvuc = new JTable();
         tblModel = new DefaultTableModel();
         tableKhuvuc.setBackground(new Color(245, 250, 250)); 
-        String[] header = new String[]{"Mã lô","Thời gian", "Trang thái"};
+        String[] header = new String[]{"Mã lô","Thời gian", "Tổng số sản phẩm", "Tổng tiền", "Trạng thái"};
         tblModel.setColumnIdentifiers(header);
         tableKhuvuc.setModel(tblModel);
         scrollTableSanPham.setViewportView(tableKhuvuc);
@@ -81,6 +81,8 @@ public final class KhuVucSach1 extends JPanel implements ActionListener, ItemLis
         columnModel.getColumn(2).setPreferredWidth(300);
         columnModel.getColumn(1).setCellRenderer(centerRenderer);
         columnModel.getColumn(2).setCellRenderer(centerRenderer);
+        columnModel.getColumn(3).setCellRenderer(centerRenderer);
+        columnModel.getColumn(4).setCellRenderer(centerRenderer);
         tableKhuvuc.setFocusable(false);
 tableKhuvuc.addMouseListener(new MouseAdapter() {
     @Override
@@ -89,11 +91,8 @@ tableKhuvuc.addMouseListener(new MouseAdapter() {
         if (index != -1) {
             // Lấy mã lô hàng từ hàng được chọn
             String maLoHang = tableKhuvuc.getValueAt(index, 0).toString(); // Giả định mã lô hàng nằm ở cột 0
-
-       
             ChiTietLoHangDAO chiTietLoHangBUS = new ChiTietLoHangDAO();
             ArrayList<ChiTietLoHangDTO> listChiTietLoHang = chiTietLoHangBUS.getByMaLoHang(maLoHang);
-
             if (listChiTietLoHang != null && !listChiTietLoHang.isEmpty()) {
                 // Xử lý hoặc hiển thị chi tiết lô hàng
                 // Ví dụ: ListCustomersInDePot(listChiTietLoHang);
@@ -183,7 +182,7 @@ tableKhuvuc.addMouseListener(new MouseAdapter() {
         tblModel.setRowCount(0);
         for (KhuVucSach1DTO kvk : result) {
             tblModel.addRow(new Object[]{
-                kvk.getMLH(),  kvk.getNgay(),kvk.getTT()
+                kvk.getMLH(),  kvk.getNgay(), kvk.getTongSoSp(), kvk.getTongTien(), kvk.getTT()
             });
         }
     }

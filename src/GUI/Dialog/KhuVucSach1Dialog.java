@@ -1,11 +1,8 @@
-
 package GUI.Dialog;
-
 import DAO.ChiTietLoHangDAO;
 import DAO.KhuVucSach1DAO;
 import DTO.ChiTietLoHangDTO;
 import DTO.KhuVucSach1DTO;
-import DTO.KhuVucSachDTO;
 import GUI.Component.ButtonCustom;
 import GUI.Component.HeaderTitle;
 import GUI.Component.InputForm;
@@ -17,11 +14,6 @@ import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import javax.swing.JDialog;
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
 import GUI.Panel.KhuVucSach1;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
@@ -38,22 +30,18 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
-//đây nè
 public final class KhuVucSach1Dialog extends JDialog implements ActionListener {
-
     private KhuVucSach1 jpkvk;
     private HeaderTitle titlePage;
     private JPanel pnmain,  pnmain_top,  pnmain_bottom, pnmain_btn;
     private ButtonCustom btnThem, btnCapNhat;
-    private InputForm txtMaPhieu, txtThoiGian ,      malohang ,ghichu;
+    private InputForm txtMaPhieu, txtThoiGian;
     private KhuVucSach1DTO kvk;
     DefaultTableModel tblModel;
-    JTable table, tblImei;
+    JTable table;
     JScrollPane scrollTable;
   
    
-
-
     public KhuVucSach1Dialog(KhuVucSach1 jpkvk, JFrame owner, String title, boolean modal, String type) {
         super(owner, title, modal);
         this.jpkvk = jpkvk;
@@ -224,9 +212,6 @@ private void updateLayoutForCreate() {
 
 
 
-    
-
-
     // public void initComponent(String title) {
     //     this.setSize(new Dimension(1100, 500));
     //     this.setLayout(new BorderLayout(0, 0));
@@ -344,7 +329,7 @@ public void actionPerformed(ActionEvent e) {
         KhuVucSach1DTO newKhuVuc = new KhuVucSach1DTO(
             maPhieuText, // Mã khu vực mới
             thoiGian,    // Thời gian hiện tại
-            1            // Trạng thái
+            1 , 0 , 0           // Trạng thái
         );
         int result = KhuVucSach1DAO.insert1(newKhuVuc);
         // Kiểm tra kết quả và thông báo thành công

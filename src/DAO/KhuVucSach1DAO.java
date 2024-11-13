@@ -29,27 +29,23 @@ public class KhuVucSach1DAO implements DAOinterface<KhuVucSach1DTO> {
         return ChiTietLoHangDAO.selectAll1(Integer.toString(maphieu));
     }
  
-   public static int insert1(KhuVucSach1DTO t) {
-    int result = 0;
-    Connection con = null;
-    PreparedStatement pst = null;
-    
-    try {
-        con = JDBCUtil.getConnection();
-        String sql = "INSERT INTO `lohang`(`MLH`, `Ngay`, `TT`) VALUES ( ?, ?, 1)";
-        pst = con.prepareStatement(sql);
-        
-        pst.setString(1, t.getMLH()); // Mã lô hàng
-      
-        pst.setTimestamp(2, t.getNgay()); // Ngày là kiểu Timestamp
-        
-        result = pst.executeUpdate();
-    } catch (SQLException ex) {
-        Logger.getLogger(KhuVucSachDAO.class.getName()).log(Level.SEVERE, null, ex);
-    } 
-    
-    return result;
-}
+  public static int insert1(KhuVucSach1DTO t) {
+        int result = 0;
+        try (Connection con = JDBCUtil.getConnection()) {
+            String sql = "INSERT INTO lohang (MLH, Ngay, TT, TongSoSp, TongTien) VALUES (?, ?, 1, ?, ?)";
+            try (PreparedStatement pst = con.prepareStatement(sql)) {
+                pst.setString(1, t.getMLH());
+                pst.setTimestamp(2, t.getNgay());
+                pst.setInt(3, t.getTongSoSp());
+                pst.setDouble(4, t.getTongTien());
+                
+                result = pst.executeUpdate();
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(KhuVucSach1DAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return result;
+    }
  
     
    public String[] getArrMLH() {
@@ -69,45 +65,42 @@ public class KhuVucSach1DAO implements DAOinterface<KhuVucSach1DTO> {
     
     @Override
   public  int insert(KhuVucSach1DTO t) {
-    int result = 0;
-    Connection con = null;
-    PreparedStatement pst = null;
-    
-    try {
-        con = JDBCUtil.getConnection();
-        String sql = "INSERT INTO `lohang`(`MLH`, `Ngay`, `TT`) VALUES ( ?, ?, 1)";
-        pst = con.prepareStatement(sql);
-        
-        pst.setString(1, t.getMLH()); // Mã lô hàng
-      
-        pst.setTimestamp(2, t.getNgay()); // Ngày là kiểu Timestamp
-        
-        result = pst.executeUpdate();
-    } catch (SQLException ex) {
-        Logger.getLogger(KhuVucSachDAO.class.getName()).log(Level.SEVERE, null, ex);
-    } 
-    
-    return result;
+   int result = 0;
+        try (Connection con = JDBCUtil.getConnection()) {
+            String sql = "INSERT INTO lohang (MLH, Ngay, TT, TongSoSp, TongTien) VALUES (?, ?, 1, ?, ?)";
+            try (PreparedStatement pst = con.prepareStatement(sql)) {
+                pst.setString(1, t.getMLH());
+                pst.setTimestamp(2, t.getNgay());
+                pst.setInt(3, t.getTongSoSp());
+                pst.setDouble(4, t.getTongTien());
+                
+                result = pst.executeUpdate();
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(KhuVucSach1DAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return result;
 }
 
-    @Override
+ @Override
     public int update(KhuVucSach1DTO t) {
         int result = 0;
-        try {
-            Connection con = (Connection) JDBCUtil.getConnection();
-            String sql = "UPDATE `lohang` SET `TEN`=?,`GHICHU`=? WHERE `MLH`=?";
-            PreparedStatement pst = (PreparedStatement) con.prepareStatement(sql);
-            pst.setString(1, t.getMLH());
-            pst.setTimestamp(2, t.getNgay());
-            pst.setInt(3, t.getTT());
-            result = pst.executeUpdate();
-            JDBCUtil.closeConnection(con);
+        try (Connection con = JDBCUtil.getConnection()) {
+            String sql = "UPDATE lohang SET Ngay = ?, TT = ?, TongSoSp = ?, TongTien = ? WHERE MLH = ?";
+            try (PreparedStatement pst = con.prepareStatement(sql)) {
+                pst.setTimestamp(1, t.getNgay());
+                pst.setInt(2, t.getTT());
+                pst.setInt(3, t.getTongSoSp());
+                pst.setDouble(4, t.getTongTien());
+                pst.setString(5, t.getMLH());
+                
+                result = pst.executeUpdate();
+            }
         } catch (SQLException ex) {
-            Logger.getLogger(KhuVucSachDAO.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(KhuVucSach1DAO.class.getName()).log(Level.SEVERE, null, ex);
         }
         return result;
     }
-
     @Override
     public int delete(String t) {
         int result = 0;
@@ -127,37 +120,29 @@ public class KhuVucSach1DAO implements DAOinterface<KhuVucSach1DTO> {
 
     
     
-public ArrayList<KhuVucSach1DTO> getAll() {
+    public ArrayList<KhuVucSach1DTO> getAll() {
         ArrayList<KhuVucSach1DTO> result = new ArrayList<>();
-        Connection con = null;
-        PreparedStatement pst = null;
-        ResultSet rs = null;
-        
-        try {
-            // Kết nối đến cơ sở dữ liệu
-            con = JDBCUtil.getConnection();
-            
-            // Truy vấn SQL để lấy tất cả các lô hàng có TT = 1
-            String sql = "SELECT MLH, NGAY, TT FROM lohang WHERE TT = 1";
-            pst = con.prepareStatement(sql);
-            rs = pst.executeQuery();
-            
-            // Xử lý kết quả truy vấn
-            while (rs.next()) {
-                String MLH = rs.getString("MLH"); // Lấy dữ liệu kiểu String
-             
-                java.sql.Timestamp NGAY = rs.getTimestamp("NGAY"); // Lấy dữ liệu kiểu Timestamp
-                int TT = rs.getInt("TT"); // Lấy dữ liệu kiểu int
-                
-                // Tạo đối tượng KhuVucSach1DTO và thêm vào danh sách kết quả
-                KhuVucSach1DTO kvk = new KhuVucSach1DTO(MLH, NGAY, TT);
-                result.add(kvk);
+        try (Connection con = JDBCUtil.getConnection()) {
+            String sql = "SELECT MLH, Ngay, TT, TongSoSp, TongTien FROM lohang WHERE TT = 1";
+            try (PreparedStatement pst = con.prepareStatement(sql);
+                 ResultSet rs = pst.executeQuery()) {
+                while (rs.next()) {
+                    KhuVucSach1DTO kv = new KhuVucSach1DTO(
+                        rs.getString("MLH"),
+                        rs.getTimestamp("Ngay"),
+                        rs.getInt("TT"),
+                        rs.getInt("TongSoSp"),
+                        rs.getDouble("TongTien")
+                    );
+                    result.add(kv);
+                }
             }
         } catch (Exception e) {
-            e.printStackTrace(); // In ra lỗi để tiện theo dõi
+            e.printStackTrace();
         }
         return result;
     }
+    
 public String[] getAll1() {
     ArrayList<String> resultList = new ArrayList<>();
     Connection con = null;
@@ -203,28 +188,27 @@ public String[] getAll1() {
 
 
 
-    @Override
+   @Override
     public KhuVucSach1DTO selectById(String t) {
         KhuVucSach1DTO result = null;
-        try {
-            Connection con = JDBCUtil.getConnection();
-            String sql = "SELECT * FROM lohang WHERE MLH=?";
-            PreparedStatement pst = con.prepareStatement(sql);
-            pst.setString(1, t);
-            ResultSet rs = pst.executeQuery();
-            
-            while (rs.next()) {
-                String MLH = rs.getString("MLH");    // Get MLH as String
-                Timestamp Ngay = rs.getTimestamp("Ngay"); // Get Ngay as Timestamp
-                int TT = rs.getInt("TT"); // Get TT as int
-    
-                // Pass values to the KhuVucSach1DTO constructor
-                result = new KhuVucSach1DTO(MLH, Ngay, TT);
+        try (Connection con = JDBCUtil.getConnection()) {
+            String sql = "SELECT MLH, Ngay, TT, TongSoSp, TongTien FROM lohang WHERE MLH = ?";
+            try (PreparedStatement pst = con.prepareStatement(sql)) {
+                pst.setString(1, t);
+                try (ResultSet rs = pst.executeQuery()) {
+                    if (rs.next()) {
+                        result = new KhuVucSach1DTO(
+                            rs.getString("MLH"),
+                            rs.getTimestamp("Ngay"),
+                            rs.getInt("TT"),
+                            rs.getInt("TongSoSp"),
+                            rs.getDouble("TongTien")
+                        );
+                    }
+                }
             }
-            
-            JDBCUtil.closeConnection(con);
         } catch (Exception e) {
-            e.printStackTrace(); // Log any errors
+            e.printStackTrace();
         }
         return result;
     }
@@ -306,7 +290,7 @@ public String[] getAll1() {
             ArrayList<KhuVucSach1DTO> maLoHangResults = findByMaLoHang(keyword);
             for (KhuVucSach1DTO kv : maLoHangResults) {
                 // Thay vì gọi convertToDTO, tạo DTO trực tiếp ở đây
-                results.add(new KhuVucSach1DTO(kv.getMLH(), kv.getNgay() , 1 ));
+                results.add(new KhuVucSach1DTO(kv.getMLH(), kv.getNgay() , 1 , kv.getTongSoSp(), kv.getTongTien()));
             }
             break;
         default:
@@ -317,28 +301,29 @@ public String[] getAll1() {
     return results;
 }
 
- public ArrayList<KhuVucSach1DTO> findByMaLoHang(String maLoHang) {
-    ArrayList<KhuVucSach1DTO> results = new ArrayList<>();
-    String query = "SELECT MLH, ngay FROM lohang WHERE MLH LIKE ?";
-    
-    try (Connection con = JDBCUtil.getConnection();
-         PreparedStatement ps = con.prepareStatement(query)) {
-        ps.setString(1, "%" + maLoHang + "%");
-        ResultSet rs = ps.executeQuery();
-        while (rs.next()) {
-            // Lấy dữ liệu từ ResultSet
-            String ma = rs.getString("MLH");  // Giả sử tên cột là ma_lohang
-            Timestamp ngay = rs.getTimestamp("ngay");  // Giả sử tên cột là ngay
-
-            // Tạo đối tượng KhuVucSach1DTO từ kết quả truy vấn
-            KhuVucSach1DTO kv = new KhuVucSach1DTO(ma, ngay, 1);
-            results.add(kv);
+  public ArrayList<KhuVucSach1DTO> findByMaLoHang(String maLoHang) {
+        ArrayList<KhuVucSach1DTO> results = new ArrayList<>();
+        String query = "SELECT MLH, Ngay, TT, TongSoSp, TongTien FROM lohang WHERE MLH LIKE ?";
+        try (Connection con = JDBCUtil.getConnection();
+             PreparedStatement ps = con.prepareStatement(query)) {
+            ps.setString(1, "%" + maLoHang + "%");
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    KhuVucSach1DTO kv = new KhuVucSach1DTO(
+                        rs.getString("MLH"),
+                        rs.getTimestamp("Ngay"),
+                        rs.getInt("TT"),
+                        rs.getInt("TongSoSp"),
+                        rs.getDouble("TongTien")
+                    );
+                    results.add(kv);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-    } catch (SQLException e) {
-        e.printStackTrace();
+        return results;
     }
-    return results;
-}
 
 
 }
