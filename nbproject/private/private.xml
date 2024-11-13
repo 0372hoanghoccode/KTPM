@@ -5,16 +5,15 @@
         <group>
             <file>file:/C:/Users/ASUS%20Vivobook/Desktop/KTPM/src/DAO/NhomQuyenDAO.java</file>
             <file>file:/C:/Users/ASUS%20Vivobook/Desktop/KTPM/src/GUI/Panel/TaoPhieuNhap.java</file>
-            <file>file:/C:/Users/ASUS%20Vivobook/Desktop/KTPM/src/DAO/ChiTietLoHangDAO.java</file>
             <file>file:/C:/Users/ASUS%20Vivobook/Desktop/KTPM/src/BUS/MaKhuyenMaiBUS.java</file>
-            <file>file:/C:/Users/ASUS%20Vivobook/Desktop/KTPM/src/GUI/Panel/TaoPhieuNhap1.java</file>
-            <file>file:/C:/Users/ASUS%20Vivobook/Desktop/KTPM/src/GUI/Dialog/SanPhamDialog.java</file>
             <file>file:/C:/Users/ASUS%20Vivobook/Desktop/KTPM/src/GUI/Panel/TaiKhoan.java</file>
+            <file>file:/C:/Users/ASUS%20Vivobook/Desktop/KTPM/src/GUI/Panel/ThongKe/ThongKeSanPhamne.java</file>
             <file>file:/C:/Users/ASUS%20Vivobook/Desktop/KTPM/src/GUI/Panel/MaKhuyenMai.java</file>
             <file>file:/C:/Users/ASUS%20Vivobook/Desktop/KTPM/src/GUI/Panel/NhaXuatBan.java</file>
-            <file>file:/C:/Users/ASUS%20Vivobook/Desktop/KTPM/src/BUS/NhaXuatBanBUS.java</file>
-            <file>file:/C:/Users/ASUS%20Vivobook/Desktop/KTPM/src/GUI/Component/SelectForm.java</file>
+            <file>file:/C:/Users/ASUS%20Vivobook/Desktop/KTPM/src/DAO/KhuVucSach1DAO.java</file>
+            <file>file:/C:/Users/ASUS%20Vivobook/Desktop/KTPM/src/GUI/Panel/ThongKe/ThongKeKhachHang.java</file>
             <file>file:/C:/Users/ASUS%20Vivobook/Desktop/KTPM/src/GUI/Panel/PhanQuyen.java</file>
+            <file>file:/C:/Users/ASUS%20Vivobook/Desktop/KTPM/src/GUI/Panel/ThongKe/ThongKe.java</file>
         </group>
     </open-files>
 </project-private>

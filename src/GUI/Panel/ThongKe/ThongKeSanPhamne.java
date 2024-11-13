@@ -35,7 +35,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
- class ThongKeKhachHang extends JPanel implements ActionListener, KeyListener, PropertyChangeListener {
+public class ThongKeSanPhamne extends JPanel implements ActionListener, KeyListener, PropertyChangeListener {
 
     PanelBorderRadius nhapxuat_left, nhapxuat_center;
     JTable tblKH;
@@ -47,7 +47,7 @@ import javax.swing.JOptionPane;
     ThongKeBUS thongkebus;
     ArrayList<ThongKeKhachHangDTO> list;
 
-    public ThongKeKhachHang(ThongKeBUS thongkebus) {
+    public ThongKeSanPhamne(ThongKeBUS thongkebus) {
         this.thongkebus = thongkebus;
         list = thongkebus.getAllKhachHang();
         initComponent();
@@ -103,7 +103,7 @@ import javax.swing.JOptionPane;
 
         scrollTblTonKho = new JScrollPane();
         tblModel = new DefaultTableModel();
-        String[] header = new String[]{"STT", "Mã khách hàng", "Tên khách hàng", "Số lượng phiếu", "Tổng số tiền"};
+        String[] header = new String[]{"STT", "Mã Sách", "Tên Sách", "Số lô đã nhập", "Số Hóa Đơn đã bán", "Tổng tiền nhập", "Tổng tiền xuất"};
         tblModel.setColumnIdentifiers(header);
         tblKH.setModel(tblModel);
         tblKH.setAutoCreateRowSorter(true);
@@ -121,7 +121,8 @@ import javax.swing.JOptionPane;
         TableSorter.configureTableColumnSorter(tblKH, 1, TableSorter.INTEGER_COMPARATOR);
         TableSorter.configureTableColumnSorter(tblKH, 3, TableSorter.INTEGER_COMPARATOR);
         TableSorter.configureTableColumnSorter(tblKH, 4, TableSorter.VND_CURRENCY_COMPARATOR);
-        
+        TableSorter.configureTableColumnSorter(tblKH, 5, TableSorter.VND_CURRENCY_COMPARATOR);
+        TableSorter.configureTableColumnSorter(tblKH, 6, TableSorter.VND_CURRENCY_COMPARATOR);
         nhapxuat_center.add(scrollTblTonKho);
 
         this.add(nhapxuat_left, BorderLayout.WEST);

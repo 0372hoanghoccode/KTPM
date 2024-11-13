@@ -561,77 +561,73 @@ public boolean validateNhap() {
     
 public void eventBtnNhapHang() {
     if (chitietphieu.isEmpty()) {
-        JOptionPane.showMessageDialog(this, "Chưa có sản phẩm nào trong phiếu !", "Cảnh báo !", JOptionPane.ERROR_MESSAGE);
-        return; // Kết thúc phương thức nếu không có sản phẩm
+        JOptionPane.showMessageDialog(this, "Chưa có sản phẩm nào trong phiếu!", "Cảnh báo!", JOptionPane.ERROR_MESSAGE);
+        return;
     }
 
-    int input = JOptionPane.showConfirmDialog(null, "Bạn có chắc chắn muốn tạo phiếu nhập !", "Xác nhận tạo phiếu", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
+    int input = JOptionPane.showConfirmDialog(null, "Bạn có chắc chắn muốn tạo phiếu nhập!", "Xác nhận tạo phiếu", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
     if (input == JOptionPane.OK_OPTION) {
-        // Lấy mã lô từ ComboBox
+        int quantity = 0;
+        int price = 0;
+        int tongsoluong = 0 ; 
+        int tongtien = 0 ; 
         String selectedLotCode = (String) cbbLoHang.getSelectedItem();
-        System.out.println("Mã combobox là : " + selectedLotCode);
-
-        // Biến kiểm tra tất cả sản phẩm đã được xử lý thành công hay chưa
+        System.out.println("Mã combobox là: " + selectedLotCode);
+        
         boolean allProductsUpdated = true;
-
-        // Lặp qua tất cả các sản phẩm trong chi tiết phiếu
-        for (ChiTietPhieuNhapDTO product : chitietphieu) { // Giả sử chitietphieu là một danh sách sản phẩm
+        
+        for (ChiTietPhieuNhapDTO product : chitietphieu) {
+            int productCode = product.getMSP();
+            quantity = product.getSL();
+            price = product.getTIEN();
+            tongsoluong += quantity ;
+            tongtien +=price ; 
             
-            int productCode = product.getMSP(); // Mã sản phẩm
-            int quantity = product.getSL(); // Số lượng sản phẩm
-            int price = product.getTIEN(); // Giá nhập sản phẩm
-
             System.out.println("Sản phẩm mã: " + productCode);
             System.out.println("Số lượng sản phẩm: " + quantity);
             System.out.println("Giá nhập sản phẩm: " + price);
-
-            // Kiểm tra xem sản phẩm đã có trong mã lô chưa
-           // boolean productExistsInLot = phieunhapBus.checkProductInLot(selectedLotCode, productCode);
-
-//           if (productExistsInLot) {
-//                // Nếu sản phẩm đã có, cập nhật số lượng và giá nhập
-//                int existingQuantity = phieunhapBus.getProductQuantityInLot(selectedLotCode, productCode);
-//                 System.out.println("Số lượng  sản phẩm trong lô : " + existingQuantity);
-//                int updatedQuantity = existingQuantity + quantity; // Cộng số lượng mới vào số lượng cũ
-// System.out.println("Số lượng tổng sản phẩm trong lô : " + updatedQuantity);
-//                // Cập nhật thông tin sản phẩm trong lô
-//                ChiTietLoHangDTO productDetail = new ChiTietLoHangDTO(selectedLotCode, productCode, price , updatedQuantity);
-//                boolean updateResult = phieunhapBus.updateProductInLot(productDetail);
-//                if (!updateResult) {
-//                    allProductsUpdated = false;
-//                    break; // Thoát khỏi vòng lặp sản phẩm nếu có lỗi
-//                }
-//           } else 
-                // Nếu sản phẩm chưa có, thêm sản phẩm vào mã lô
-                ChiTietLoHangDTO productDetail = new ChiTietLoHangDTO(product.getMLH()+"", productCode, price, quantity);
-                boolean addResult = phieunhapBus.addProductToLot(productDetail);
-                if (!addResult) {
-                    allProductsUpdated = false;
-                    break; // Thoát khỏi vòng lặp sản phẩm nếu có lỗi
-                }
             
-        }
+            ChiTietLoHangDTO productDetail = new ChiTietLoHangDTO(product.getMLH()+"", productCode, price, quantity); // product.getMLH() is a String
 
-        // Kiểm tra kết quả cập nhật hoặc thêm sản phẩm
+            // Attempt to add the product to the lot
+            boolean addResult = phieunhapBus.addProductToLot(productDetail);
+
+            if (addResult) {
+                String lotCode = product.getMLH()+""; // Assuming MLH is a String
+                KhuVucSach1DAO hehe = new KhuVucSach1DAO();
+                boolean updateResult = hehe.updateLot(lotCode, tongsoluong, tongtien);
+                
+                if (!updateResult) {
+                    allProductsUpdated = false;
+                    System.out.println("Failed to update lot with MLH: " + lotCode);
+                    break;
+                }
+            } else {
+                allProductsUpdated = false;
+                System.out.println("Failed to add product to lot: Product Code = " + productCode);
+                break;
+            }
+        }
+        
         if (allProductsUpdated) {
-            // Tạo phiếu nhập
             long now = System.currentTimeMillis();
             Timestamp currenTime = new Timestamp(now);
             PhieuNhapDTO pn = new PhieuNhapDTO(maphieunhap, nvDto.getMNV(), currenTime, phieunhapBus.getTIEN(chitietphieu), 1);
             boolean result = phieunhapBus.add(pn, chitietphieu, chitietsanpham);
 
             if (result) {
-                JOptionPane.showMessageDialog(this, "Nhập hàng thành công !");
+                JOptionPane.showMessageDialog(this, "Nhập hàng thành công!");
                 PhieuNhap pnlPhieu = new PhieuNhap(m, nvDto);
                 m.setPanel(pnlPhieu);
             } else {
-                JOptionPane.showMessageDialog(this, "Nhập hàng không thành công !", "Cảnh báo !", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Nhập hàng không thành công!", "Cảnh báo!", JOptionPane.ERROR_MESSAGE);
             }
         } else {
-            JOptionPane.showMessageDialog(this, "Cập nhật sản phẩm không thành công !", "Cảnh báo !", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Cập nhật sản phẩm không thành công!", "Cảnh báo!", JOptionPane.ERROR_MESSAGE);
         }
     }
 }
+
 
 }
 

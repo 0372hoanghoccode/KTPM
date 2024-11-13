@@ -324,6 +324,30 @@ public String[] getAll1() {
         }
         return results;
     }
+public  boolean updateLot(String lotCode, int additionalQuantity, int additionalPrice) {
+    String query = "UPDATE lohang SET TongSoSp = TongSoSp + ?, TongTIEN = TongTIEN + ? WHERE MLH = ?";
+    
+    System.out.println("hello" + lotCode );
+     System.out.println("hello" + additionalQuantity );
+      System.out.println("hello" + additionalPrice );
+    
+    try (Connection con = JDBCUtil.getConnection();
+         PreparedStatement pst = con.prepareStatement(query)) {
+        
+        // Set the parameters for quantity, price, and lot code
+        pst.setInt(1, additionalQuantity);
+        pst.setInt(2, additionalPrice);
+        pst.setString(3,lotCode);
+
+        int rowsUpdated = pst.executeUpdate();
+        
+        // Check if the update was successful
+        return rowsUpdated > 0;
+    } catch (SQLException e) {
+        e.printStackTrace();
+        return false;
+    }
+}
 
 
 }
