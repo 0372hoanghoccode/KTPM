@@ -99,7 +99,7 @@ btnThem.addActionListener(new ActionListener() {
 
             if (check == 0) {
                 String pass = password.getPass(); // Lấy mật khẩu nhập vào
-                String hashedPass = BCrypt.hashpw(pass, BCrypt.gensalt(12)); // Mã hóa mật khẩu
+               String hashedPass = BCrypt.hashpw(pass, BCrypt.gensalt(12)); // Mã hóa mật khẩu
                 int manhom = listNq.get(maNhomQuyen.getSelectedIndex()).getManhomquyen();
                 int tt = trangthai.getSelectedIndex();
                 TaiKhoanDTO tk = new TaiKhoanDTO(manv, tendangnhap, hashedPass, manhom, tt);
@@ -114,7 +114,7 @@ btnThem.addActionListener(new ActionListener() {
                 
                 // Hiển thị thông báo thành công cùng với mật khẩu mới
                 JOptionPane.showMessageDialog(null, 
-                    "Thêm tài khoản thành công!\nMật khẩu mới: " + pass, 
+                    "Thêm tài khoản thành công!", 
                     "Thông báo", 
                     JOptionPane.INFORMATION_MESSAGE);
                 
@@ -159,12 +159,13 @@ btnThem.addActionListener(new ActionListener() {
             case "create" ->
                 pnbottom.add(btnThem);
             case "update" -> {
-                  username.setDisable();
+                username.setDisable();
                 pnbottom.add(btnCapNhat);
-                if (maNhomQuyen.getValue().equals("Quản lý cửa hàng")){
-                    System.out.print("Quyền admin không cho sửa ");
-                       maNhomQuyen.setDisable();
-                }
+                 pnmain.remove(password);
+//                if (maNhomQuyen.getValue().equals("Quản lý cửa hàng")){
+//                    System.out.print("Quyền admin không cho sửa ");
+//                       maNhomQuyen.setDisable();
+//                }
               
             }
             case "view" -> {

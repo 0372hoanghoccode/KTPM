@@ -68,7 +68,7 @@ public class TaiKhoanKHDialog extends JDialog {
         pnmain.setBackground(Color.white);
         username = new InputForm("Tên đăng nhập");
         password = new InputForm("Mật khẩu", "password");
-        trangthai = new SelectForm("Trạng thái", new String[]{"Ngưng hoạt động", "Hoạt động", "Chờ xử lý"});
+        trangthai = new SelectForm("Trạng thái", new String[]{"Ngưng hoạt động", "Hoạt động"});
         maNhomQuyen = new SelectForm("Nhóm quyền", getNhomQuyen());
         maNhomQuyen.setSelectedItem("Khách hàng");
         maNhomQuyen.setVisible(false);
@@ -143,6 +143,7 @@ public class TaiKhoanKHDialog extends JDialog {
                 pnbottom.add(btnThem);
             case "update" -> {
                 pnbottom.add(btnCapNhat);
+                 pnmain.remove(password);
             }
             case "view" -> {
                 username.setEditable(false);

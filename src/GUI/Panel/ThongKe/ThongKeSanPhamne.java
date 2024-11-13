@@ -1,7 +1,7 @@
 package GUI.Panel.ThongKe;
 
 import BUS.ThongKeBUS;
-import DTO.ThongKe.ThongKeKhachHangDTO;
+import DTO.ThongKe.ThongKeSanPhamDTO;
 import GUI.Component.ButtonCustom;
 import GUI.Component.InputDate;
 import GUI.Component.InputForm;
@@ -45,7 +45,7 @@ public class ThongKeSanPhamne extends JPanel implements ActionListener, KeyListe
     InputDate start_date, end_date;
     ButtonCustom export, reset;
     ThongKeBUS thongkebus;
-    ArrayList<ThongKeKhachHangDTO> list;
+    ArrayList<ThongKeSanPhamDTO> list;
 
     public ThongKeSanPhamne(ThongKeBUS thongkebus) {
         this.thongkebus = thongkebus;
@@ -162,10 +162,10 @@ public class ThongKeSanPhamne extends JPanel implements ActionListener, KeyListe
         }
     }
 
-    public void loadDataTable(ArrayList<ThongKeKhachHangDTO> result) {
+    public void loadDataTable(ArrayList<ThongKeSanPhamDTO> result) {
         tblModel.setRowCount(0);
         int k = 1;
-        for (ThongKeKhachHangDTO i : result) {
+        for (ThongKeSanPhamDTO i : result) {
             tblModel.addRow(new Object[]{
                 k, i.getMakh(), i.getTenkh(), i.getSoluongphieu(), Formater.FormatVND(i.getTongtien())
             });

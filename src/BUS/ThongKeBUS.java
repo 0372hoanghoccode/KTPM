@@ -1,8 +1,10 @@
 package BUS;
 
+import DAO.SanPhamDAO;
 import DAO.ThongKeDAO;
 import DTO.ThongKe.ThongKeDoanhThuDTO;
 import DTO.ThongKe.ThongKeKhachHangDTO;
+import DTO.ThongKe.ThongKeSanPhamDTO;
 import DTO.ThongKe.ThongKeTheoThangDTO;
 import DTO.ThongKe.ThongKeTonKhoDTO;
 import DTO.ThongKe.ThongKeTungNgayTrongThangDTO;
@@ -13,6 +15,7 @@ public class ThongKeBUS {
 
     ThongKeDAO thongkeDAO = new ThongKeDAO();
     ArrayList<ThongKeKhachHangDTO> tkkh;
+      ArrayList<ThongKeSanPhamDTO> tksp;
     ArrayList<ThongKeTonKhoDTO> listTonKho;
 
     public ThongKeBUS() {
@@ -23,6 +26,10 @@ public class ThongKeBUS {
         this.tkkh = ThongKeDAO.getThongKeKhachHang("",new Date(0), new Date(System.currentTimeMillis()));
         return this.tkkh;
     }
+    public ArrayList<ThongKeSanPhamDTO> getAllSanPham(){
+        this.tksp=SanPhamDAO.get
+    }
+    
 
     public ArrayList<ThongKeKhachHangDTO> FilterKhachHang(String text,Date start, Date end) {
         this.tkkh = ThongKeDAO.getThongKeKhachHang(text,start, end);
