@@ -80,16 +80,35 @@ public class MaKhuyenMaiBUS {
         return check;
     }
 
-    public ArrayList<MaKhuyenMaiDTO> search(String text) {
-        ArrayList<MaKhuyenMaiDTO> result = new ArrayList<>();
-        text = text.toLowerCase();
-        for (MaKhuyenMaiDTO i : this.listMKM) {
-            if (i.getMKM().toLowerCase().contains(text)) {
-                result.add(i);
+   public ArrayList<MaKhuyenMaiDTO> search(String txt, String type) {
+    ArrayList<MaKhuyenMaiDTO> result = new ArrayList<>();
+    txt = txt.toLowerCase();
+    switch (type) {
+        case "Tất cả" -> {
+            for (MaKhuyenMaiDTO i : listMKM) {
+                if (i.getMKM().toLowerCase().contains(txt)) {
+                    result.add(i);
+                }
             }
         }
-        return result;
+        case "Còn hạn" -> {
+            for (MaKhuyenMaiDTO i : listMKM) {
+                if (i.getMKM().toLowerCase().contains(txt) && i.getTT()==1) {
+                    result.add(i);
+                }
+            }
+        }
+        case "Hết hạn" -> {
+            for (MaKhuyenMaiDTO i : listMKM) {
+                if (i.getMKM().toLowerCase().contains(txt) && i.getTT()==0) {
+                    result.add(i);
+                }
+            }
+        }
     }
+    return result;
+}
+
 
     public MaKhuyenMaiDTO selectMkm(String makh) {
         return mkmDAO.selectById(makh);

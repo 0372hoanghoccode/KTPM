@@ -106,13 +106,14 @@ public class MaKhuyenMai extends JPanel implements ActionListener, ItemListener 
         }
         functionBar.add(mainFunction);
 
-        search = new IntegratedSearch(new String[]{"Tất cả"});
+        search = new IntegratedSearch(new String[]{"Tất cả" , "Còn hạn ", "Hết hạn"});
         search.cbxChoose.addItemListener(this);
         search.txtSearchForm.addKeyListener(new KeyAdapter() {
             @Override
             public void keyReleased(KeyEvent e) {
                 String txt = search.txtSearchForm.getText();
-                listMKM = mkmBUS.search(txt);
+                String type = (String) search.cbxChoose.getSelectedItem();
+                listMKM = mkmBUS.search(txt,type);
                 loadDataTable(listMKM);
             }
         });
@@ -259,7 +260,8 @@ public void loadDataTable(ArrayList<MaKhuyenMaiDTO> result) {
     @Override
     public void itemStateChanged(ItemEvent e) {
         String txt = search.txtSearchForm.getText();
-        listMKM = mkmBUS.search(txt);
+        String type = (String) search.cbxChoose.getSelectedItem();
+        listMKM = mkmBUS.search(txt,type);
         loadDataTable(listMKM);
     }
     
