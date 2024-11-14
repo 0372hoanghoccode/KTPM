@@ -80,6 +80,17 @@ public class MaKhuyenMaiBUS {
         return check;
     }
 
+      public ArrayList<MaKhuyenMaiDTO> search(String text) {
+        ArrayList<MaKhuyenMaiDTO> result = new ArrayList<>();
+        text = text.toLowerCase();
+        for (MaKhuyenMaiDTO i : this.listMKM) {
+            if (i.getMKM().toLowerCase().contains(text)) {
+                result.add(i);
+                        }
+        }
+        return result;
+    }
+    
    public ArrayList<MaKhuyenMaiDTO> search(String txt, String type) {
     ArrayList<MaKhuyenMaiDTO> result = new ArrayList<>();
     txt = txt.toLowerCase();
@@ -127,29 +138,54 @@ public class MaKhuyenMaiBUS {
         return p;
     }
 
-    public ArrayList<ChiTietMaKhuyenMaiDTO> Getctmkm(int masp) {
-        ArrayList<ChiTietMaKhuyenMaiDTO> p = new ArrayList<ChiTietMaKhuyenMaiDTO>();
-        listctMKM = ctmkmDAO.selectAll();
-        for(ChiTietMaKhuyenMaiDTO i : listctMKM) if(i.getMSP() == masp && !validateSelectDate(i)) p.add(i);
-        return p;
-    } 
-
-    public boolean validateSelectDate(DTO.ChiTietMaKhuyenMaiDTO tmp) {
-        MaKhuyenMaiDTO a = selectMkm(tmp.getMKM());
-        Date time_start = a.getTGBD();
-        Date time_end = a.getTGKT();
-        Date current_date = new Date();
-        if (time_start != null && time_start.after(current_date)) {
-            return false;
+ public ArrayList<ChiTietMaKhuyenMaiDTO> Getctmkm(int masp) {
+    ArrayList<ChiTietMaKhuyenMaiDTO> p = new ArrayList<>();
+    listctMKM = ctmkmDAO.selectAll();
+    
+    System.out.println("Starting Getctmkm for MSP: " + masp);
+    
+    for (ChiTietMaKhuyenMaiDTO i : listctMKM) {
+        System.out.println("Checking promotion: " + i);
+        if (i.getMSP() == masp && validateSelectDate(i)) {
+            System.out.println("Promotion added to result list: " + i);
+            p.add(i);
+        } else {
+            System.out.println("Promotion does not match or is expired: " + i);
         }
-        if (time_end != null && time_end.after(current_date)) {
-            return false;
-        }
-        if (time_start != null && time_end != null && time_start.after(time_end)) {
-            return false;
-        }
-        return true;
     }
+    
+    System.out.println("Completed Getctmkm. Found " + p.size() + " valid promotions for MSP: " + masp);
+    return p;
+}
+
+public boolean validateSelectDate(ChiTietMaKhuyenMaiDTO tmp) {
+    MaKhuyenMaiDTO a = selectMkm(tmp.getMKM());
+    Date time_start = a.getTGBD();
+    Date time_end = a.getTGKT();
+    Date current_date = new Date();
+    
+    System.out.println("Validating promotion: " + tmp.getMKM());
+    System.out.println("Start date: " + time_start);
+    System.out.println("End date: " + time_end);
+    System.out.println("Current date: " + current_date);
+    
+    if (time_start != null && time_start.after(current_date)) {
+        System.out.println("Promotion is not valid yet (start date in the future).");
+        return false;
+    }
+    if (time_end != null && time_end.before(current_date)) {
+        System.out.println("Promotion has expired (end date in the past).");
+        return false;
+    }
+    if (time_start != null && time_end != null && time_start.after(time_end)) {
+        System.out.println("Invalid promotion (start date after end date).");
+        return false;
+    }
+    
+    System.out.println("Promotion is currently valid.");
+    return true;
+}
+
     
 public ArrayList<MaKhuyenMaiDTO> fillerPhieuNhap(Date time_s, Date time_e) {
     // Convert input dates to Timestamps

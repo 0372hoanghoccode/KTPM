@@ -89,5 +89,44 @@ public class ChiTietPhieuNhapDAO implements ChiTietInterface<ChiTietPhieuNhapDTO
         }
         return result;
     }
+public static ArrayList<ChiTietPhieuNhapDTO> selectAllByProductCode(int masp) {
+    ArrayList<ChiTietPhieuNhapDTO> result = new ArrayList<>();
+    try {
+        Connection con = JDBCUtil.getConnection();
+        String sql = "SELECT * FROM CTPHIEUNHAP WHERE MSP = ?";
+        PreparedStatement pst = con.prepareStatement(sql);
+        pst.setInt(1, masp);
+        ResultSet rs = pst.executeQuery();
+        while (rs.next()) {
+            int maphieu = rs.getInt("MPN");
+            int soluong = rs.getInt("SL");
+            int tiennhap = rs.getInt("TIENNHAP");
+            int hinhthucnhap = rs.getInt("MLH");
+            ChiTietPhieuNhapDTO ctphieu = new ChiTietPhieuNhapDTO(maphieu, masp, soluong, tiennhap, hinhthucnhap);
+            result.add(ctphieu);
+        }
+        JDBCUtil.closeConnection(con);
+    } catch (SQLException e) {
+        System.out.println(e);
+    }
+    return result;
+}
+public static int getTotalCostByProductCode(int masp) {
+    int totalCost = 0;
+    try {
+        Connection con = JDBCUtil.getConnection();
+        String sql = "SELECT SUM(TIENNHAP*SL) AS TotalCost FROM CTPHIEUNHAP WHERE MSP = ?";
+        PreparedStatement pst = con.prepareStatement(sql);
+        pst.setInt(1, masp);
+        ResultSet rs = pst.executeQuery();
+        if (rs.next()) {
+            totalCost = rs.getInt("TotalCost");
+        }
+        JDBCUtil.closeConnection(con);
+    } catch (SQLException e) {
+        System.out.println(e);
+    }
+    return totalCost;
+}
 
 }

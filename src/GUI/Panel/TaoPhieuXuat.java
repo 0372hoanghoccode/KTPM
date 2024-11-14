@@ -395,6 +395,7 @@ public final class TaoPhieuXuat extends JPanel {
         //maphieu = PhieuXuatDAO.getInstance().getAutoIncrement();
         manv = tk.getMNV();
         txtMaphieu.setText("PX" + maphieu);
+        
         NhanVienDTO nhanvien = NhanVienDAO.getInstance().selectById(tk.getMNV() + "");
         txtNhanVien.setText(nhanvien.getHOTEN());
         right_top.add(txtMaphieu);

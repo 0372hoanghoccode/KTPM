@@ -113,7 +113,35 @@ public class SanPhamDAO implements DAOinterface<SanPhamDTO> {
     }
 
     @Override
-    public ArrayList<SanPhamDTO> selectAll() {
+    public  ArrayList<SanPhamDTO> selectAll() {
+        ArrayList<SanPhamDTO> result = new ArrayList<>();
+        try {
+            Connection con = (Connection) JDBCUtil.getConnection();
+            String sql = "SELECT * FROM SANPHAM WHERE `TT`= 1";
+            PreparedStatement pst = (PreparedStatement) con.prepareStatement(sql);
+            ResultSet rs = (ResultSet) pst.executeQuery();
+            while (rs.next()) {
+                int madm = rs.getInt("MSP");
+                String tendm = rs.getString("TEN");
+                String HINHANH = rs.getString("HINHANH");
+                String DANHMUC = rs.getString("DANHMUC");
+                int NAMXB = rs.getInt("NAMXB");
+                int MNXB = rs.getInt("MNXB");
+                String TENTG = rs.getString("TENTG");
+                int MKVS = rs.getInt("MKVS");
+                int TIENX = rs.getInt("GiaBan");
+              //  int TIENN = rs.getInt("TIENN");
+                int SL = rs.getInt("SL");
+              //  String ISBN = rs.getString("ISBN");
+                SanPhamDTO sp = new SanPhamDTO(madm, tendm, HINHANH, DANHMUC, NAMXB, MNXB, TENTG, MKVS, TIENX, SL);
+                result.add(sp);
+            }
+            JDBCUtil.closeConnection(con);
+        } catch (Exception e) {
+        }
+        return result;
+    }
+          public  static ArrayList<SanPhamDTO> selectAll1() {
         ArrayList<SanPhamDTO> result = new ArrayList<>();
         try {
             Connection con = (Connection) JDBCUtil.getConnection();
@@ -298,4 +326,29 @@ public class SanPhamDAO implements DAOinterface<SanPhamDTO> {
         return filteredList; // Trả về danh sách sản phẩm đã lọc
     }
       
+       public static int countLoHangByMaSP(int maSP) {
+        int soLuongLoHang = 0;
+
+        // SQL truy vấn để đếm số lô hàng có mã sản phẩm
+        String sql = "SELECT COUNT(*) AS SoLuongLoHang FROM ctlohang WHERE MSP = ?";
+
+        try (Connection con = JDBCUtil.getConnection();  // Kết nối đến cơ sở dữ liệu
+             PreparedStatement pst = con.prepareStatement(sql)) {  // Tạo PreparedStatement
+            
+            // Thiết lập tham số truy vấn
+            pst.setInt(1, maSP);
+
+            // Thực hiện truy vấn
+            ResultSet rs = pst.executeQuery();
+            
+            // Xử lý kết quả truy vấn
+            if (rs.next()) {
+                soLuongLoHang = rs.getInt("SoLuongLoHang");  // Lấy tổng số lượng lô hàng
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();  // In lỗi nếu có
+        }
+
+        return soLuongLoHang;  // Trả về tổng số lượng lô hàng
+    }
 }

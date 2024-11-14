@@ -59,10 +59,9 @@ public final class TaoMaKhuyenMai extends JPanel implements ItemListener, Action
     JPanel contentCenter, left_top, content_btn, left_bottom;
     DefaultTableModel tblModel, tblModelSP; //table co san 
     ButtonCustom btnAddSp, btnDelete, btnNhapMKM; //, btnImport
-    InputForm txtMaKM, txtNhanVien, txtMaSp, txtTenSp, txtMaISBN, txtPTG,txtGiaNhap, txtGiaBan,txtGiaBia;
+    InputForm txtMaKM, txtNhanVien, txtMaSp, txtTenSp, txtPTG,txtGiaNhap, txtGiaBan,txtGiaBia;
     InputDate dateStart, dateEnd;
     JTextField txtTimKiem;
-    SelectForm cbbLoHang;
  String[] arrmlh ;
     Main m;
     Color BackgroundColor = new Color(211, 211, 211);

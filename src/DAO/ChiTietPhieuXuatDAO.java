@@ -210,5 +210,21 @@ public static ArrayList<ChiTietPhieuXuatDTO> getChiTietByPhieuXuat(int maPhieuXu
     return chiTietList;
 }
 
-  
+  public static int getTotalCostByProductCode(int masp) {
+    int totalCost = 0;
+    try {
+        Connection con = JDBCUtil.getConnection();
+        String sql = "SELECT SUM(TIENNHAP*SL) AS TotalCost FROM CTPHIEUNHAP WHERE MSP = ?";
+        PreparedStatement pst = con.prepareStatement(sql);
+        pst.setInt(1, masp);
+        ResultSet rs = pst.executeQuery();
+        if (rs.next()) {
+            totalCost = rs.getInt("TotalCost");
+        }
+        JDBCUtil.closeConnection(con);
+    } catch (SQLException e) {
+        System.out.println(e);
+    }
+    return totalCost;
+}
 }

@@ -306,10 +306,24 @@ public final class TaoPhieuNhap extends JPanel implements ItemListener, ActionLi
         txtNhanVien = new InputForm("Nhân viên nhập");
         txtNhanVien.setText(nvDto.getHOTEN());
         txtNhanVien.setEditable(false);
-        cbbLoHang = new SelectForm("Lô Hàng", arrmlh); //Hieusua -thêm cái string lo hang vo
-        right_top.add(txtMaphieu);
-        right_top.add(txtNhanVien);
-        right_top.add(cbbLoHang);
+       cbbLoHang = new SelectForm("Lô Hàng", arrmlh); // ComboBox for "Lô Hàng"
+
+// Create a panel with GridLayout(1, 2) to hold the combobox and the button side by side
+JPanel kJPanelLeft = new JPanel(new GridLayout(1, 2));
+kJPanelLeft.setOpaque(false);
+
+// Add the combobox and button to the kJPanelLeft panel
+kJPanelLeft.add(cbbLoHang);
+JButton btnSearch = new JButton("Search"); // Button next to ComboBox
+kJPanelLeft.add(btnSearch);
+
+// Add components to the right_top panel
+right_top.add(txtMaphieu);
+right_top.add(txtNhanVien);
+right_top.add(kJPanelLeft); // Add kJPanelLeft instead of cbbLoHang directly
+
+// Add right_top to the main right panel
+right.add(right_top, BorderLayout.NORTH);
         
          cbbLoHang.addActionListener(new ActionListener() {
             @Override

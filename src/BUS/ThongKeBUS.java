@@ -26,9 +26,7 @@ public class ThongKeBUS {
         this.tkkh = ThongKeDAO.getThongKeKhachHang("",new Date(0), new Date(System.currentTimeMillis()));
         return this.tkkh;
     }
-    public ArrayList<ThongKeSanPhamDTO> getAllSanPham(){
-        this.tksp=SanPhamDAO.get
-    }
+ 
     
 
     public ArrayList<ThongKeKhachHangDTO> FilterKhachHang(String text,Date start, Date end) {
