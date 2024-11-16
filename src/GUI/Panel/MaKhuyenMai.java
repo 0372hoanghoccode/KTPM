@@ -183,29 +183,32 @@ public class MaKhuyenMai extends JPanel implements ActionListener, ItemListener 
 public void loadDataTable(ArrayList<MaKhuyenMaiDTO> result) {
     tblModel.setRowCount(0);  
     Date now = new Date();  // Lấy ngày hiện tại
-
     for (MaKhuyenMaiDTO kvk : result) {
-        Date ngayKetThuc = kvk.getTGKT();  // Lấy ngày kết thúc
-        int intTrangThai = kvk.getTT();
-        String stringTrangThai = "Còn hạn";
+         Date ngayKetThuc = kvk.getTGKT();  // Lấy ngày kết thúc
+        int intTrangThai = kvk.getTT();  // Lấy trạng thái từ DTO
+       
+       
+        String stringTrangThai = "";
 
-        // Kiểm tra nếu ngày kết thúc nhỏ hơn ngày hiện tại
-        if (ngayKetThuc.before(now)) {
-            stringTrangThai = "Hết hạn";
-            intTrangThai = 0; // Đặt trạng thái thành hết hạn
-
-            // Gọi hàm cập nhật trạng thái trong database
-            MaKhuyenMaiDAO.updateTrangThaiMaKhuyenMai(kvk.getMKM(), intTrangThai);
+        // Kiểm tra trạng thái
+        if (intTrangThai == -1) { 
+            stringTrangThai = "Đã xóa"; // Trạng thái đã xóa
+        } else if (ngayKetThuc.before(now)) {
+            stringTrangThai = "Hết hạn"; // Trạng thái hết hạn
+            intTrangThai = 0; // Đặt trạng thái thành hết hạn nếu cần cập nhật
+            MaKhuyenMaiDAO.updateTrangThaiMaKhuyenMai(kvk.getMKM(), intTrangThai); // Cập nhật trạng thái trong DB
         } else {
-            stringTrangThai = "Còn hạn";
+            stringTrangThai = "Còn hạn"; // Trạng thái còn hạn
         }
 
+        // Thêm dòng vào bảng
         tblModel.addRow(new Object[]{
             kvk.getMKM(), 
             Formater.FormatTimeNgayThangNam(kvk.getTGBD()), 
             Formater.FormatTimeNgayThangNam(kvk.getTGKT()), 
             stringTrangThai
         });
+         System.out.println("Mã khuyến mãi: " + kvk.getMKM() + ", Trạng thái: " + kvk.getTT());
     }
 }
 
@@ -264,9 +267,7 @@ public void loadDataTable(ArrayList<MaKhuyenMaiDTO> result) {
         listMKM = mkmBUS.search(txt,type);
         loadDataTable(listMKM);
     }
-    
-
-
+  
 public void Fillter() throws ParseException {
     if (validateSelectDate()) {
         // Print debug statement
@@ -334,8 +335,6 @@ public void Fillter() throws ParseException {
     
     return true;
 }
-
-   
 
 
   

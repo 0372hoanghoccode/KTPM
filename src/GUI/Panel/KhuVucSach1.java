@@ -191,8 +191,6 @@ tableKhuvuc.addMouseListener(new MouseAdapter() {
     tblModel.setRowCount(0);
     for (KhuVucSach1DTO kvk : result) {
         String trangThai;
-        
-        // Kiểm tra giá trị của TT và gán trạng thái tương ứng
         if (kvk.getTT()==1 ) 
             trangThai = "Hoạt động";
         else
@@ -201,6 +199,7 @@ tableKhuvuc.addMouseListener(new MouseAdapter() {
         tblModel.addRow(new Object[]{
             kvk.getMLH(), kvk.getNgay(), kvk.getTongSoSp(), kvk.getTongTien(), trangThai
         });
+        System.out.print("Mã " + kvk.getMLH());
     }
 }
 

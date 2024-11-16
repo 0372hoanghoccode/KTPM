@@ -41,6 +41,7 @@ import GUI.Component.InputForm;
 import GUI.Component.NumericDocumentFilter;
 import GUI.Component.PanelBorderRadius;
 import GUI.Component.SelectForm;
+import GUI.Dialog.KhuVucSach1Dialog;
 import helper.Formater;
 import helper.Validation;
 import java.sql.SQLException;
@@ -50,7 +51,7 @@ import java.util.logging.Logger;
 
 
 public final class TaoPhieuNhap extends JPanel implements ItemListener, ActionListener {
-    
+      JFrame owner = (JFrame) SwingUtilities.getWindowAncestor(this); //gọi phương thức compoment tổ tiên có kiểu window của compoment hiện tại
     private SelectForm cbbLoHang;
     PanelBorderRadius left, right;
     JTable tablePhieuNhap, tableSanPham; //tablePhieuNhap ở left_bottom chứa sp của phiếu, tableSanPham chứa sp đang bán
@@ -328,6 +329,7 @@ JButton btnSearch = new JButton("Search");
 btnSearch.setPreferredSize(new Dimension(80, 2)); // Set size for Button
 buttonPanel.add(btnSearch, BorderLayout.CENTER);
 
+
 // Container panel to hold both ComboBox and button panels
 JPanel kJPanelLeft = new JPanel();
 kJPanelLeft.setLayout(new BoxLayout(kJPanelLeft, BoxLayout.X_AXIS));
@@ -345,7 +347,13 @@ right_top.add(kJPanelLeft); // Add kJPanelLeft with aligned ComboBox and button
 // Add right_top to the main right panel
 right.add(right_top, BorderLayout.NORTH);
 
-
+btnSearch.addActionListener(new ActionListener() {
+    @Override
+    public void actionPerformed(ActionEvent e) {
+       KhuVucSach1 khuvuc = new KhuVucSach1(m);
+        new KhuVucSach1Dialog(khuvuc, owner, "Thêm khu vực lô", true, "create");
+    }
+});
 
         
          cbbLoHang.addActionListener(new ActionListener() {

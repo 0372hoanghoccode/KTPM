@@ -95,9 +95,6 @@ public final class TaoMaKhuyenMai extends JPanel implements ItemListener, Action
         this.setLayout(new BorderLayout(0, 0));
         this.setOpaque(true);
         
-        
-       
-        
         //Phieu Nhap
         tableMKM = new JTable();
         tableMKM.setBackground(new Color(245, 250, 250));
@@ -353,10 +350,7 @@ public final class TaoMaKhuyenMai extends JPanel implements ItemListener, Action
         contentCenter.add(right, BorderLayout.EAST);
          int MKM = MaKhuyenMaiDAO.getMaxMaKhuyenMai()+1;
         txtMaKM.setText(MKM+"");
-
-
-
-        
+ 
     }
 
     public void actionbtn(String type) { //ẩn hiện button

@@ -168,21 +168,28 @@ public class MaKhuyenMaiDAO implements DAOinterface<MaKhuyenMaiDTO> {
         return result;
     }
 
-    public int cancelMKM(String mkm){
-        int result = 0;
-        ChiTietMaKhuyenMaiDAO.getInstance().delete(mkm);
-        try {
-            Connection con = (Connection) JDBCUtil.getConnection();
-            String sql = "DELETE FROM MAKHUYENMAI WHERE MKM = ?";
-            PreparedStatement pst = con.prepareStatement(sql);
-            pst.setString(1, mkm);
-            result = pst.executeUpdate();
-            JDBCUtil.closeConnection(con);
-        } catch (SQLException ex) {
-            Logger.getLogger(MaKhuyenMaiDAO.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return result;
+  public int cancelMKM(String mkm) {
+    int result = 0;
+    try {
+        // Lấy kết nối đến cơ sở dữ liệu
+        Connection con = (Connection) JDBCUtil.getConnection();
+
+        // Cập nhật trạng thái TT thành -1 cho mã khuyến mãi
+        String sql = "UPDATE MAKHUYENMAI SET TT = -1 WHERE MKM = ?";
+        PreparedStatement pst = con.prepareStatement(sql);
+        pst.setString(1, mkm);
+
+        // Thực thi câu lệnh SQL
+        result = pst.executeUpdate();
+
+        // Đóng kết nối
+        JDBCUtil.closeConnection(con);
+    } catch (SQLException ex) {
+        Logger.getLogger(MaKhuyenMaiDAO.class.getName()).log(Level.SEVERE, null, ex);
     }
+    return result;
+}
+
 
     @Override
     public int getAutoIncrement() {

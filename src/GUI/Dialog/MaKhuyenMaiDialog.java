@@ -3,7 +3,6 @@ package GUI.Dialog;
 import BUS.SanPhamBUS;
 import BUS.MaKhuyenMaiBUS;
 import DAO.NhanVienDAO;
-import DAO.SanPhamDAO;
 import DTO.ChiTietMaKhuyenMaiDTO;
 import DTO.SanPhamDTO;
 import DTO.MaKhuyenMaiDTO;
@@ -35,7 +34,7 @@ public final class MaKhuyenMaiDialog extends JDialog implements ActionListener {
     JPanel pnmain, pnmain_top, pnmain_bottom, pnmain_btn; //bỏ pnmain_bottom_right, pnmain_bottom_left 
     InputForm txtMaPhieu, txtNhanVien, txtThoiGianBD, txtThoiGianKT;
     DefaultTableModel tblModel;
-    JTable table, tblImei;
+    JTable table;
     JScrollPane scrollTable;
 
     MaKhuyenMaiDTO makhuyenmai;
