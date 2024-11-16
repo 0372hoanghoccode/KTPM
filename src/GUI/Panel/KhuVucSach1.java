@@ -132,17 +132,27 @@ tableKhuvuc.addMouseListener(new MouseAdapter() {
         }
         functionBar.add(mainFunction);
 
-        search = new IntegratedSearch(new String[]{"Mã lô hàng"});
+        search = new IntegratedSearch(new String[]{"Tất cả" , "Hoạt động", "Đã xóa",  "Mã lô hàng"});
         search.cbxChoose.addItemListener(this);
-        search.txtSearchForm.addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyReleased(KeyEvent e) {
-                String type = (String) search.cbxChoose.getSelectedItem();
-                String txt = search.txtSearchForm.getText();
-                listKVK = loHangDAO.search(txt, type);
-                loadDataTable(listKVK);
-            }
-        });
+    search.txtSearchForm.addKeyListener(new KeyAdapter() {
+    @Override
+    public void keyReleased(KeyEvent e) {
+        String type = (String) search.cbxChoose.getSelectedItem();
+        String txt = search.txtSearchForm.getText();
+        listKVK = loHangDAO.search(txt, type);
+
+        if (listKVK.isEmpty()) {
+            // Nếu không có sản phẩm nào, hiển thị thông báo trong bảng
+            DefaultTableModel model = (DefaultTableModel) tableKhuvuc.getModel();
+            model.setRowCount(0); // Xóa tất cả các dòng cũ
+            model.addRow(new Object[]{"Không có sản phẩm", "", "", "", ""}); // Thêm dòng thông báo // tạm thời v ha
+        } else {
+            // Nếu có sản phẩm, tải dữ liệu vào bảng
+            loadDataTable(listKVK);
+        }
+    }
+});
+
 
         search.btnReset.addActionListener(this);
         functionBar.add(search);

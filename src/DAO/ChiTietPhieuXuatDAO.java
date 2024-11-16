@@ -11,6 +11,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import BUS.MaKhuyenMaiBUS;
+import DTO.ChiTietPhieuNhapDTO;
 import DTO.ChiTietPhieuXuatDTO;
 
 import java.sql.ResultSet;
@@ -214,7 +215,7 @@ public static ArrayList<ChiTietPhieuXuatDTO> getChiTietByPhieuXuat(int maPhieuXu
     int totalCost = 0;
     try {
         Connection con = JDBCUtil.getConnection();
-        String sql = "SELECT SUM(TIENNHAP*SL) AS TotalCost FROM CTPHIEUNHAP WHERE MSP = ?";
+        String sql = "SELECT SUM(GiaThanhToan*SL) AS TotalCost FROM CTPHIEUXuat WHERE MSP = ?";
         PreparedStatement pst = con.prepareStatement(sql);
         pst.setInt(1, masp);
         ResultSet rs = pst.executeQuery();
@@ -227,4 +228,29 @@ public static ArrayList<ChiTietPhieuXuatDTO> getChiTietByPhieuXuat(int maPhieuXu
     }
     return totalCost;
 }
+  public static ArrayList<ChiTietPhieuXuatDTO> selectAllByProductCode(int masp) {
+    ArrayList<ChiTietPhieuXuatDTO> result = new ArrayList<>();
+    try {
+        Connection con = JDBCUtil.getConnection();
+        String sql = "SELECT * FROM CTPHIEUXuat WHERE MSP = ?";
+        PreparedStatement pst = con.prepareStatement(sql);
+        pst.setInt(1, masp);
+        ResultSet rs = pst.executeQuery();
+        while (rs.next()) {
+            int maphieu = rs.getInt("MPX");
+            int soluong = rs.getInt("SL");
+            int tienxuat = rs.getInt("TIENXuat");
+            int giaGiam = rs.getInt("GiaGiam");
+            int giaThanhToan = rs.getInt("giaThanhToan");
+            String MKM = rs.getString("MKM");
+            ChiTietPhieuXuatDTO ctphieu = new ChiTietPhieuXuatDTO(maphieu, masp, soluong, tienxuat, giaGiam , giaThanhToan, MKM);
+            result.add(ctphieu);
+        }
+        JDBCUtil.closeConnection(con);
+    } catch (SQLException e) {
+        System.out.println(e);
+    }
+    return result;
+}
+  
 }

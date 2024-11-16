@@ -3,8 +3,10 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import BUS.ThongKeBUS;
 import DAO.ChiTietPhieuNhapDAO;
+import DAO.ChiTietPhieuXuatDAO;
 import DAO.SanPhamDAO;
 import DTO.ChiTietPhieuNhapDTO;
+import DTO.ChiTietPhieuXuatDTO;
 import DTO.SanPhamDTO;
 import DTO.ThongKe.ThongKeSanPhamDTO;
 import GUI.Component.ButtonCustom;
@@ -51,7 +53,7 @@ public class ThongKeSanPhamne extends JPanel implements ActionListener, KeyListe
     DefaultTableModel tblModel;
     InputForm tenkhachhang;
     InputDate start_date, end_date;
-    ButtonCustom chitietnhap, reset;
+    ButtonCustom chitietnhap, reset , chitietxuat;
     ThongKeBUS thongkebus;
     public static ArrayList<SanPhamDTO> list;
     private JPanel pnmain;
@@ -88,13 +90,13 @@ public class ThongKeSanPhamne extends JPanel implements ActionListener, KeyListe
         btn_layout.setBorder(new EmptyBorder(20, 10, 0, 10));
         btn_layout.setBackground(Color.white);
         chitietnhap = new ButtonCustom("Chi Tiết Nhập", "chitietnhap", 14);
-        reset = new ButtonCustom("Làm mới", "danger", 14);
+        chitietxuat = new ButtonCustom("Chi Tiết Xuất", "chitietxuat", 14);
 
         chitietnhap.addActionListener(this);
-        reset.addActionListener(this);
+        chitietxuat.addActionListener(this);
 
         btninner.add(chitietnhap);
-        btninner.add(reset);
+        btninner.add(chitietxuat);
         btn_layout.add(btninner, BorderLayout.NORTH);
 
         left_content.add(tenkhachhang);
@@ -185,7 +187,8 @@ public class ThongKeSanPhamne extends JPanel implements ActionListener, KeyListe
         for (SanPhamDTO i : result) {
             tblModel.addRow(new Object[]{
                 k, i.getMSP() , i.getTEN() , SanPhamDAO.countLoHangByMaSP(i.getMSP()) , 
-                ChiTietPhieuNhapDAO.getTotalCostByProductCode(i.getMSP()),
+                ChiTietPhieuNhapDAO.getTotalCostByProductCode(i.getMSP()),    
+                ChiTietPhieuXuatDAO.getTotalCostByProductCode(i.getMSP()), 
             });
             k++;
         }
@@ -208,14 +211,18 @@ public class ThongKeSanPhamne extends JPanel implements ActionListener, KeyListe
                 "Thông báo", 
                 JOptionPane.WARNING_MESSAGE);
         } else {
-            // Gọi showTableForm và truyền mã sản phẩm đã chọn
-            showTableForm(selectedMaSP);
+            // Gọi showTableFormnhap và truyền mã sản phẩm đã chọn
+            showTableFormnhap(selectedMaSP);
         }
-    } else if (source == reset) {
-        try {
-            resetForm();
-        } catch (ParseException ex) {
-            Logger.getLogger(ThongKeKhachHang.class.getName()).log(Level.SEVERE, null, ex);
+    } else if (source == chitietxuat) {
+        if (selectedMaSP <=  0) {
+            JOptionPane.showMessageDialog(null, 
+                "Bạn chưa chọn dòng nào. Vui lòng chọn một dòng trong bảng.", 
+                "Thông báo", 
+                JOptionPane.WARNING_MESSAGE);
+        } else {
+            // Gọi showTableFormnhap và truyền mã sản phẩm đã chọn
+            showTableFormxuat(selectedMaSP);
         }
     }
 }
@@ -241,7 +248,7 @@ public class ThongKeSanPhamne extends JPanel implements ActionListener, KeyListe
     }
 
    
-    public void showTableForm(int maSp) {
+    public void showTableFormnhap(int maSp) {
         // Tạo JFrame cho form
         JFrame frame = new JFrame("Chi Tiết Lô Hàng");
         frame.setSize(new Dimension(1100, 500));
@@ -289,6 +296,77 @@ public class ThongKeSanPhamne extends JPanel implements ActionListener, KeyListe
             chiTiet.getTIEN(),
             chiTiet.getSL() ,   
             tongTien 
+           
+        };
+      
+        tblModel.addRow(row);
+    }
+        table.setModel(tblModel);
+        table.setFocusable(false);
+
+        // Căn giữa dữ liệu trong bảng
+        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+        centerRenderer.setHorizontalAlignment(JLabel.CENTER);
+        table.setDefaultRenderer(Object.class, centerRenderer);
+        table.getColumnModel().getColumn(2).setPreferredWidth(200);
+
+        JScrollPane scrollTable = new JScrollPane(table);
+        pnmain_bottom.add(scrollTable, BorderLayout.CENTER);
+
+        // Thêm các panel vào JFrame
+        pnmain.add(pnmain_bottom, BorderLayout.CENTER);
+        frame.add(pnmain, BorderLayout.CENTER);
+
+        // Hiển thị JFrame
+        frame.setLocationRelativeTo(null);
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        frame.setVisible(true);
+    }
+     public void showTableFormxuat(int maSp) {
+        // Tạo JFrame cho form
+        JFrame frame = new JFrame("Chi Tiết Xuất ");
+        frame.setSize(new Dimension(1100, 500));
+        frame.setLayout(new BorderLayout(0, 0));
+
+        // Tiêu đề
+        HeaderTitle titlePage = new HeaderTitle("CHI TIẾT XUẤT");
+        frame.add(titlePage, BorderLayout.NORTH);
+
+        // Main panel
+        pnmain = new JPanel(new BorderLayout());
+
+        // Panel top với các input fields
+        JPanel pnmain_top = new JPanel(new GridLayout(1, 2));
+        InputForm txtMaPhieu = new InputForm("Mã Sản Phẩm");
+        txtMaPhieu.setText(maSp+"");
+        InputForm txtThoiGian = new InputForm("Tên Sản Phẩm");
+        String ten =  SanPhamDAO.getTenSanPhamByMaSP(maSp);
+        txtThoiGian.setText(ten);
+        // Disable các input fields
+        txtMaPhieu.setDisable();
+        txtThoiGian.setDisable();
+
+        pnmain_top.add(txtMaPhieu);
+        pnmain_top.add(txtThoiGian);
+        pnmain.add(pnmain_top, BorderLayout.NORTH);
+
+        // Panel bottom chứa bảng
+        JPanel pnmain_bottom = new JPanel(new BorderLayout());
+        pnmain_bottom.setBorder(new EmptyBorder(5, 5, 5, 5));
+        pnmain_bottom.setBackground(Color.WHITE);
+
+        // Cấu hình bảng và thêm vào JScrollPane
+        JTable table = new JTable();
+        tblModel = new DefaultTableModel();
+        int tongTien = 0 ; 
+        String[] header = {"Mã Phiếu Xuất", "Gíá Bán", "Số Lượng", "Mã Giảm Giá" ,"Giá giảm","Giá sau khi giảm" ,"Tổng tiền sau khi giảm"};
+        tblModel.setColumnIdentifiers(header);
+         ArrayList<ChiTietPhieuXuatDTO> listChiTiet = ChiTietPhieuXuatDAO.selectAllByProductCode(maSp);
+         for (ChiTietPhieuXuatDTO chiTiet : listChiTiet) {
+              tongTien =  chiTiet.getGiaThanhToan()*  chiTiet.getSL();
+        Object[] row = {
+              chiTiet.getMP(), chiTiet.getTIEN() ,  chiTiet.getSL() , 
+              chiTiet.getMKM() , chiTiet.getGiaGiam() , chiTiet.getGiaThanhToan() , tongTien
            
         };
       

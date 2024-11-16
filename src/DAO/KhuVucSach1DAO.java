@@ -274,23 +274,36 @@ public String[] getAll1() {
 
     return maxMLH;
 }
-
-  public ArrayList<KhuVucSach1DTO> search(String keyword, String type) {
+public ArrayList<KhuVucSach1DTO> search(String keyword, String type) {
     ArrayList<KhuVucSach1DTO> results = new ArrayList<>();
    
     switch (type) {
-//        case "Tất cả":
-//            ArrayList<KhuVucSach1DTO> allResults = findAll(keyword);
-//            for (KhuVucSach1DTO kv : allResults) {
-//                // Thay vì gọi convertToDTO, tạo DTO trực tiếp ở đây
-//                results.add(new KhuVucSach1DTO(kv.getMLH(), kv.getNgay(),1) );
-//            }
-//            break;
+        case "Tất cả":
+            ArrayList<KhuVucSach1DTO> allResults = findAll(keyword);
+            for (KhuVucSach1DTO kv : allResults) {
+                results.add(new KhuVucSach1DTO(kv.getMLH(), kv.getNgay(), kv.getTT(), kv.getTongSoSp(), kv.getTongTien()));
+            }
+            break;
         case "Mã lô hàng":
             ArrayList<KhuVucSach1DTO> maLoHangResults = findByMaLoHang(keyword);
             for (KhuVucSach1DTO kv : maLoHangResults) {
-                // Thay vì gọi convertToDTO, tạo DTO trực tiếp ở đây
-                results.add(new KhuVucSach1DTO(kv.getMLH(), kv.getNgay() , 1 , kv.getTongSoSp(), kv.getTongTien()));
+                results.add(new KhuVucSach1DTO(kv.getMLH(), kv.getNgay(), kv.getTT(), kv.getTongSoSp(), kv.getTongTien()));
+            }
+            break;
+        case "Hoạt động":
+            ArrayList<KhuVucSach1DTO> activeResults = findAll(keyword);
+            for (KhuVucSach1DTO kv : activeResults) {
+                if (kv.getTT() == 1) { // Chỉ thêm các lô hàng có TT = 1
+                    results.add(new KhuVucSach1DTO(kv.getMLH(), kv.getNgay(), kv.getTT(), kv.getTongSoSp(), kv.getTongTien()));
+                }
+            }
+            break;
+        case "Đã xóa":
+            ArrayList<KhuVucSach1DTO> deletedResults = findAll(keyword);
+            for (KhuVucSach1DTO kv : deletedResults) {
+                if (kv.getTT() == 0) { // Chỉ thêm các lô hàng có TT = 0
+                    results.add(new KhuVucSach1DTO(kv.getMLH(), kv.getNgay(), kv.getTT(), kv.getTongSoSp(), kv.getTongTien()));
+                }
             }
             break;
         default:
@@ -300,6 +313,23 @@ public String[] getAll1() {
 
     return results;
 }
+public ArrayList<KhuVucSach1DTO> findAll(String keyword) {
+    ArrayList<KhuVucSach1DTO> results = new ArrayList<>();
+
+    // Giả sử kvkDAO là đối tượng DAO để truy cập cơ sở dữ liệu
+    ArrayList<KhuVucSach1DTO> allRecords = getAll();
+
+    for (KhuVucSach1DTO kv : allRecords) {
+        // Kiểm tra nếu từ khóa xuất hiện trong mã lô hàng hoặc bất kỳ thông tin nào cần tìm kiếm
+        if (kv.getMLH().contains(keyword) || 
+            String.valueOf(kv.getTongSoSp()).contains(keyword) || 
+            String.valueOf(kv.getTongTien()).contains(keyword)) {
+            results.add(kv);
+        } // không có ngày á
+    }
+    return results;
+}
+
 
   public ArrayList<KhuVucSach1DTO> findByMaLoHang(String maLoHang) {
         ArrayList<KhuVucSach1DTO> results = new ArrayList<>();
