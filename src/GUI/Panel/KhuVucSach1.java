@@ -1,5 +1,6 @@
 package GUI.Panel;
 
+import BUS.KhuVucSach1BUS;
 import BUS.SanPhamBUS;
 import DAO.ChiTietLoHangDAO;
 import DAO.KhuVucSach1DAO;
@@ -57,10 +58,11 @@ public final class KhuVucSach1 extends JPanel implements ActionListener, ItemLis
     Color BackgroundColor = new Color(211,211,211);
     DefaultTableModel tblModel;
     Main m;
-    public KhuVucSach1DAO lohangBUS = new KhuVucSach1DAO();
+    public KhuVucSach1DAO loHangDAO = new KhuVucSach1DAO();
+    public KhuVucSach1BUS loHangbus = new KhuVucSach1BUS();
     public SanPhamBUS spBUS = new SanPhamBUS();
 
-    public ArrayList<KhuVucSach1DTO> listKVK = lohangBUS.getAll();
+    public ArrayList<KhuVucSach1DTO> listKVK = loHangDAO.getAll();
     
     public ArrayList<SanPhamDTO> listSP = spBUS.getAll();
 
@@ -69,7 +71,7 @@ public final class KhuVucSach1 extends JPanel implements ActionListener, ItemLis
         tableKhuvuc = new JTable();
         tblModel = new DefaultTableModel();
         tableKhuvuc.setBackground(new Color(245, 250, 250)); 
-        String[] header = new String[]{"Mã lô","Thời gian", "Tổng số sản phẩm", "Tổng tiền", "Trạng thái"};
+        String[] header = new String[]{"Mã lô","Thời gian tạo", "Tổng số sản phẩm", "Tổng tiền", "Trạng thái"};
         tblModel.setColumnIdentifiers(header);
         tableKhuvuc.setModel(tblModel);
         scrollTableSanPham.setViewportView(tableKhuvuc);
@@ -91,22 +93,20 @@ tableKhuvuc.addMouseListener(new MouseAdapter() {
         if (index != -1) {
             // Lấy mã lô hàng từ hàng được chọn
             String maLoHang = tableKhuvuc.getValueAt(index, 0).toString(); // Giả định mã lô hàng nằm ở cột 0
+           
+             String tt = tableKhuvuc.getValueAt(index, 4).toString();
+
+            // Kiểm tra trạng thái và ẩn/hiện nút xóa
+            if (tt.equals("Đã xóa")) {
+                mainFunction.btn.get("delete").setVisible(false); // Ẩn nút "delete" nếu TT = 0
+            } else {
+                mainFunction.btn.get("delete").setVisible(true); // Hiện nút "delete" nếu TT khác 0
+            }
             ChiTietLoHangDAO chiTietLoHangBUS = new ChiTietLoHangDAO();
             ArrayList<ChiTietLoHangDTO> listChiTietLoHang = chiTietLoHangBUS.getByMaLoHang(maLoHang);
-            if (listChiTietLoHang != null && !listChiTietLoHang.isEmpty()) {
-                // Xử lý hoặc hiển thị chi tiết lô hàng
-                // Ví dụ: ListCustomersInDePot(listChiTietLoHang);
-                // Hiển thị chi tiết lô hàng (ví dụ: hiển thị trong bảng, dialog, v.v.)
-            ///    showChiTietLoHang(listChiTietLoHang);
-            } else {
-                // Xử lý nếu không có chi tiết lô hàng cho mã lô hàng này
-                JOptionPane.showMessageDialog(null, "Không tìm thấy chi tiết lô hàng cho mã lô hàng: " + maLoHang);
-            }
         }
     }
 });
-
-
         this.setBackground(BackgroundColor);
         this.setLayout(new GridLayout(1, 1));
         this.setBorder(new EmptyBorder(10, 10, 10, 10));
@@ -139,7 +139,7 @@ tableKhuvuc.addMouseListener(new MouseAdapter() {
             public void keyReleased(KeyEvent e) {
                 String type = (String) search.cbxChoose.getSelectedItem();
                 String txt = search.txtSearchForm.getText();
-                listKVK = lohangBUS.search(txt, type);
+                listKVK = loHangDAO.search(txt, type);
                 loadDataTable(listKVK);
             }
         });
@@ -176,16 +176,24 @@ tableKhuvuc.addMouseListener(new MouseAdapter() {
         loadDataTable(listKVK);
     }
 
-    public void loadDataTable(ArrayList<KhuVucSach1DTO> result) {
-        //listKVK = lohangBUS.getAll();
-           
-        tblModel.setRowCount(0);
-        for (KhuVucSach1DTO kvk : result) {
-            tblModel.addRow(new Object[]{
-                kvk.getMLH(),  kvk.getNgay(), kvk.getTongSoSp(), kvk.getTongTien(), kvk.getTT()
-            });
-        }
+   public void loadDataTable(ArrayList<KhuVucSach1DTO> result) {
+    // Reset lại bảng trước khi thêm dữ liệu mới
+    tblModel.setRowCount(0);
+    for (KhuVucSach1DTO kvk : result) {
+        String trangThai;
+        
+        // Kiểm tra giá trị của TT và gán trạng thái tương ứng
+        if (kvk.getTT()==1 ) 
+            trangThai = "Hoạt động";
+        else
+            trangThai = "Đã xóa"; 
+        // Thêm dữ liệu vào bảng với trạng thái đã chuyển đổi
+        tblModel.addRow(new Object[]{
+            kvk.getMLH(), kvk.getNgay(), kvk.getTongSoSp(), kvk.getTongTien(), trangThai
+        });
     }
+}
+
 
     public void importExcel() {
         File excelFile;
@@ -207,7 +215,7 @@ tableKhuvuc.addMouseListener(new MouseAdapter() {
                  //   int id = KhuVucSachDAO.getInstance().getAutoIncrement();
                     String tenkvk = excelRow.getCell(0).getStringCellValue();
                     String ghichu = excelRow.getCell(1).getStringCellValue();
-          //          lohangBUS.add(new KhuVucSachDTO(id, tenkvk, ghichu));
+          //          loHangDAO.add(new KhuVucSachDTO(id, tenkvk, ghichu));
                     tblModel.setRowCount(0);
                     loadDataTable(listKVK);
                 }
@@ -248,33 +256,28 @@ tableKhuvuc.addMouseListener(new MouseAdapter() {
                       new KhuVucSach1Dialog(this, owner, "Thêm khu vực lô", true, "detail" ,listKVK.get(index) );
             }
         }
-//        else if (e.getSource() == mainFunction.btn.get("delete")) {        
-//            int index = getRowSelected();
-//            if (index != -1) {
-//                int input = JOptionPane.showConfirmDialog(null,
-//                        "Bạn có chắc chắn muốn xóa khu vực!", "Xóa khu vực lô",
-//                        JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
-//                if (input == 0) {
-//                    int check = 0;
-//                    for (SanPhamDTO i : listSP) {
-//                        if (listKVK.get(index).getMakhuvuc() == i.getMKVS()) {
-//                            check++;
-//                            break;
-//                        }
-//                    }
-//                    if (check == 0) {
-//                        lohangBUS.delete(listKVK.get(index), index);
-//                        loadDataTable(listKVK);
-//                    }
-//                    else {
-//                        JOptionPane.showMessageDialog(this, "Không thể xóa khu vực vì vẫn còn sản phẩm trong khu vực.");
-//                    }
-//                }
-//            }
-//        }
+        else if (e.getSource() == mainFunction.btn.get("delete")) {        
+      int index = getRowSelected();
+      if (index != -1) {
+          int input = JOptionPane.showConfirmDialog(null,
+                  "Bạn có chắc chắn muốn xóa khu vực!", "Xóa khu vực lô",
+                  JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
+          if (input == 0) {
+              System.out.println("mã xóa nè " +listKVK.get(index) );
+              if (listKVK.get(index).getTongSoSp() > 0) {
+                  JOptionPane.showMessageDialog(this, "Không thể xóa khu vực vì có sản phẩm ở trong lô.");
+              } else {
+                  loHangDAO.delete(listKVK.get(index).getMLH());
+                  loadDataTable(listKVK);
+                  JOptionPane.showMessageDialog(this, "Xóa khu vực thành công.");
+              }
+          }
+      }
+  }
+
          else if (e.getSource() == search.btnReset) {
             search.txtSearchForm.setText("");
-            listKVK = lohangBUS.getAll();
+            listKVK = loHangDAO.getAll();
             loadDataTable(listKVK);
         } else if (e.getSource() == mainFunction.btn.get("import")) {
             importExcel();
@@ -291,7 +294,7 @@ tableKhuvuc.addMouseListener(new MouseAdapter() {
     public void itemStateChanged(ItemEvent e) {
         String type = (String) search.cbxChoose.getSelectedItem();
         String txt = search.txtSearchForm.getText();
-        listKVK = lohangBUS.search(txt, type);
+        listKVK = loHangDAO.search(txt, type);
         loadDataTable(listKVK);
     }
 }

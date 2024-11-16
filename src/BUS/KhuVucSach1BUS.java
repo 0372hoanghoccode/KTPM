@@ -1,27 +1,27 @@
-//package BUS;
-//
-//import DAO.KhuVucSach1DAO;
-//
-//import DTO.KhuVucSach1DTO;
-//
-//import java.util.ArrayList;
-//
-//public class KhuVucSach1BUS {
-//
-//    private final KhuVucSach1DAO kvkDAO = new KhuVucSach1DAO();
-//    private ArrayList<KhuVucSach1DTO> listKVK = new ArrayList<>();
-//
-//    public KhuVucSachBUS getInstance() {
-//        return new KhuVucSachBUS();
-//    }
-//    
+package BUS;
+
+import DAO.KhuVucSach1DAO;
+
+import DTO.KhuVucSach1DTO;
+
+import java.util.ArrayList;
+
+public class KhuVucSach1BUS {
+
+    private final KhuVucSach1DAO kvkDAO = new KhuVucSach1DAO();
+    private ArrayList<KhuVucSach1DTO> listKVK = new ArrayList<>();
+
+    public KhuVucSachBUS getInstance() {
+        return new KhuVucSachBUS();
+    }
+    
 //    public KhuVucSach1BUS() {
 //        listKVK = kvkDAO.selectAll();
 //    }
-//
-//    public ArrayList<KhuVucSachDTO> getAll() {
-//        return this.listKVK;
-//    }
+
+    public ArrayList<KhuVucSach1DTO> getAll() {
+        return this.listKVK;
+    }
 //
 //    public KhuVucSachDTO getByIndex(int index) {
 //        return this.listKVK.get(index);
@@ -47,14 +47,14 @@
 //        }
 //        return check;
 //    }
-//
-//    public boolean delete(KhuVucSachDTO kvk, int index) {
-//        boolean check = kvkDAO.delete(Integer.toString(kvk.getMakhuvuc())) != 0;
-//        if (check) {
-//            this.listKVK.remove(index);
-//        }
-//        return check;
-//    }
+
+    public boolean delete(KhuVucSach1DTO kvk, int index) {
+        boolean check = kvkDAO.delete(kvk.getMLH()) != 0;
+        if (check) {
+            this.listKVK.remove(index);
+        }
+        return check;
+    }
 //
 //    public boolean update(KhuVucSachDTO kvk) {
 //        boolean check = kvkDAO.update(kvk) != 0;
@@ -77,7 +77,7 @@
 //        }
 //        return vitri;
 //    }
-//
+
 //    public ArrayList<KhuVucSachDTO> search(String txt, String type) {
 //        ArrayList<KhuVucSachDTO> result = new ArrayList<>();
 //        txt = txt.toLowerCase();
@@ -107,16 +107,5 @@
 //        return result;
 //    }
 //    
-//    public String[] getArrTenKhuVuc() {
-//        int size = listKVK.size();
-//        String[] result = new String[size];
-//        for(int i = 0; i < size; i++) {
-//            result[i] = listKVK.get(i).getTenkhuvuc();
-//        }
-//        return result;
-//    }
-//    
-//    public String getTenKhuVuc(int makhuvuc) {
-//        return this.listKVK.get(this.getIndexByMaKVK(makhuvuc)).getTenkhuvuc();
-//    }
-//}
+   
+}

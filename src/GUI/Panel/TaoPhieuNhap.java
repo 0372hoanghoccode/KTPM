@@ -306,24 +306,47 @@ public final class TaoPhieuNhap extends JPanel implements ItemListener, ActionLi
         txtNhanVien = new InputForm("Nhân viên nhập");
         txtNhanVien.setText(nvDto.getHOTEN());
         txtNhanVien.setEditable(false);
-       cbbLoHang = new SelectForm("Lô Hàng", arrmlh); // ComboBox for "Lô Hàng"
+    // Initialize SelectForm for ComboBox "Lô Hàng"
 
-// Create a panel with GridLayout(1, 2) to hold the combobox and the button side by side
-JPanel kJPanelLeft = new JPanel(new GridLayout(1, 2));
+// Initialize SelectForm for ComboBox "Lô Hàng"
+cbbLoHang = new SelectForm("Lô Hàng", arrmlh); // ComboBox for "Lô Hàng"
+
+// Panel for ComboBox
+JPanel comboBoxPanel = new JPanel();
+comboBoxPanel.setLayout(new BorderLayout());
+comboBoxPanel.setOpaque(false);
+comboBoxPanel.setBorder(new EmptyBorder(5, 5, 5, 10)); // Padding for ComboBox
+cbbLoHang.setPreferredSize(new Dimension(150, 30)); // Set size for ComboBox
+comboBoxPanel.add(cbbLoHang, BorderLayout.CENTER);
+
+// Panel for Search button
+JPanel buttonPanel = new JPanel();
+buttonPanel.setLayout(new BorderLayout());
+buttonPanel.setOpaque(false);
+buttonPanel.setBorder(new EmptyBorder(5, 0, 5, 5)); // Padding for Button
+JButton btnSearch = new JButton("Search");
+btnSearch.setPreferredSize(new Dimension(80, 2)); // Set size for Button
+buttonPanel.add(btnSearch, BorderLayout.CENTER);
+
+// Container panel to hold both ComboBox and button panels
+JPanel kJPanelLeft = new JPanel();
+kJPanelLeft.setLayout(new BoxLayout(kJPanelLeft, BoxLayout.X_AXIS));
 kJPanelLeft.setOpaque(false);
 
-// Add the combobox and button to the kJPanelLeft panel
-kJPanelLeft.add(cbbLoHang);
-JButton btnSearch = new JButton("Search"); // Button next to ComboBox
-kJPanelLeft.add(btnSearch);
+// Add the two panels to the container panel
+kJPanelLeft.add(comboBoxPanel);
+kJPanelLeft.add(buttonPanel);
 
-// Add components to the right_top panel
+// Add kJPanelLeft to the right_top panel
 right_top.add(txtMaphieu);
 right_top.add(txtNhanVien);
-right_top.add(kJPanelLeft); // Add kJPanelLeft instead of cbbLoHang directly
+right_top.add(kJPanelLeft); // Add kJPanelLeft with aligned ComboBox and button
 
 // Add right_top to the main right panel
 right.add(right_top, BorderLayout.NORTH);
+
+
+
         
          cbbLoHang.addActionListener(new ActionListener() {
             @Override
@@ -595,7 +618,7 @@ public void eventBtnNhapHang() {
             quantity = product.getSL();
             price = product.getTIEN();
             tongsoluong += quantity ;
-            tongtien +=price ; 
+            tongtien +=price*quantity ; 
             
             System.out.println("Sản phẩm mã: " + productCode);
             System.out.println("Số lượng sản phẩm: " + quantity);

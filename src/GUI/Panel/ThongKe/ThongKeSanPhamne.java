@@ -76,7 +76,7 @@ public class ThongKeSanPhamne extends JPanel implements ActionListener, KeyListe
         left_content.setPreferredSize(new Dimension(300, 360));
         nhapxuat_left.add(left_content, BorderLayout.NORTH);
 
-        tenkhachhang = new InputForm("Tìm kiếm khách hàng");
+        tenkhachhang = new InputForm("Tìm kiếm sản phẩm");
         tenkhachhang.getTxtForm().putClientProperty("JTextField.showClearButton", true);
         tenkhachhang.getTxtForm().addKeyListener(this);
      
@@ -172,10 +172,10 @@ public class ThongKeSanPhamne extends JPanel implements ActionListener, KeyListe
     public void Fillter() throws ParseException {
         if (validateSelectDate()) {
             String input = tenkhachhang.getText() != null ? tenkhachhang.getText() : "";
-            java.util.Date time_start = start_date.getDate() != null ? start_date.getDate() : new java.util.Date(0);
-            java.util.Date time_end = end_date.getDate() != null ? end_date.getDate() : new java.util.Date(System.currentTimeMillis());
-          //  this.list = thongkebus.FilterKhachHang(input, new Date(time_start.getTime()), new Date(time_end.getTime()));
-            loadDataTable(list);
+         //   java.util.Date time_start = start_date.getDate() != null ? start_date.getDate() : new java.util.Date(0);
+          //  java.util.Date time_end = end_date.getDate() != null ? end_date.getDate() : new java.util.Date(System.currentTimeMillis());
+          //  this.list = 
+          //  loadDataTable(list);
         }
     }
 

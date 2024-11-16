@@ -123,7 +123,7 @@ public class KhuVucSach1DAO implements DAOinterface<KhuVucSach1DTO> {
     public ArrayList<KhuVucSach1DTO> getAll() {
         ArrayList<KhuVucSach1DTO> result = new ArrayList<>();
         try (Connection con = JDBCUtil.getConnection()) {
-            String sql = "SELECT MLH, Ngay, TT, TongSoSp, TongTien FROM lohang WHERE TT = 1";
+            String sql = "SELECT MLH, Ngay, TT, TongSoSp, TongTien FROM lohang "; // lấy tất cả các lô hàng                                                                  // không phân biệt TT
             try (PreparedStatement pst = con.prepareStatement(sql);
                  ResultSet rs = pst.executeQuery()) {
                 while (rs.next()) {
@@ -333,8 +333,7 @@ public  boolean updateLot(String lotCode, int additionalQuantity, int additional
     
     try (Connection con = JDBCUtil.getConnection();
          PreparedStatement pst = con.prepareStatement(query)) {
-        
-        // Set the parameters for quantity, price, and lot code
+     
         pst.setInt(1, additionalQuantity);
         pst.setInt(2, additionalPrice);
         pst.setString(3,lotCode);
