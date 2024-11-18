@@ -22,6 +22,9 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.awt.GridBagLayout;
+import java.awt.GridBagConstraints;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -30,6 +33,8 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
 import java.util.ArrayList;
+
+import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -67,78 +72,86 @@ public class ThongKeSanPhamne extends JPanel implements ActionListener, KeyListe
     }
 
     public void initComponent() {
-        this.setLayout(new BorderLayout(10, 10));
-        this.setOpaque(false);
-        this.setBorder(new EmptyBorder(10, 10, 10, 10));
-        nhapxuat_left = new PanelBorderRadius();
-        nhapxuat_left.setPreferredSize(new Dimension(300, 100));
-        nhapxuat_left.setLayout(new BorderLayout());
-        nhapxuat_left.setBorder(new EmptyBorder(0, 0, 0, 5));
-        JPanel left_content = new JPanel(new GridLayout(4, 1));
-        left_content.setPreferredSize(new Dimension(300, 360));
-        nhapxuat_left.add(left_content, BorderLayout.NORTH);
+    this.setLayout(new BorderLayout(5, 5));
+    this.setOpaque(false);
+    this.setBorder(new EmptyBorder(2, 2, 2, 2));
+    
+    nhapxuat_left = new PanelBorderRadius();
+    nhapxuat_left.setPreferredSize(new Dimension(300, 100));
+    nhapxuat_left.setLayout(new GridBagLayout());
+    GridBagConstraints gbc = new GridBagConstraints();
+    gbc.insets = new Insets(1, 5, 1, 5);
+    gbc.fill = GridBagConstraints.HORIZONTAL;
+    gbc.weightx = 1.0;
 
-        tenkhachhang = new InputForm("Tìm kiếm sản phẩm");
-        tenkhachhang.getTxtForm().putClientProperty("JTextField.showClearButton", true);
-        tenkhachhang.getTxtForm().addKeyListener(this);
-     
-      
-        JPanel btn_layout = new JPanel(new BorderLayout());
-        JPanel btninner = new JPanel(new GridLayout(1, 2));
-        btninner.setOpaque(false);
-        btn_layout.setPreferredSize(new Dimension(30, 36));
-        btn_layout.setBorder(new EmptyBorder(20, 10, 0, 10));
-        btn_layout.setBackground(Color.white);
-        chitietnhap = new ButtonCustom("Chi Tiết Nhập", "chitietnhap", 14);
-        chitietxuat = new ButtonCustom("Chi Tiết Xuất", "chitietxuat", 14);
+    gbc.gridx = 0;
+    gbc.gridy = 0;
+    tenkhachhang = new InputForm("Tìm kiếm sản phẩm");
+    tenkhachhang.getTxtForm().putClientProperty("JTextField.showClearButton", true);
+    tenkhachhang.getTxtForm().addKeyListener(this);
+    nhapxuat_left.add(tenkhachhang, gbc);
 
-        chitietnhap.addActionListener(this);
-        chitietxuat.addActionListener(this);
+    JPanel btn_layout = new JPanel(new BorderLayout());
+    JPanel btninner = new JPanel(new GridLayout(1, 2));
+    btninner.setOpaque(false);
+    btn_layout.setPreferredSize(new Dimension(30, 30));
+    btn_layout.setBorder(new EmptyBorder(0, 5, 0, 5));
+    btn_layout.setBackground(Color.white);
+    
+    chitietnhap = new ButtonCustom("Chi Tiết Nhập", "chitietnhap", 14);
+    chitietxuat = new ButtonCustom("Chi Tiết Xuất", "chitietxuat", 14);
 
-        btninner.add(chitietnhap);
-        btninner.add(chitietxuat);
-        btn_layout.add(btninner, BorderLayout.NORTH);
+    chitietnhap.addActionListener(this);
+    chitietxuat.addActionListener(this);
 
-        left_content.add(tenkhachhang);
-//        left_content.add(start_date);
-//        left_content.add(end_date);
-        left_content.add(btn_layout);
+    btninner.add(chitietnhap);
+    btninner.add(chitietxuat);
+    btn_layout.add(btninner, BorderLayout.CENTER);
 
-        nhapxuat_center = new PanelBorderRadius();
-        BoxLayout boxly = new BoxLayout(nhapxuat_center, BoxLayout.Y_AXIS);
-        nhapxuat_center.setLayout(boxly);
+    gbc.gridy = 1;
+    nhapxuat_left.add(btn_layout, gbc);
 
-        tblKH = new JTable();
-        tblKH.setBackground(new Color(245, 250, 250));
+    gbc.gridy = 2;
+    gbc.weighty = 0.001;
+    gbc.fill = GridBagConstraints.VERTICAL;
+    nhapxuat_left.add(Box.createVerticalGlue(), gbc);
 
-        scrollTblTonKho = new JScrollPane();
-        tblModel = new DefaultTableModel();
-        String[] header = new String[]{"STT", "Mã Sách", "Tên Sách", "Số lô đã nhập", "Tổng tiền nhập", "Tổng tiền xuất"};
-        tblModel.setColumnIdentifiers(header);
-        tblKH.setModel(tblModel);
-        
-        tblKH.setAutoCreateRowSorter(true);
-        tblKH.setDefaultEditor(Object.class, null);
-        scrollTblTonKho.setViewportView(tblKH);
-        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
-        centerRenderer.setHorizontalAlignment(JLabel.CENTER);
-        tblKH.setDefaultRenderer(Object.class, centerRenderer);
-        tblKH.setFocusable(false);
-        tblKH.getColumnModel().getColumn(0).setPreferredWidth(10);
-        tblKH.getColumnModel().getColumn(1).setPreferredWidth(50);
-        tblKH.getColumnModel().getColumn(2).setPreferredWidth(200);
-        
-        TableSorter.configureTableColumnSorter(tblKH, 0, TableSorter.INTEGER_COMPARATOR);
-        TableSorter.configureTableColumnSorter(tblKH, 1, TableSorter.INTEGER_COMPARATOR);
-        TableSorter.configureTableColumnSorter(tblKH, 2, TableSorter.INTEGER_COMPARATOR);
-        TableSorter.configureTableColumnSorter(tblKH, 3, TableSorter.VND_CURRENCY_COMPARATOR);
-        TableSorter.configureTableColumnSorter(tblKH, 4, TableSorter.VND_CURRENCY_COMPARATOR);
-        TableSorter.configureTableColumnSorter(tblKH, 5, TableSorter.VND_CURRENCY_COMPARATOR);
-        nhapxuat_center.add(scrollTblTonKho);
+    nhapxuat_center = new PanelBorderRadius();
+    BoxLayout boxly = new BoxLayout(nhapxuat_center, BoxLayout.Y_AXIS);
+    nhapxuat_center.setLayout(boxly);
 
-        this.add(nhapxuat_left, BorderLayout.WEST);
-        this.add(nhapxuat_center, BorderLayout.CENTER);
-         tblKH.getSelectionModel().addListSelectionListener(event -> {
+    tblKH = new JTable();
+    tblKH.setBackground(new Color(245, 250, 250));
+
+    scrollTblTonKho = new JScrollPane();
+    tblModel = new DefaultTableModel();
+    String[] header = new String[]{"STT", "Mã Sách", "Tên Sách", "Số lô đã nhập", "Tổng tiền nhập", "Tổng tiền xuất"};
+    tblModel.setColumnIdentifiers(header);
+    tblKH.setModel(tblModel);
+    
+    tblKH.setAutoCreateRowSorter(true);
+    tblKH.setDefaultEditor(Object.class, null);
+    scrollTblTonKho.setViewportView(tblKH);
+    DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+    centerRenderer.setHorizontalAlignment(JLabel.CENTER);
+    tblKH.setDefaultRenderer(Object.class, centerRenderer);
+    tblKH.setFocusable(false);
+    tblKH.getColumnModel().getColumn(0).setPreferredWidth(10);
+    tblKH.getColumnModel().getColumn(1).setPreferredWidth(50);
+    tblKH.getColumnModel().getColumn(2).setPreferredWidth(200);
+    
+    TableSorter.configureTableColumnSorter(tblKH, 0, TableSorter.INTEGER_COMPARATOR);
+    TableSorter.configureTableColumnSorter(tblKH, 1, TableSorter.INTEGER_COMPARATOR);
+    TableSorter.configureTableColumnSorter(tblKH, 2, TableSorter.INTEGER_COMPARATOR);
+    TableSorter.configureTableColumnSorter(tblKH, 3, TableSorter.VND_CURRENCY_COMPARATOR);
+    TableSorter.configureTableColumnSorter(tblKH, 4, TableSorter.VND_CURRENCY_COMPARATOR);
+    TableSorter.configureTableColumnSorter(tblKH, 5, TableSorter.VND_CURRENCY_COMPARATOR);
+    nhapxuat_center.add(scrollTblTonKho);
+
+    this.add(nhapxuat_left, BorderLayout.WEST);
+    this.add(nhapxuat_center, BorderLayout.CENTER);
+    
+    tblKH.getSelectionModel().addListSelectionListener(event -> {
         if (!event.getValueIsAdjusting()) {
             int selectedRow = tblKH.getSelectedRow();
             if (selectedRow >= 0) {
@@ -146,7 +159,7 @@ public class ThongKeSanPhamne extends JPanel implements ActionListener, KeyListe
             }
         }
     });
-    }
+}
 
     public boolean validateSelectDate() throws ParseException {
         java.util.Date time_start = start_date.getDate();
