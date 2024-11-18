@@ -129,7 +129,7 @@ public class MaKhuyenMai extends JPanel implements ActionListener, ItemListener 
         }
         functionBar.add(mainFunction);
 
-        search = new IntegratedSearch(new String[]{"Tất cả" , "Còn hạn ", "Hết hạn"});
+        search = new IntegratedSearch(new String[]{"Tất cả" , "Còn hạn", "Hết hạn" ,"Đã xóa"});
         search.cbxChoose.addItemListener(this);
         search.txtSearchForm.addKeyListener(new KeyAdapter() {
             @Override
@@ -137,8 +137,7 @@ public class MaKhuyenMai extends JPanel implements ActionListener, ItemListener 
                 String txt = search.txtSearchForm.getText();
                 String type = (String) search.cbxChoose.getSelectedItem();
                 listMKM = mkmBUS.search(txt,type);
-                capNhatTrangThai(listMKM);
-
+           //     capNhatTrangThai(listMKM);
                 loadDataTable(listMKM);
             }
         });

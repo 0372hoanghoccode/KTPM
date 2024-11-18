@@ -116,6 +116,13 @@ public class MaKhuyenMaiBUS {
                 }
             }
         }
+          case "Đã xóa" -> {
+            for (MaKhuyenMaiDTO i : listMKM) {
+                if (i.getMKM().toLowerCase().contains(txt) && i.getTT()==-1) {
+                    result.add(i);
+                }
+            }
+        }
     }
     return result;
 }
