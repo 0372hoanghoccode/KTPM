@@ -86,6 +86,14 @@ public void clearAndAddItems(int[] items) {
     }
 }
 
+    public void updateOptions(String[] arrmlh) {
+        cbb.removeAllItems(); // Xóa tất cả các mục hiện tại
+    for (String option : arrmlh) {
+        cbb.addItem(option); // Thêm các mục mới
+    }
+    this.repaint(); // Làm mới giao diện
+    }
+
 
   
 }

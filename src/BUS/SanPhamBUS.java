@@ -88,7 +88,7 @@ public class SanPhamBUS {
         switch (type) {
             case "Tất cả" -> {
                 for (SanPhamDTO i : this.listSP) {
-                    if (i.getTENTG().toLowerCase().contains(text) || i.getTEN().toLowerCase().contains(text)) {
+                    if (i.getTENTG().toLowerCase().contains(text) || i.getTEN().toLowerCase().contains(text) ||Integer.toString(i.getMSP()).toLowerCase().contains(text)  ) {
                         result.add(i);
                     }
                 }

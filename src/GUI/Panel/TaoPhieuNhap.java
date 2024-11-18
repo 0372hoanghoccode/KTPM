@@ -78,6 +78,7 @@ public final class TaoPhieuNhap extends JPanel implements ItemListener, ActionLi
     HashMap<Integer, ArrayList<SanPhamDTO>> chitietsanpham = new HashMap<>();
     int maphieunhap;
     int rowPhieuSelect = -1;
+    private ButtonCustom btnAdd;
 
     public TaoPhieuNhap(NhanVienDTO nv, String type, Main m ){
         this.nvDto = nv;
@@ -97,7 +98,7 @@ public final class TaoPhieuNhap extends JPanel implements ItemListener, ActionLi
         this.setLayout(new BorderLayout(0, 0));
         this.setOpaque(true);
         
-          arrmlh = kvs1dao.getAll1();
+        arrmlh = kvs1dao.getAll1();
         
         //Phieu Nhap
         tablePhieuNhap = new JTable();
@@ -129,7 +130,7 @@ public final class TaoPhieuNhap extends JPanel implements ItemListener, ActionLi
                     tableSanPham.setSelectionMode(index);
                     setFormChiTietPhieu(chitietphieu.get(index));
                     rowPhieuSelect = index;
-                  //  actionbtn("update");
+                    actionbtn("update");
                 }
             }
         });
@@ -154,7 +155,8 @@ public final class TaoPhieuNhap extends JPanel implements ItemListener, ActionLi
                 int index = tableSanPham.getSelectedRow();
                 if (index != -1) {
                     resetForm();
-                    setInfoSanPham(listSP.get(index));
+                   // setInfoSanPham(listSP.get(index));
+                   setInfoSanPham1(index);
                     ChiTietPhieuNhapDTO ctp = checkTonTai();
                     if (ctp == null) {
                         actionbtn("add");
@@ -291,113 +293,122 @@ public final class TaoPhieuNhap extends JPanel implements ItemListener, ActionLi
         left.add(left_top, BorderLayout.CENTER);
         left.add(left_bottom, BorderLayout.SOUTH);
 
-        // RIGHT 
-        right = new PanelBorderRadius();
-        right.setPreferredSize(new Dimension(320, 0));
-        right.setBorder(new EmptyBorder(5, 5, 5, 5));
-        right.setLayout(new BorderLayout());
+     right = new PanelBorderRadius();
+right.setPreferredSize(new Dimension(320, 0));
+right.setBorder(new EmptyBorder(5, 5, 5, 5));
+right.setLayout(new BorderLayout());
 
-        JPanel right_top, right_center, right_bottom, pn_tongtien;
-        right_top = new JPanel(new GridLayout(4, 1, 0, 0));
-        right_top.setPreferredSize(new Dimension(300, 360));
-        right_top.setOpaque(false);
-        txtMaphieu = new InputForm("Mã phiếu nhập");
-        txtMaphieu.setText("PN" + maphieunhap);
-        txtMaphieu.setEditable(false);
-        txtNhanVien = new InputForm("Nhân viên nhập");
-        txtNhanVien.setText(nvDto.getHOTEN());
-        txtNhanVien.setEditable(false);
-    // Initialize SelectForm for ComboBox "Lô Hàng"
+// Phần Right Top
+JPanel right_top = new JPanel(new GridLayout(4, 1, 0, 0));
+right_top.setPreferredSize(new Dimension(300, 360));
+right_top.setOpaque(false);
 
-// Initialize SelectForm for ComboBox "Lô Hàng"
-cbbLoHang = new SelectForm("Lô Hàng", arrmlh); // ComboBox for "Lô Hàng"
+// Mã phiếu nhập
+txtMaphieu = new InputForm("Mã phiếu nhập");
+txtMaphieu.setText("PN" + maphieunhap);
+txtMaphieu.setEditable(false);
 
-// Panel for ComboBox
+// Nhân viên nhập
+txtNhanVien = new InputForm("Nhân viên nhập");
+txtNhanVien.setText(nvDto.getHOTEN());
+txtNhanVien.setEditable(false);
+
+// Lô Hàng ComboBox
+cbbLoHang = new SelectForm("Lô Hàng", arrmlh);
+cbbLoHang.setPreferredSize(new Dimension(240, 30));
+
 JPanel comboBoxPanel = new JPanel();
 comboBoxPanel.setLayout(new BorderLayout());
 comboBoxPanel.setOpaque(false);
-comboBoxPanel.setBorder(new EmptyBorder(5, 5, 5, 10)); // Padding for ComboBox
-cbbLoHang.setPreferredSize(new Dimension(150, 30)); // Set size for ComboBox
+comboBoxPanel.setBorder(new EmptyBorder(5, 5, 0, 0));
 comboBoxPanel.add(cbbLoHang, BorderLayout.CENTER);
 
-// Panel for Search button
+// Nút Add sản phẩm
 JPanel buttonPanel = new JPanel();
 buttonPanel.setLayout(new BorderLayout());
 buttonPanel.setOpaque(false);
-buttonPanel.setBorder(new EmptyBorder(5, 0, 5, 5)); // Padding for Button
-JButton btnSearch = new JButton("Search");
-btnSearch.setPreferredSize(new Dimension(80, 2)); // Set size for Button
-buttonPanel.add(btnSearch, BorderLayout.CENTER);
+buttonPanel.setBorder(new EmptyBorder(40, 5, 5, 5));
+btnAdd = new ButtonCustom("+", "excel", 14);
+btnAdd.setPreferredSize(new Dimension(40, 30));
+buttonPanel.add(btnAdd, BorderLayout.WEST);
 
-
-// Container panel to hold both ComboBox and button panels
+// Gộp ComboBox và Button thành một hàng ngang
 JPanel kJPanelLeft = new JPanel();
 kJPanelLeft.setLayout(new BoxLayout(kJPanelLeft, BoxLayout.X_AXIS));
 kJPanelLeft.setOpaque(false);
-
-// Add the two panels to the container panel
 kJPanelLeft.add(comboBoxPanel);
 kJPanelLeft.add(buttonPanel);
 
-// Add kJPanelLeft to the right_top panel
+// Add các thành phần vào Right Top
 right_top.add(txtMaphieu);
 right_top.add(txtNhanVien);
-right_top.add(kJPanelLeft); // Add kJPanelLeft with aligned ComboBox and button
+right_top.add(kJPanelLeft);
 
-// Add right_top to the main right panel
+// Thêm Right Top vào panel chính
 right.add(right_top, BorderLayout.NORTH);
 
-btnSearch.addActionListener(new ActionListener() {
+// Phần Right Bottom
+JPanel right_bottom = new JPanel(new GridLayout(2, 1));
+right_bottom.setPreferredSize(new Dimension(300, 100));
+right_bottom.setBorder(new EmptyBorder(10, 10, 10, 10));
+right_bottom.setOpaque(false);
+
+// Tổng tiền
+JPanel pn_tongtien = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 0));
+pn_tongtien.setOpaque(false);
+JLabel lbltien = new JLabel("TỔNG TIỀN: ");
+lbltien.setFont(new Font(FlatRobotoFont.FAMILY, Font.BOLD, 18));
+lbltien.setForeground(new Color(255, 51, 51));
+lbltongtien = new JLabel("0đ");
+lbltongtien.setFont(new Font(FlatRobotoFont.FAMILY, Font.BOLD, 18));
+pn_tongtien.add(lbltien);
+pn_tongtien.add(lbltongtien);
+right_bottom.add(pn_tongtien);
+
+// Nút Nhập Hàng
+btnNhapHang = new ButtonCustom("Nhập hàng", "excel", 14);
+    btnNhapHang.addActionListener(this);
+right_bottom.add(btnNhapHang);
+
+// Thêm Right Bottom vào panel chính
+right.add(right_bottom, BorderLayout.SOUTH);
+
+// Phần Center (để trống cho logic sau này)
+JPanel right_center = new JPanel();
+right_center.setPreferredSize(new Dimension(100, 100));
+right_center.setOpaque(false);
+right.add(right_center, BorderLayout.CENTER);
+
+// Thêm panel Right vào contentCenter
+contentCenter.add(left, BorderLayout.CENTER);
+contentCenter.add(right, BorderLayout.EAST);
+
+// Sự kiện cho nút Add
+btnAdd.addActionListener(new ActionListener() {
     @Override
     public void actionPerformed(ActionEvent e) {
-       KhuVucSach1 khuvuc = new KhuVucSach1(m);
+        KhuVucSach1 khuvuc = new KhuVucSach1(m);
         new KhuVucSach1Dialog(khuvuc, owner, "Thêm khu vực lô", true, "create");
+         arrmlh = kvs1dao.getAll1();
+        ;
+          cbbLoHang.updateOptions(arrmlh); 
     }
 });
 
-        
-         cbbLoHang.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // Gọi hàm resetForm khi chọn mục trong JComboBox
-                resetForm();
-                 tableSanPham.setRowSelectionInterval(0, 0);
-            // Tự động click vào dòng đầu tiên để kích hoạt sự kiện chọn hàng
-            tableSanPham.scrollRectToVisible(tableSanPham.getCellRect(0, 0, true));
-            }
-        });
-
-        right_center = new JPanel();
-        right_center.setPreferredSize(new Dimension(100, 100));
-        right_center.setOpaque(false);
-
-        right_bottom = new JPanel(new GridLayout(2, 1));
-        right_bottom.setPreferredSize(new Dimension(300, 100));
-        right_bottom.setBorder(new EmptyBorder(10, 10, 10, 10));
-        right_bottom.setOpaque(false);
-
-        pn_tongtien = new JPanel(new FlowLayout(1, 20, 0));
-        pn_tongtien.setOpaque(false);
-        JLabel lbltien = new JLabel("TỔNG TIỀN: ");
-        lbltien.setFont(new Font(FlatRobotoFont.FAMILY, 1, 18));
-        lbltongtien = new JLabel("0đ");
-        lbltongtien.setFont(new Font(FlatRobotoFont.FAMILY, 1, 18));
-        lbltien.setForeground(new Color(255, 51, 51));
-        pn_tongtien.add(lbltien);
-        pn_tongtien.add(lbltongtien);
-        right_bottom.add(pn_tongtien);
-
-        btnNhapHang = new ButtonCustom("Nhập hàng", "excel", 14);
-        btnNhapHang.addActionListener(this);
-        right_bottom.add(btnNhapHang);
-
-        right.add(right_top, BorderLayout.NORTH);
-        right.add(right_center, BorderLayout.CENTER);// để trống
-        right.add(right_bottom, BorderLayout.SOUTH);
-
-        contentCenter.add(left, BorderLayout.CENTER);
-        contentCenter.add(right, BorderLayout.EAST);
+// Sự kiện cho ComboBox Lô Hàng
+cbbLoHang.addActionListener(new ActionListener() {
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        resetForm();
+        tableSanPham.setRowSelectionInterval(0, 0);
+        tableSanPham.scrollRectToVisible(tableSanPham.getCellRect(0, 0, true));
     }
+});
+    }
+    
+  
+
+    
     /********************************************************************************************************************************************************/
     public void actionbtn(String type) { //ẩn hiện button
         boolean val_1 = type.equals("add");
@@ -409,6 +420,7 @@ btnSearch.addActionListener(new ActionListener() {
         content_btn.revalidate();
         content_btn.repaint();
     }
+    
 
     public void setInfoSanPham(SanPhamDTO sp) { //set info vào inputform khi nhan ben tablesanpham
         this.txtMaSp.setText(Integer.toString(sp.getMSP()));
@@ -418,6 +430,22 @@ btnSearch.addActionListener(new ActionListener() {
         
        // this.txtDongia.setText(Integer.toString(sp.getTIENX()));
     }
+
+  public void setInfoSanPham1(int index) {
+    // Lấy giá trị từ cột 0 (Mã sản phẩm)
+    int columnMaSpIndex = tableSanPham.convertColumnIndexToModel(0); // Cột 0 theo mô hình
+    Object maSpValue = tableSanPham.getValueAt(index, columnMaSpIndex);
+    this.txtMaSp.setText(maSpValue.toString());
+
+    // Lấy giá trị từ cột 1 (Tên sản phẩm)
+    int columnTenSpIndex = tableSanPham.convertColumnIndexToModel(1); // Cột 1 theo mô hình
+    Object tenSpValue = tableSanPham.getValueAt(index, columnTenSpIndex);
+    this.txtTenSp.setText(tenSpValue.toString());
+
+    // Nếu cần cập nhật thêm trường khác, bạn có thể thêm logic tương tự
+    // Ví dụ: Giá sản phẩm hoặc danh mục (nếu có)
+    // this.txtDongia.setText(sp.getTIENX().toString());
+}
 
     // public ArrayList<SanPhamDTO> getChiTietSanPham() {
     //     // int ctsp = listSP_tmp.get(.getSelectedIndex()).getMSP();
@@ -625,8 +653,8 @@ public void eventBtnNhapHang() {
             int productCode = product.getMSP();
             quantity = product.getSL();
             price = product.getTIEN();
-            tongsoluong += quantity ;
-            tongtien +=price*quantity ; 
+           // tongsoluong += quantity ;
+            tongtien =price*quantity ; 
             
             System.out.println("Sản phẩm mã: " + productCode);
             System.out.println("Số lượng sản phẩm: " + quantity);
@@ -634,13 +662,12 @@ public void eventBtnNhapHang() {
             
             ChiTietLoHangDTO productDetail = new ChiTietLoHangDTO(product.getMLH()+"", productCode, price, quantity); // product.getMLH() is a String
 
-            // Attempt to add the product to the lot
             boolean addResult = phieunhapBus.addProductToLot(productDetail);
 
             if (addResult) {
                 String lotCode = product.getMLH()+""; // Assuming MLH is a String
                 KhuVucSach1DAO hehe = new KhuVucSach1DAO();
-                boolean updateResult = hehe.updateLot(lotCode, tongsoluong, tongtien);
+                boolean updateResult = hehe.updateLot(lotCode, quantity, tongtien);
                 
                 if (!updateResult) {
                     allProductsUpdated = false;
