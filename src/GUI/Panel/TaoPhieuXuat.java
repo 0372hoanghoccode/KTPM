@@ -105,7 +105,7 @@ public final class TaoPhieuXuat extends JPanel {
         this.tk = tk;
         this.type = type;
         maphieu = phieuXuatBUS.getMPMAX() + 1;
-        System.out.print("mã lớn nhất +1 nè : " + maphieu);
+      //  System.out.print("mã lớn nhất +1 nè : " + maphieu);
         initComponent(type);
         loadDataTableSanPham(listSPlonhon0);
     }
@@ -165,22 +165,32 @@ public final class TaoPhieuXuat extends JPanel {
         tableSanPham.getColumnModel().getColumn(2).setCellRenderer(centerRenderer);
         tableSanPham.setFocusable(false);
         scrollTableSanPham.setViewportView(tableSanPham);
+       tableSanPham.addMouseListener(new MouseAdapter() {
+@Override
+public void mousePressed(MouseEvent e) {
+    int index = tableSanPham.getSelectedRow();
+    if (index != -1) {
+        int columnMaIndex = tableSanPham.convertColumnIndexToModel(0);
+        String maValueStr = tableSanPham.getValueAt(index, columnMaIndex).toString();
+       int maValue = Integer.parseInt(maValueStr);
 
-        tableSanPham.addMouseListener((MouseListener) new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent e) {
-                int index = tableSanPham.getSelectedRow();
-                if (index != -1) {
-                    resetForm();
-                    setInfoSanPham(listSPlonhon0.get(index));
-                    if (!checkTonTai()) {
-                        actionbtn("add");
-                    } else {
-                        actionbtn("update");
-                    }
-                }
-            }
-        });
+        // Tìm sản phẩm trong danh sách có mã trùng với maValue
+        SanPhamDTO selectedSanPham = listSPlonhon0.stream()
+            .filter(sp -> sp.getMSP()== (maValue)) // So sánh mã sản phẩm
+            .findFirst() // Lấy sản phẩm đầu tiên tìm thấy
+            .orElse(null); // Nếu không có, trả về null
+
+        if (selectedSanPham != null) {
+            resetForm();
+            setInfoSanPham(selectedSanPham);
+            actionbtn(checkTonTai() ? "update" : "add");
+        } else {
+            System.out.println("Không tìm thấy sản phẩm có mã: " + maValue);
+        }
+    }
+}
+
+});
 
         //content_CENTER (chứa hết tất cả left+right) 
         contentCenter = new JPanel();
@@ -209,14 +219,14 @@ public final class TaoPhieuXuat extends JPanel {
 
         txtTimKiem = new JTextField();
         txtTimKiem.setPreferredSize(new Dimension(100, 40));
-        txtTimKiem.putClientProperty("JTextField.placeholderText", "Tên sản phẩm ");
+        txtTimKiem.putClientProperty("JTextField.placeholderText", "Tên sản phẩm , mã sản phẩm ");
         txtTimKiem.putClientProperty("JTextField.showClearButton", true);
         txtTimKiem.putClientProperty("JTextField.leadingIcon", new FlatSVGIcon("./icon/search.svg"));
 
         txtTimKiem.addKeyListener(new KeyAdapter() {
             @Override
             public void keyReleased(KeyEvent event) { //chạy khi nhả phím trong tìm kiếm
-                ArrayList<SanPhamDTO> rs = spBUS.search(txtTimKiem.getText(), "Tên sản phẩm");
+                ArrayList<SanPhamDTO> rs = spBUS.searchTrongTaoPhieu(txtTimKiem.getText(), "Tất cả");
                  ArrayList<SanPhamDTO> sanphamtimkiemlonhon0 = SanPhamDAO.filterProductsWithPositiveQuantity(rs);
                 loadDataTableSanPham(sanphamtimkiemlonhon0);
             }
@@ -243,8 +253,8 @@ public final class TaoPhieuXuat extends JPanel {
         txtMaISBN.setVisible(false); // Ẩn thành phần InputForm
 
         txtGiaXuat = new InputForm("Giá xuất");
-           txtGiaXuat.setDisable();
-         txtGiaXuat.setEditable(false);
+        txtGiaXuat.setDisable();
+        txtGiaXuat.setEditable(false);
        
         txtSoLuongSPxuat = new InputForm("Số lượng");
         PlainDocument soluong = (PlainDocument) txtSoLuongSPxuat.getTxtForm().getDocument();
@@ -424,11 +434,11 @@ public final class TaoPhieuXuat extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 int maKhachHangBanDau = KhachHangDAO.getMaxMaKhachHang();
-                System.out.print("Mã khách hàng ban đầu là : " + maKhachHangBanDau);
+               // System.out.print("Mã khách hàng ban đầu là : " + maKhachHangBanDau);
                 KhachHang KhachHang = new KhachHang(mainChinh);
                 new KhachHangDialog(KhachHang, owner, "Thêm khách hàng", true,"create");
                  int maKhachHangSauKhiNhanNut = KhachHangDAO.getMaxMaKhachHang();
-                     System.out.print("Mã khách hàng sau khi nhấn nút là : " + maKhachHangSauKhiNhanNut);
+                 //    System.out.print("Mã khách hàng sau khi nhấn nút là : " + maKhachHangSauKhiNhanNut);
                  if (maKhachHangBanDau!=maKhachHangSauKhiNhanNut)
                      setKhachHang(maKhachHangSauKhiNhanNut);
                  else
@@ -569,7 +579,7 @@ public final class TaoPhieuXuat extends JPanel {
         // Tìm lô hàng có mã nhỏ nhất
         ChiTietLoHangDTO minLohang = findMinLohangWithValidQuantity(ctsp.getMSP());
            this.txtGiaXuat.setText(ctsp.getTIENX()+"");
-           System.out.print("hello nè " + ctsp.getTIENX());
+         //  System.out.print("hello nè " + ctsp.getTIENX());
         this.txtSoLuongSPxuat.setText(Integer.toString(phieu.getSL()));
         cbxMaKM.setArr(getMaGiamGiaTable(ctsp.getMSP()));
     }
@@ -693,7 +703,7 @@ lbltongtien.setText(Formater.FormatVND(sum));
     boolean check = true;
     int index = tableSanPham.getSelectedRow();  // Giả sử tableSanPham là bảng sản phẩm đã chọn
     int availableQuantity = 0;  // Khai báo biến lưu số lượng có sẵn
-    System.out.println("Hello mã " + txtMaSp.getText());
+   // System.out.println("Hello mã " + txtMaSp.getText());
     String text = txtMaSp.getText(); // Lấy giá trị từ trường văn bản
     
 
@@ -713,7 +723,7 @@ lbltongtien.setText(Formater.FormatVND(sum));
             
             if (minLohang != null) {
                 availableQuantity = minLohang.getSoLuong();
-                System.out.print("hello " + availableQuantity);
+              //  System.out.print("hello " + availableQuantity);
             }
 
            if (txtSoLuongSPxuat.getText().trim().isEmpty()) {
@@ -788,7 +798,7 @@ public void eventBtnNhapHang() throws SQLException {
             long now = System.currentTimeMillis();
             Timestamp currenTime = new Timestamp(now);
             PhieuXuatDTO phieuXuat = new PhieuXuatDTO(makh, maphieu, tk.getMNV(), currenTime, sum, 1);
-            System.out.print("hehe" + maphieu);
+           // System.out.print("hehe" + maphieu);
                     
             // Thêm phiếu xuất vào cơ sở dữ liệu
             phieuXuatBUS.insert(phieuXuat); // Thêm phiếu xuất
@@ -804,12 +814,12 @@ public void eventBtnNhapHang() throws SQLException {
                 ArrayList<ChiTietLoHangDTO> loHangList = chiTietLoHangDAO.findLohangByMSP(maSp);
                 ChiTietLoHangDTO minLohang = findMinLohangWithValidQuantity(maSp);
                 
-                System.out.print(chiTiet.getMP());
+             //   System.out.print(chiTiet.getMP());
                 if (minLohang != null) {
                     String maLoHang = minLohang.getMLH();
                     
                     int soLuongXuat = chiTiet.getSL(); 
-                    System.out.print("Số lượng xuất " + soLuongXuat);
+                 //   System.out.print("Số lượng xuất " + soLuongXuat);
                     
                     // Cập nhật số lượng trong kho
                     chiTietLoHangDAO.updateQuantity(maSp ,maLoHang, -soLuongXuat); // Trừ số lượng xuất bán

@@ -196,14 +196,14 @@ public final class TaoPhieuNhap extends JPanel implements ItemListener, ActionLi
 
         txtTimKiem = new JTextField();
         txtTimKiem.setPreferredSize(new Dimension(100, 40));
-        txtTimKiem.putClientProperty("JTextField.placeholderText", "Tên sản phẩm, mã sản phẩm, ...");
+        txtTimKiem.putClientProperty("JTextField.placeholderText", "Tên sản phẩm, mã sản phẩm");
         txtTimKiem.putClientProperty("JTextField.showClearButton", true);
         txtTimKiem.putClientProperty("JTextField.leadingIcon", new FlatSVGIcon("./icon/search.svg"));
 
         txtTimKiem.addKeyListener(new KeyAdapter() {
             @Override
             public void keyReleased(KeyEvent event) { //chạy khi nhả phím trong tìm kiếm
-                ArrayList<SanPhamDTO> rs = spBUS.search(txtTimKiem.getText(), "Tất cả");
+                ArrayList<SanPhamDTO> rs = spBUS.searchTrongTaoPhieu(txtTimKiem.getText(), "Tất cả");
                 loadDataTalbeSanPham(rs);
             }
         });

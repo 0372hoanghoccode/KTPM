@@ -118,6 +118,21 @@ public class SanPhamBUS {
         
         return result;
     }
+      public ArrayList<SanPhamDTO> searchTrongTaoPhieu(String text, String type) {
+        text = text.toLowerCase();
+        ArrayList<SanPhamDTO> result = new ArrayList<>();
+        switch (type) {
+            case "Tất cả" -> {
+                for (SanPhamDTO i : this.listSP) {
+                    if (i.getTEN().toLowerCase().contains(text) ||Integer.toString(i.getMSP()).toLowerCase().contains(text)  ) {
+                        result.add(i);
+                    }
+                }
+            }   
+        }
+        
+        return result;
+    }
 
     public ArrayList<SanPhamDTO> search(ArrayList<SanPhamDTO> listSP, String text, String type) {
         text = text.toLowerCase();

@@ -144,13 +144,30 @@ public final class TaoMaKhuyenMai extends JPanel implements ItemListener, Action
         tableSanPham.setFocusable(false);
         scrollTableSanPham.setViewportView(tableSanPham);
 
-        tableSanPham.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent e) {
-                int index = tableSanPham.getSelectedRow();
-                if (index != -1) {
+     tableSanPham.addMouseListener(new MouseAdapter() {
+    @Override
+    public void mousePressed(MouseEvent e) {
+        int index = tableSanPham.getSelectedRow();
+        if (index != -1) {
+            // Lấy giá trị cột đầu tiên (mã sản phẩm) và chuyển sang kiểu int
+            int columnMaIndex = tableSanPham.convertColumnIndexToModel(0);
+            String maValueStr = tableSanPham.getValueAt(index, columnMaIndex).toString();
+
+            try {
+                int maValue = Integer.parseInt(maValueStr);
+                System.out.println("Cột đầu tiên là: " + maValue);
+
+                // Tìm sản phẩm trong danh sách dựa vào mã
+                SanPhamDTO selectedSanPham = listSP.stream()
+                    .filter(sp -> sp.getMSP() == maValue) // So sánh mã sản phẩm (int)
+                    .findFirst()
+                    .orElse(null);
+
+                if (selectedSanPham != null) {
                     resetForm();
-                    setInfoSanPham(listSP.get(index));
+                    setInfoSanPham(selectedSanPham);
+
+                    // Kiểm tra tồn tại và thực hiện hành động phù hợp
                     ChiTietMaKhuyenMaiDTO ctp = checkTonTai();
                     if (ctp == null) {
                         actionbtn("add");
@@ -158,9 +175,16 @@ public final class TaoMaKhuyenMai extends JPanel implements ItemListener, Action
                         actionbtn("update");
                         setFormChiTietPhieu(ctp);
                     }
+                } else {
+                    System.out.println("Không tìm thấy sản phẩm có mã: " + maValue);
                 }
+            } catch (NumberFormatException ex) {
+                System.err.println("Không thể chuyển giá trị cột đầu tiên sang số nguyên: " + maValueStr);
             }
-        });
+        }
+    }
+});
+
 
 
         left = new PanelBorderRadius();
@@ -189,14 +213,14 @@ public final class TaoMaKhuyenMai extends JPanel implements ItemListener, Action
 
         txtTimKiem = new JTextField();
         txtTimKiem.setPreferredSize(new Dimension(100, 40));
-        txtTimKiem.putClientProperty("JTextField.placeholderText", "Tên sản phẩm");
+        txtTimKiem.putClientProperty("JTextField.placeholderText", "Tên sản phẩm, mã sản phẩm");
         txtTimKiem.putClientProperty("JTextField.showClearButton", true);
         txtTimKiem.putClientProperty("JTextField.leadingIcon", new FlatSVGIcon("./icon/search.svg"));
 
         txtTimKiem.addKeyListener(new KeyAdapter() {
             @Override
             public void keyReleased(KeyEvent event) { //chạy khi nhả phím trong tìm kiếm
-                 ArrayList<SanPhamDTO> rs = spBUS.search(txtTimKiem.getText(), "Tên sản phẩm");
+                 ArrayList<SanPhamDTO> rs = spBUS.searchTrongTaoPhieu(txtTimKiem.getText(), "Tất cả");
                  ArrayList<SanPhamDTO> sanphamtimkiemlonhon0 = SanPhamDAO.filterProductsWithPositiveQuantity(rs);
                 loadDataTalbeSanPham(sanphamtimkiemlonhon0);
             }
