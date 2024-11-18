@@ -2,7 +2,9 @@ package GUI.Panel;
 
 import BUS.MaKhuyenMaiBUS;
 import BUS.SanPhamBUS;
+import DAO.ChiTietLoHangDAO;
 import DAO.MaKhuyenMaiDAO;
+import DTO.ChiTietLoHangDTO;
 import DTO.MaKhuyenMaiDTO;
 import DTO.NhanVienDTO;
 import DTO.ChiTietMaKhuyenMaiDTO;
@@ -31,6 +33,8 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumnModel;
 import GUI.Component.InputDate;
 import java.awt.event.KeyAdapter;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.text.ParseException;
@@ -80,6 +84,25 @@ public class MaKhuyenMai extends JPanel implements ActionListener, ItemListener 
         columnModel.getColumn(1).setCellRenderer(centerRenderer);
         columnModel.getColumn(2).setCellRenderer(centerRenderer);
         tableMKM.setFocusable(false);
+        tableMKM.addMouseListener(new MouseAdapter() {
+   
+    public void mousePressed(MouseEvent e) {
+        int index = tableMKM.getSelectedRow();
+        if (index != -1) {
+            // Lấy mã lô hàng từ hàng được chọn
+         
+             String tt = tableMKM.getValueAt(index, 3).toString();
+
+            // Kiểm tra trạng thái và ẩn/hiện nút xóa
+            if (tt.equals("Đã xóa")) {
+                mainFunction.btn.get("delete").setVisible(false); // Ẩn nút "delete" nếu TT = 0
+            } else {
+                mainFunction.btn.get("delete").setVisible(true); // Hiện nút "delete" nếu TT khác 0
+            }
+         
+        }
+    }
+});
 
         this.setBackground(BackgroundColor);
         this.setLayout(new GridLayout(1, 1));
@@ -114,6 +137,8 @@ public class MaKhuyenMai extends JPanel implements ActionListener, ItemListener 
                 String txt = search.txtSearchForm.getText();
                 String type = (String) search.cbxChoose.getSelectedItem();
                 listMKM = mkmBUS.search(txt,type);
+                capNhatTrangThai(listMKM);
+
                 loadDataTable(listMKM);
             }
         });
@@ -159,8 +184,7 @@ public class MaKhuyenMai extends JPanel implements ActionListener, ItemListener 
         leftPanel.add(dateEnd);
 
         contentCenter.add(leftPanel, BorderLayout.WEST);   
-        
-        
+          
         main = new PanelBorderRadius();
         BoxLayout boxly = new BoxLayout(main, BoxLayout.Y_AXIS);
         main.setLayout(boxly);
@@ -177,46 +201,63 @@ public class MaKhuyenMai extends JPanel implements ActionListener, ItemListener 
         this.nv = nv;
         initComponent();
         tableMKM.setDefaultEditor(Object.class, null);
+      //  capNhatTrangThai(listMKM);
+
         loadDataTable(listMKM);
     }
 
-public void loadDataTable(ArrayList<MaKhuyenMaiDTO> result) {
-    tblModel.setRowCount(0);  
-    Date now = new Date();  // Lấy ngày hiện tại
-    for (MaKhuyenMaiDTO kvk : result) {
-         Date ngayKetThuc = kvk.getTGKT();  // Lấy ngày kết thúc
-        int intTrangThai = kvk.getTT();  // Lấy trạng thái từ DTO
-       
-       
-        String stringTrangThai = "";
+// Hàm cập nhật trạng thái khuyến mãi
 
-        // Kiểm tra trạng thái
-        if (intTrangThai == -1) { 
+
+// Hàm load dữ liệu vào bảng
+public void loadDataTable(ArrayList<MaKhuyenMaiDTO> listMKM) {
+    tblModel.setRowCount(0);  // Xóa dữ liệu cũ trong bảng
+    Date now = new Date();  // Ngày hiện tại
+
+    for (MaKhuyenMaiDTO kvk : listMKM) {
+        System.out.print( " " + kvk.getTGKT() + " \n " + kvk.getTT());
+        String stringTrangThai = "";   
+        int intTrangThai = kvk.getTT();
+        Date ngayKetThuc = kvk.getTGKT();
+
+        if (intTrangThai == -1) {
             stringTrangThai = "Đã xóa"; // Trạng thái đã xóa
         } else if (ngayKetThuc.before(now)) {
             stringTrangThai = "Hết hạn"; // Trạng thái hết hạn
-            intTrangThai = 0; // Đặt trạng thái thành hết hạn nếu cần cập nhật
-            MaKhuyenMaiDAO.updateTrangThaiMaKhuyenMai(kvk.getMKM(), intTrangThai); // Cập nhật trạng thái trong DB
         } else {
             stringTrangThai = "Còn hạn"; // Trạng thái còn hạn
         }
 
         // Thêm dòng vào bảng
-        tblModel.addRow(new Object[]{
+        tblModel.addRow(new Object[] {
             kvk.getMKM(), 
             Formater.FormatTimeNgayThangNam(kvk.getTGBD()), 
             Formater.FormatTimeNgayThangNam(kvk.getTGKT()), 
             stringTrangThai
         });
-         System.out.println("Mã khuyến mãi: " + kvk.getMKM() + ", Trạng thái: " + kvk.getTT());
+    }
+       //updateDeleteButtonState();
+}
+public void capNhatTrangThai(ArrayList<MaKhuyenMaiDTO> listMKM) {
+    Date now = new Date();  // Lấy ngày hiện tại
+    for (MaKhuyenMaiDTO kvk : listMKM) {
+        Date ngayKetThuc = kvk.getTGKT();  // Ngày kết thúc
+        int intTrangThai = kvk.getTT();  // Trạng thái hiện tại
+        if (intTrangThai != -1 && ngayKetThuc.before(now)) { // Không cập nhật nếu đã xóa
+            intTrangThai = 0; // Đặt trạng thái thành hết hạn
+            MaKhuyenMaiDAO.updateTrangThaiMaKhuyenMai(kvk.getMKM(), intTrangThai); // Cập nhật DB
+            kvk.setTT(intTrangThai); // Đồng bộ trạng thái với danh sách hiện tại
+        }
     }
 }
+
 
     public int getRowSelected() {
         int index = tableMKM.getSelectedRow();
         if (index == -1) {
             JOptionPane.showMessageDialog(this, "Vui lòng chọn mã khuyến mãi");
         }
+          System.out.print("Dòng bạn đã chọn là " + index );
         return index;
     }
 
@@ -231,23 +272,32 @@ public void loadDataTable(ArrayList<MaKhuyenMaiDTO> result) {
                 new MaKhuyenMaiDialog(m, "Thông tin mã khuyến mãi", true, listMKM.get(index));
             }
         } else if (e.getSource() == mainFunction.btn.get("delete")) {
-            int index = getRowSelected();
-            if (index != -1) {
-                int input = JOptionPane.showConfirmDialog(null,
-                        "Bạn có chắc chắn muốn xóa mã khuyến mãi!", "Xóa mã khuyến mãi",
-                        JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
-                if (input == 0) {
-                    MaKhuyenMaiDTO mkm = listMKM.get(index);
-                    int c = mkmBUS.cancelMKM(mkm.getMKM());
-                        if (c == 0) {
-                            JOptionPane.showMessageDialog(null, "Xóa mã khuyến mãi không thành công!");
-                        } else {
-                            JOptionPane.showMessageDialog(null, "Xóa mã khuyến mãi thành công!");
-                            loadDataTable(mkmBUS.getAll());
-                        }
-                }
+    int index = getRowSelected();
+    if (index != -1) {
+        MaKhuyenMaiDTO mkm = listMKM.get(index);
+
+        // Kiểm tra nếu mã đã được sử dụng
+        if (mkmBUS.kiemTraMKMTrongHoaDon(mkm.getMKM())) {
+            JOptionPane.showMessageDialog(null, "Mã khuyến mãi đã được áp dụng trong hóa đơn, không thể xóa!");
+            return;
+        }
+
+        int input = JOptionPane.showConfirmDialog(null,
+                "Bạn có chắc chắn muốn xóa mã khuyến mãi?", "Xóa mã khuyến mãi",
+                JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
+        if (input == 0) {
+            int c = mkmBUS.cancelMKM(mkm.getMKM());
+            if (c == 0) {
+                JOptionPane.showMessageDialog(null, "Xóa mã khuyến mãi không thành công!");
+            } else {
+                JOptionPane.showMessageDialog(null, "Xóa mã khuyến mãi thành công!");
+                loadDataTable(mkmBUS.getAll());
             }
-        } else if (e.getSource() == search.btnReset) {
+        }
+    }
+    
+}
+else if (e.getSource() == search.btnReset) {
             search.txtSearchForm.setText("");
             listMKM = mkmBUS.getAll();
             loadDataTable(listMKM);
@@ -258,6 +308,7 @@ public void loadDataTable(ArrayList<MaKhuyenMaiDTO> result) {
                 Logger.getLogger(MaKhuyenMai.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+        
     }
     
     @Override
@@ -346,8 +397,5 @@ public void Fillter() throws ParseException {
     public void keyPressed(KeyEvent e) {
 
     }
-
-  
-
 
 }

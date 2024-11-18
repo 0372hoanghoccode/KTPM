@@ -13,12 +13,12 @@ public class MaKhuyenMaiDTO {
 
     }
 
-    public MaKhuyenMaiDTO(String mKM, int mNV, Timestamp tGBD, Timestamp tGKT , int TT ) {
+    public MaKhuyenMaiDTO(String mKM, int mNV, Timestamp tGBD, Timestamp tGKT , int Trangthai ) {
         MKM = mKM;
         MNV = mNV;
         TGBD = tGBD;
         TGKT = tGKT;
-        TT = TT ; 
+        TT = Trangthai ; 
     }
     public String getMKM() {
         return MKM;
@@ -36,8 +36,8 @@ public class MaKhuyenMaiDTO {
       public int getTT() {
         return TT;
     }
-    public void setTT(int mNV) {
-        TT = mNV;
+    public void setTT(int Trangthai) {
+        TT = Trangthai;
     }
     public Timestamp getTGBD() {
         return TGBD;

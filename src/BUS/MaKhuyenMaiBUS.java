@@ -228,4 +228,9 @@ public ArrayList<MaKhuyenMaiDTO> fillerPhieuNhap(Date time_s, Date time_e) {
     public int cancelMKM(String makm) {
         return mkmDAO.cancelMKM(makm);
     }
+    public boolean kiemTraMKMTrongHoaDon(String mkm) {
+    // Gọi DAO để kiểm tra trong bảng hóa đơn
+    return MaKhuyenMaiDAO.isMKMUsedInHoaDon(mkm); // Trả về true nếu đã được sử dụng
+}
+
 }

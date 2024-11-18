@@ -248,5 +248,24 @@ public class MaKhuyenMaiDAO implements DAOinterface<MaKhuyenMaiDTO> {
         Logger.getLogger(MaKhuyenMaiDAO.class.getName()).log(Level.SEVERE, null, ex);
     }
 }
+public static boolean isMKMUsedInHoaDon(String mkm) {
+    boolean isUsed = false;
+    try {
+         Connection con = JDBCUtil.getConnection();
+        String sql = "SELECT COUNT(*) FROM ctphieuxuat WHERE MKM = ?";
+         PreparedStatement ps = con.prepareStatement(sql);
+        ps.setString(1, mkm);
+        ResultSet rs = ps.executeQuery();
+        if (rs.next()) {
+            isUsed = rs.getInt(1) > 0; // Nếu số lượng > 0, MKM đã được sử dụng
+        }
+        rs.close();
+        ps.close();
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+    return isUsed;
+}
 
+    
 }
