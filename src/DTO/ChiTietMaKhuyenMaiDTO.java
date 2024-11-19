@@ -1,22 +1,22 @@
 package DTO;
 
 public class ChiTietMaKhuyenMaiDTO {
-    private String MKM;
+    private int MKM;
     private int MSP;
     private int PTG;
     
     public ChiTietMaKhuyenMaiDTO() {
 
     }
-    public ChiTietMaKhuyenMaiDTO(String mKM, int mSP, int pTG) {
+    public ChiTietMaKhuyenMaiDTO(int mKM, int mSP, int pTG) {
         MKM = mKM;
         MSP = mSP;
         PTG = pTG;
     }
-    public String getMKM() {
+    public int getMKM() {
         return MKM;
     }
-    public void setMKM(String mKM) {
+    public void setMKM(int mKM) {
         MKM = mKM;
     }
     public int getMSP() {
@@ -36,7 +36,7 @@ public class ChiTietMaKhuyenMaiDTO {
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + ((MKM == null) ? 0 : MKM.hashCode());
+    //    result = prime * result + ((MKM == null) ? 0 : MKM.hashCode());
         result = prime * result + MSP;
         result = prime * result + PTG;
         return result;
@@ -51,15 +51,15 @@ public class ChiTietMaKhuyenMaiDTO {
         if (getClass() != obj.getClass())
             return false;
         ChiTietMaKhuyenMaiDTO other = (ChiTietMaKhuyenMaiDTO) obj;
-        if (MKM == null) {
-            if (other.MKM != null)
-                return false;
-        } else if (!MKM.equals(other.MKM))
-            return false;
-        if (MSP != other.MSP)
-            return false;
-        if (PTG != other.PTG)
-            return false;
+//        if (MKM == null) {
+//            if (other.MKM != null)
+//                return false;
+//        } else if (!MKM.equals(other.MKM))
+          //  return false;
+//        if (MSP != other.MSP)
+//            return false;
+//        if (PTG != other.PTG)
+//            return false;
         return true;
     }
 

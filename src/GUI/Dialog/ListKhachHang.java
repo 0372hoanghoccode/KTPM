@@ -134,10 +134,11 @@ public class ListKhachHang extends JDialog implements MouseListener {
             text = text.toLowerCase();
         ArrayList<KhachHangDTO> result = new ArrayList<>();
         for(KhachHangDTO i : listKh) {
-           if(i.getHoten().toLowerCase().contains(text) || i.getDiachi().toLowerCase().contains(text)
+           if(i.getHoten().toLowerCase().contains(text) 
                    || i.getSdt().toLowerCase().contains(text)){
                result.add(i);
            }
+         //  || i.getDiachi().toLowerCase().contains(text)
         }
         return result;
         } else {

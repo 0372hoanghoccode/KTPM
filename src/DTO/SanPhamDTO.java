@@ -14,13 +14,14 @@ public class SanPhamDTO {
     private int MKVS;
     private int TIENX;
     private int SL;
-
+    private int TT ;
     // Constructor mặc định
     public SanPhamDTO() {
     }
 
     // Constructor với tất cả các tham số
-    public SanPhamDTO(int MSP, String TEN, String HINHANH, String DANHMUC, int NAMXB, int MNXB, String TENTG, int MKVS, int TIENX, int SL) {
+    public SanPhamDTO(int MSP, String TEN, String HINHANH,
+            String DANHMUC, int NAMXB, int MNXB, String TENTG, int MKVS, int TIENX, int SL , int TT) {
         this.MSP = MSP;
         this.TEN = TEN;
         this.HINHANH = HINHANH;
@@ -31,6 +32,7 @@ public class SanPhamDTO {
         this.MKVS = MKVS;
         this.TIENX = TIENX;
         this.SL = SL;
+        this.TT = TT ; 
     }
 
     // Getter và Setter cho MSP
@@ -121,6 +123,13 @@ public class SanPhamDTO {
 
     public void setSL(int SL) {
         this.SL = SL;
+    }
+      public int getTT() {
+        return TT;
+    }
+
+    public void setTT(int SL) {
+        this.TT = SL;
     }
 
     @Override

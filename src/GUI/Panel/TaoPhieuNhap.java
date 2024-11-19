@@ -72,7 +72,7 @@ public final class TaoPhieuNhap extends JPanel implements ItemListener, ActionLi
     PhieuNhapBUS phieunhapBus = new PhieuNhapBUS();
     NhanVienDTO nvDto;
 
-    ArrayList<SanPhamDTO> listSP = spBUS.getAll(); // list ben kho 
+    ArrayList<SanPhamDTO> listSP = spBUS.getAllkhacam1(); // list ben kho 
     // ArrayList<SanPhamDTO> listSP_tmp = new ArrayList<>(); 
     ArrayList<ChiTietPhieuNhapDTO> chitietphieu;
     HashMap<Integer, ArrayList<SanPhamDTO>> chitietsanpham = new HashMap<>();

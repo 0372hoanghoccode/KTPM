@@ -19,6 +19,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -52,7 +54,8 @@ public final class SanPham extends JPanel implements ActionListener {
         tableSanPham.setBackground(new Color(245, 250, 250));  
         scrollTableSanPham = new JScrollPane();
         tblModel = new DefaultTableModel();
-        String[] header = new String[]{"Mã SP", "Tên sản phẩm", "Số lượng tồn", "Tên tác giả", "Danh mục", "Năm xuất bản", "Nhà xuất bản", "Khu vực sách"};
+        String[] header = new String[]{"Mã SP", "Tên sản phẩm", "Số lượng tồn", "Tên tác giả", 
+            "Danh mục", "Năm xuất bản", "Nhà xuất bản", "Khu vực sách","Trạng thái "};
         tblModel.setColumnIdentifiers(header);
         tableSanPham.setModel(tblModel);
         scrollTableSanPham.setViewportView(tableSanPham);
@@ -88,18 +91,46 @@ public final class SanPham extends JPanel implements ActionListener {
             mainFunction.btn.get(ac).addActionListener(this);
         }
         functionBar.add(mainFunction);
+        
+        
+        
+        tableSanPham.addMouseListener(new MouseAdapter() {
+    public void mousePressed(MouseEvent e) {
+        int index = tableSanPham.getSelectedRow();
+        if (index != -1) {
+            // Lấy mã lô hàng từ hàng được chọn
+            String maLoHang = tableSanPham.getValueAt(index, 0).toString(); // Giả định mã lô hàng nằm ở cột 0
+           
+             String tt = tableSanPham.getValueAt(index, 8).toString();
 
-        search = new IntegratedSearch(new String[]{"Tất cả","Tên Tác giả","Tên sản phẩm"});
-        search.txtSearchForm.addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyReleased(KeyEvent e) {
-                String type = (String) search.cbxChoose.getSelectedItem();
-                String txt = search.txtSearchForm.getText();
-                listSP = spBUS.search( txt, type);
-                loadDataTalbe(listSP);
+            // Kiểm tra trạng thái và ẩn/hiện nút xóa
+            if (tt.equals("Nghỉ bán")) {
+                mainFunction.btn.get("delete").setVisible(false); // Ẩn nút "delete" nếu TT = 0
+                mainFunction.btn.get("update").setVisible(false); // Ẩn nút "delete" nếu TT = 0
+            } else {
+                mainFunction.btn.get("delete").setVisible(true); // Hiện nút "delete" nếu TT khác 0
+                mainFunction.btn.get("update").setVisible(true); // Ẩn nút "delete" nếu TT = 0
             }
+           
+        }
+    }
+      });  
 
-        });
+        search = new IntegratedSearch(new String[]{"Tất cả","Tên Tác giả","Tên sản phẩm","Đang bán","Hết hàng", "Nghỉ bán"});
+    search.txtSearchForm.addKeyListener(new KeyAdapter() {
+    @Override
+    public void keyReleased(KeyEvent e) {
+        performSearch(); // Gọi hàm tìm kiếm chung
+    }
+});
+
+// Lắng nghe sự kiện thay đổi giá trị trong ComboBox
+search.cbxChoose.addActionListener(new ActionListener() {
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        performSearch(); // Gọi hàm tìm kiếm chung
+    }
+});
 
         search.btnReset.addActionListener((ActionEvent e) -> {
             search.txtSearchForm.setText("");
@@ -129,15 +160,24 @@ public final class SanPham extends JPanel implements ActionListener {
         tblModel.setRowCount(0);
         System.out.print("hello");
         for (DTO.SanPhamDTO sp : result) {
-            int tongsoluong = 0;
+            int tongSoLuong = 0;
             try {
-                tongsoluong = ChiTietLoHangDAO.getTotalQuantityByProduct(sp.getMSP());
+                tongSoLuong = ChiTietLoHangDAO.getTotalQuantityByProduct(sp.getMSP());
             } catch (SQLException ex) {
                 Logger.getLogger(SanPham.class.getName()).log(Level.SEVERE, null, ex);
             }
-            tblModel.addRow(new Object[]{sp.getMSP(), sp.getTEN(), tongsoluong, sp.getTENTG(), sp.getDANHMUC(), sp.getNAMXB()
+              String trangThai;
+        if (sp.getTT() == -1) {
+            trangThai = "Nghỉ bán";
+        } else if (tongSoLuong == 0 && sp.getTT()== 0 ) {
+            trangThai = "Hết hàng";
+        } else {
+            trangThai = "Đang bán";
+        }
+
+            tblModel.addRow(new Object[]{sp.getMSP(), sp.getTEN(), tongSoLuong, sp.getTENTG(), sp.getDANHMUC(), sp.getNAMXB()
                 , NhaXuatBanDAO.getInstance().selectById(sp.getMNXB() + "").getTennxb()
-                , KhuVucSachDAO.getInstance().selectById(sp.getMKVS() + " ").getTenkhuvuc()
+                , KhuVucSachDAO.getInstance().selectById(sp.getMKVS() + " ").getTenkhuvuc() ,trangThai 
             });
         }
     }
@@ -158,20 +198,17 @@ public final class SanPham extends JPanel implements ActionListener {
         int input = JOptionPane.showConfirmDialog(null, "Bạn có chắc chắn muốn xóa Sản phẩm :)!", "Xóa sản phẩm", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
         if (input == 0) {
 
-            // Lấy tổng số lượng của sản phẩm
             int sum = 0;
             try {
                 sum = ChiTietLoHangDAO.getTotalQuantityByProduct(listSP.get(index).getMSP());
             } catch (SQLException ex) {
                 Logger.getLogger(SanPham.class.getName()).log(Level.SEVERE, null, ex);
             }
-
-            // Kiểm tra xem số lượng có bằng 0 hay không
             if (sum == 0) {
                 boolean i = spBUS.delete(listSP.get(index));  
                 if (i) {
                     System.out.println("Xóa thành công!");
-                    loadDataTalbe(listSP);
+                  
                 } else {
                     System.out.println("Xóa thất bại!");
                 }
@@ -181,6 +218,8 @@ public final class SanPham extends JPanel implements ActionListener {
             }
         }
     }
+    listSP = spBUS.getAll();
+  loadDataTalbe(listSP);
 }
  else if (e.getSource() == mainFunction.btn.get("detail")) {
             int index = getRowSelected();
@@ -218,7 +257,7 @@ public final class SanPham extends JPanel implements ActionListener {
 
         pnlBorder2 = new JPanel();
         pnlBorder2.setPreferredSize(new Dimension(0, 10));
-        pnlBorder2.setBackground(BackgroundColor);
+            pnlBorder2.setBackground(BackgroundColor);
         this.add(pnlBorder2, BorderLayout.SOUTH);
 
         pnlBorder3 = new JPanel();
@@ -231,5 +270,10 @@ public final class SanPham extends JPanel implements ActionListener {
         pnlBorder4.setBackground(BackgroundColor);
         this.add(pnlBorder4, BorderLayout.WEST);
     }
-
+private void performSearch() {
+    String type = (String) search.cbxChoose.getSelectedItem(); // Lấy loại tìm kiếm
+    String txt = search.txtSearchForm.getText(); // Lấy từ khóa tìm kiếm
+    listSP = spBUS.search(txt, type); // Gọi hàm tìm kiếm
+    loadDataTalbe(listSP); // Tải lại bảng dữ liệu
+}
 }

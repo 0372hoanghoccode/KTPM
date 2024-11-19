@@ -24,7 +24,7 @@ public class SanPhamDAO implements DAOinterface<SanPhamDTO> {
             Connection con = (Connection) JDBCUtil.getConnection();
             // `ISBN`
             String sql = "INSERT INTO `SANPHAM` (`MSP`, `TEN`, `HINHANH`, "
-                  + "`DANHMUC`, `NAMXB`, `MNXB`, `TENTG`, `MKVS`, `SL`,`GiaBan`,`TT`) VALUES (?,?,?,?,?,?,?,?,?,?,1)";
+                  + "`DANHMUC`, `NAMXB`, `MNXB`, `TENTG`, `MKVS`, `SL`,`GiaBan`,`TT`) VALUES (?,?,?,?,?,?,?,?,?,?,0)";
             PreparedStatement pst = (PreparedStatement) con.prepareStatement(sql);
             pst.setInt(1, t.getMSP());
             pst.setString(2, t.getTEN());
@@ -99,7 +99,7 @@ public class SanPhamDAO implements DAOinterface<SanPhamDTO> {
         int result = 0;
         try {
             Connection con = (Connection) JDBCUtil.getConnection();
-            String sql = "UPDATE `SANPHAM` SET `TT` = 0 WHERE MSP = ?";
+            String sql = "UPDATE `SANPHAM` SET `TT` = -1 WHERE MSP = ?";
             PreparedStatement pst = (PreparedStatement) con.prepareStatement(sql);
             pst.setString(1, t);
             result = pst.executeUpdate();
@@ -109,13 +109,13 @@ public class SanPhamDAO implements DAOinterface<SanPhamDTO> {
         }
         return result;
     }
-
-    @Override
+        @Override
     public  ArrayList<SanPhamDTO> selectAll() {
         ArrayList<SanPhamDTO> result = new ArrayList<>();
         try {
             Connection con = (Connection) JDBCUtil.getConnection();
-            String sql = "SELECT * FROM SANPHAM WHERE `TT`= 1";
+            String sql = "SELECT * FROM SANPHAM";
+         //    WHERE `TT`= 1
             PreparedStatement pst = (PreparedStatement) con.prepareStatement(sql);
             ResultSet rs = (ResultSet) pst.executeQuery();
             while (rs.next()) {
@@ -130,8 +130,40 @@ public class SanPhamDAO implements DAOinterface<SanPhamDTO> {
                 int TIENX = rs.getInt("GiaBan");
               //  int TIENN = rs.getInt("TIENN");
                 int SL = rs.getInt("SL");
+                 int TT = rs.getInt("TT");
               //  String ISBN = rs.getString("ISBN");
-                SanPhamDTO sp = new SanPhamDTO(madm, tendm, HINHANH, DANHMUC, NAMXB, MNXB, TENTG, MKVS, TIENX, SL);
+                SanPhamDTO sp = new SanPhamDTO(madm, tendm, HINHANH, DANHMUC, NAMXB, MNXB, TENTG, MKVS, TIENX, SL, TT );
+                result.add(sp);
+            }
+            JDBCUtil.closeConnection(con);
+        } catch (Exception e) {
+        }
+        return result;
+    }
+
+    public  ArrayList<SanPhamDTO> selectAlltrangthaikhacam1() {
+        ArrayList<SanPhamDTO> result = new ArrayList<>();
+        try {
+            Connection con = (Connection) JDBCUtil.getConnection();
+            String sql = "SELECT * FROM SANPHAM  WHERE `TT`!= -1 " ; 
+         
+            PreparedStatement pst = (PreparedStatement) con.prepareStatement(sql);
+            ResultSet rs = (ResultSet) pst.executeQuery();
+            while (rs.next()) {
+                int madm = rs.getInt("MSP");
+                String tendm = rs.getString("TEN");
+                String HINHANH = rs.getString("HINHANH");
+                String DANHMUC = rs.getString("DANHMUC");
+                int NAMXB = rs.getInt("NAMXB");
+                int MNXB = rs.getInt("MNXB");
+                String TENTG = rs.getString("TENTG");
+                int MKVS = rs.getInt("MKVS");
+                int TIENX = rs.getInt("GiaBan");
+              //  int TIENN = rs.getInt("TIENN");
+                int SL = rs.getInt("SL");
+                 int TT = rs.getInt("TT");
+              //  String ISBN = rs.getString("ISBN");
+                SanPhamDTO sp = new SanPhamDTO(madm, tendm, HINHANH, DANHMUC, NAMXB, MNXB, TENTG, MKVS, TIENX, SL, TT );
                 result.add(sp);
             }
             JDBCUtil.closeConnection(con);
@@ -158,8 +190,9 @@ public class SanPhamDAO implements DAOinterface<SanPhamDTO> {
                 int TIENX = rs.getInt("GiaBan");
               //  int TIENN = rs.getInt("TIENN");
                 int SL = rs.getInt("SL");
+                   int TT  = rs.getInt("TT");
               //  String ISBN = rs.getString("ISBN");
-                SanPhamDTO sp = new SanPhamDTO(madm, tendm, HINHANH, DANHMUC, NAMXB, MNXB, TENTG, MKVS, TIENX, SL);
+                SanPhamDTO sp = new SanPhamDTO(madm, tendm, HINHANH, DANHMUC, NAMXB, MNXB, TENTG, MKVS, TIENX, SL , TT );
                 result.add(sp);
             }
             JDBCUtil.closeConnection(con);
@@ -188,8 +221,8 @@ public class SanPhamDAO implements DAOinterface<SanPhamDTO> {
                 int MKVS = rs.getInt("MKVS");
                 int TIENX = rs.getInt("TIENX");
                 int SL = rs.getInt("SL");
-              
-                result = new SanPhamDTO(madm, tendm, HINHANH, DANHMUC, NAMXB, MNXB, TENTG, MKVS, TIENX, SL);
+                int TT = rs.getInt("TT");
+                result = new SanPhamDTO(madm, tendm, HINHANH, DANHMUC, NAMXB, MNXB, TENTG, MKVS, TIENX, SL, TT);
             }
             JDBCUtil.closeConnection(con);
         } catch (SQLException e) {

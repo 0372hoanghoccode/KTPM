@@ -122,17 +122,10 @@ public final class SanPhamDialog extends JDialog implements ActionListener {
         txtsoluong.setDisable();
         PlainDocument nhap = (PlainDocument)txtsoluong.getTxtForm().getDocument();
         nhap.setDocumentFilter((new NumericDocumentFilter()));
-
-//        PlainDocument xuat = (PlainDocument)txtgiaxuat.getTxtForm().getDocument();
-      //  xuat.setDocumentFilter((new NumericDocumentFilter()));
-  //      cbbLoHang = new SelectForm("Lô Hàng",  arrmlh); //Hieusua -thêm cái string lo hang vo
         txtgiabia = new InputForm("Giá Bìa");
-          PlainDocument nhap1 = (PlainDocument)txtgiabia.getTxtForm().getDocument();
+        PlainDocument nhap1 = (PlainDocument)txtgiabia.getTxtForm().getDocument();
         nhap1.setDocumentFilter((new NumericDocumentFilter()));
-//        txtgiabia.setDisable();
-        //cbbMKM = new SelectForm("Mã Khuyến Mãi",  new String[]{"MKM1", "MKM2", "MKM3"});//Hieusua -thêm cái string mkm zo
-     
-  masp1 = new InputForm("Mã sản phẩm");
+        masp1 = new InputForm("Mã sản phẩm");
         masp1.setVisible(false);
         hinhanh = new InputImage("Hình minh họa");
 
@@ -160,7 +153,8 @@ public final class SanPhamDialog extends JDialog implements ActionListener {
                 initView();
                 btnSaveCH = new ButtonCustom("Lưu thông tin", "success", 14);
                 btnSaveCH.addActionListener(this);
-                 tenSP.setDisable();
+                tenSP.setDisable();
+                txtgiabia.setDisable();
                 pnbottom.add(btnSaveCH);
             }
             case "create" -> {
@@ -191,23 +185,23 @@ public final class SanPhamDialog extends JDialog implements ActionListener {
 
         switch (type) {
             case "view" -> {
-                   cbbLoHang = new SelectForm("Lô Hàng",  arrmlh); //Hieusua -thêm cái string lo hang vo
-       
-        txtgiabia.setDisable();
-       // cbbMKM = new SelectForm("Mã Khuyến Mãi",  new String[]{"MKM1", "MKM2", "MKM3"});//Hieusua -thêm cái string mkm zo
+//                System.out.print("bAO NHIEU :" + arrmlh.length);
+//              if (arrmlh == null || arrmlh.length == 0) {
+//                  System.out.print("hehe");
+//             arrmlh = new String[]{"Chưa nhập hàng vào lô"}; // Gán mảng mới nếu rỗng
+//}
+         cbbLoHang = new SelectForm("Lô Hàng",  arrmlh); //Hieusua -thêm cái string lo hang vo   
+        txtgiabia.setDisable(); 
         pninfosanpham.add(txtgiabia);
         pninfosanpham.add(cbbLoHang);
-       // pninfosanpham.add(cbbMKM);
+      
         setInfo(sp);
              ChiTietLoHangDAO dao = new ChiTietLoHangDAO();
         ArrayList<String> mlhList = dao.findMLHByMSP(masp);
         cbbLoHang.setArr(mlhList);
          String selectedLotCode = (String) cbbLoHang.getSelectedItem();
           int quantity = dao.getProductQuantityInLot(selectedLotCode, masp);
-                txtsoluong.setText(Integer.toString(quantity));
-                //                int gianhap = dao.TuMaLayGiaNhap(selectedLotCode, masp);
-             //   int giaBan = gianhap * 2 ; 
-             //     txtgiaxuat.setText(Integer.toString(giaBsan));
+                txtsoluong.setText(Integer.toString(quantity));          
         cbbLoHang.addActionListener(new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
@@ -271,35 +265,20 @@ public final class SanPhamDialog extends JDialog implements ActionListener {
          if (source == btnAddSanPham && checkCreate()) {
             eventAddSanPham();
         }  
-    else if(source == btnSaveCH) {
-    // Lấy thông tin sản phẩm mới từ phương thức getInfo()
+    else if(source == btnSaveCH && checkCreate()  ) {
+   
     SanPhamDTO snNew = getInfo();
-
-    // Lấy số lượng hiện tại của sản phẩm từ cơ sở dữ liệu
-    //int currentQuantity = spBus.getSPbyISBN(snNew.getMSP()).getSL();
-    //snNew.setSL(currentQuantity);
-
-    // Kiểm tra xem có thay đổi hình ảnh không
     if(!snNew.getHINHANH().equals(this.sp.getHINHANH())) {
         // Cập nhật hình ảnh mới
         snNew.setHINHANH(addImage(snNew.getHINHANH()));
     }
-
-    // Đảm bảo mã sản phẩm mới không thay đổi
     snNew.setMSP(this.sp.getMSP());
-
-    // Cập nhật thông tin sản phẩm trong cơ sở dữ liệu
     SanPhamDAO.getInstance().update(snNew);
-
-    // Cập nhật thông tin sản phẩm trong danh sách
     this.jpSP.spBUS.update(snNew);
-
-    // Tải lại dữ liệu vào bảng
     this.jpSP.loadDataTalbe(this.jpSP.spBUS.getAll());
-
-    // Hiển thị thông báo thành công
     JOptionPane.showMessageDialog(this, "Sửa thông tin sản phẩm thành công!");
-}
+      dispose();
+        }
 
         
     }
@@ -323,20 +302,9 @@ public final class SanPhamDialog extends JDialog implements ActionListener {
         String TenTG = tenTG.getText();
         int MKVK = kvkhoBus.getAll().get(this.khuvuc.getSelectedIndex()).getMakhuvuc();
         int tIENX = Integer.parseInt(txtgiabia.getText());
-       //    ChiTietLoHangDAO dao = new ChiTietLoHangDAO();
-    
-       // ArrayList<String> mlhList = dao.findMLHByMSP(masp);
-   
- 
-        SanPhamDTO result = new SanPhamDTO(masp, vtensp, hinhanh, danhMuc, naMXB, MNXB, TenTG, MKVK, tIENX, 0);
-        // Sản phẩm : int MSP, String TEN, String HINHANH, 
-        //String DANHMUC, int NAMXB, int MNXB, String TENTG, int MKVS, int TIENX, String MLH, int SL
+        SanPhamDTO result = new SanPhamDTO(masp, vtensp, hinhanh, danhMuc, naMXB, MNXB, TenTG, MKVK, tIENX, 0 , 0 ); 
         return result;
     }
-    
-    
-    
-    
     
     public SanPhamDTO getInfo() {
         String vtensp = tenSP.getText();
@@ -365,7 +333,7 @@ public final class SanPhamDialog extends JDialog implements ActionListener {
 //            }
 //        }
 //    });
-        SanPhamDTO result = new SanPhamDTO(masp, vtensp, hinhanh, danhMuc, naMXB, MNXB, TenTG, MKVK, tIENX, 0);
+        SanPhamDTO result = new SanPhamDTO(masp, vtensp, hinhanh, danhMuc, naMXB, MNXB, TenTG, MKVK, tIENX, 0 , 1 );
         // Sản phẩm : int MSP, String TEN, String HINHANH, 
         //String DANHMUC, int NAMXB, int MNXB, String TENTG, int MKVS, int TIENX, String MLH, int SL
         return result;
@@ -466,23 +434,32 @@ public final class SanPhamDialog extends JDialog implements ActionListener {
 }
 
 
-            if (Validation.isEmpty(namXB.getText())) {
-                JOptionPane.showMessageDialog(this, "Vui lòng nhập năm xuất bản!");
-                return false;
-            } else {
-             String yearText = namXB.getText();
-                try {
-                int year = Integer.parseInt(yearText);
-                int currentYear = java.time.Year.now().getValue();
-                if (yearText.length() != 4 || year > currentYear) {
-                    JOptionPane.showMessageDialog(this, "Năm xuất bản phải có 4 chữ số và không vượt quá năm hiện tại!");
-                    return false;
-                }
-                  } catch (NumberFormatException e) {
-                JOptionPane.showMessageDialog(this, "Năm xuất bản phải là số!");
-                return false;
-                 }
-            }
+    if (Validation.isEmpty(namXB.getText())) {
+    JOptionPane.showMessageDialog(this, "Vui lòng nhập năm xuất bản!");
+    return false;
+}
+
+String yearText = namXB.getText();
+try {
+    int year = Integer.parseInt(yearText);
+
+    // Kiểm tra nếu năm không đủ 4 chữ số
+    if (yearText.length() != 4) {
+        JOptionPane.showMessageDialog(this, "Năm xuất bản phải có đúng 4 chữ số!");
+        return false;
+    }
+
+    // Kiểm tra nếu năm vượt quá năm hiện tại
+    int currentYear = java.time.Year.now().getValue();
+    if (year > currentYear) {
+        JOptionPane.showMessageDialog(this, "Năm xuất bản không được vượt quá năm hiện tại!");
+        return false;
+    }
+
+} catch (NumberFormatException e) {
+    JOptionPane.showMessageDialog(this, "Năm xuất bản phải là số!");
+    return false;
+}
 if (Validation.isEmpty(tenTG.getText())) {
     JOptionPane.showMessageDialog(this, "Vui lòng nhập tên tác giả!");
     return false;
@@ -513,8 +490,6 @@ if (Validation.isEmpty(tenTG.getText())) {
         return false;
     }
 }
-
-
             if (Validation.isEmpty(txtgiabia.getText())) {
                 JOptionPane.showMessageDialog(this, "Vui lòng nhập giá bìa!");
                 return false;

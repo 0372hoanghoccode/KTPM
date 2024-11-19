@@ -14,8 +14,11 @@ public class SanPhamBUS {
     }
 
     public ArrayList<SanPhamDTO> getAll() {
+        return this.listSP = spDAO.selectAll();
+    }
+       public ArrayList<SanPhamDTO> getAllkhacam1() {
         
-        return this.listSP;
+        return this.listSP = spDAO.selectAlltrangthaikhacam1();
     }
 
     public SanPhamDTO getByIndex(int index) {
@@ -88,7 +91,32 @@ public class SanPhamBUS {
         switch (type) {
             case "Tất cả" -> {
                 for (SanPhamDTO i : this.listSP) {
-                    if (i.getTENTG().toLowerCase().contains(text) || i.getTEN().toLowerCase().contains(text) ||Integer.toString(i.getMSP()).toLowerCase().contains(text)  ) {
+                    if (i.getTENTG().toLowerCase().contains(text) || i.getTEN().toLowerCase().contains(text) 
+                            ||Integer.toString(i.getMSP()).toLowerCase().contains(text)  ) {
+                        result.add(i);
+                    }
+                }
+            }
+              case "Đang bán" -> {
+                for (SanPhamDTO i : this.listSP) {
+                  if ((Integer.toString(i.getMSP()).toLowerCase().contains(text) || 
+                          i.getTENTG().toLowerCase().contains(text) || i.getTEN().toLowerCase().contains(text) )&& i.getTT()==1) {
+                        result.add(i);
+                    }
+                }
+            }
+                 case "Hết hàng" -> {
+                for (SanPhamDTO i : this.listSP) {
+                  if ((Integer.toString(i.getMSP()).toLowerCase().contains(text)
+                          || i.getTENTG().toLowerCase().contains(text) || i.getTEN().toLowerCase().contains(text)) && i.getTT()==0  ) {
+                        result.add(i);
+                    }
+                }
+            }
+                    case "Nghỉ bán" -> {
+                for (SanPhamDTO i : this.listSP) {
+                  if ((Integer.toString(i.getMSP()).toLowerCase().contains(text)
+                          ||   i.getTENTG().toLowerCase().contains(text) || i.getTEN().toLowerCase().contains(text)) && i.getTT()== -1 ) {
                         result.add(i);
                     }
                 }
