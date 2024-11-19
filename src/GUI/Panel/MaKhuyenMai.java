@@ -93,7 +93,6 @@ public class MaKhuyenMai extends JPanel implements ActionListener, ItemListener 
          
              String tt = tableMKM.getValueAt(index, 3).toString();
 
-            // Kiểm tra trạng thái và ẩn/hiện nút xóa
             if (tt.equals("Đã xóa")) {
                 mainFunction.btn.get("delete").setVisible(false); // Ẩn nút "delete" nếu TT = 0
             } else {

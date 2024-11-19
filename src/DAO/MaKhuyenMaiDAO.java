@@ -12,19 +12,18 @@ import java.sql.Timestamp;
 import DTO.MaKhuyenMaiDTO;
 
 
-public class MaKhuyenMaiDAO implements DAOinterface<MaKhuyenMaiDTO> {
+public class MaKhuyenMaiDAO  {
     public static MaKhuyenMaiDAO getInstance() {
         return new MaKhuyenMaiDAO();
     }
 
-    @Override
     public int insert(MaKhuyenMaiDTO t) {
         int result = 0;
         try {
             Connection con = (Connection) JDBCUtil.getConnection();
             String sql = "INSERT INTO `MAKHUYENMAI`(`MKM`, `MNV`, `TGBD`,`TGKT`, `TT`) VALUES (?,?,?,?,1)";
             PreparedStatement pst = (PreparedStatement) con.prepareStatement(sql);
-            pst.setString(1, t.getMKM());
+            pst.setInt(1, t.getMKM());
             pst.setInt(2, t.getMNV());
             pst.setTimestamp(3, t.getTGBD());
             pst.setTimestamp(4, t.getTGKT());
@@ -36,18 +35,18 @@ public class MaKhuyenMaiDAO implements DAOinterface<MaKhuyenMaiDTO> {
         return result;
     }
 
-    @Override
+  
     public int update(MaKhuyenMaiDTO t) {
         int result = 0;
         try {
             Connection con = (Connection) JDBCUtil.getConnection();
             String sql = "UPDATE `MAKHUYENMAI` SET `MKM`=?,`MNV`=?,`TGBD`=?,`TGKT`=? WHERE MKM=?";
             PreparedStatement pst = (PreparedStatement) con.prepareStatement(sql);
-            pst.setString(1, t.getMKM());
+            pst.setInt(1, t.getMKM());
             pst.setInt(2, t.getMNV());
             pst.setTimestamp(3, t.getTGBD());
             pst.setTimestamp(4, t.getTGKT());
-            pst.setString(5, t.getMKM());
+            pst.setInt(5, t.getMKM());
             
             result = pst.executeUpdate();
             JDBCUtil.closeConnection(con);
@@ -57,14 +56,14 @@ public class MaKhuyenMaiDAO implements DAOinterface<MaKhuyenMaiDTO> {
         return result;
     }
 
-    @Override
-    public int delete(String t) {
+  
+    public int delete(int t) {
         int result = 0;
         try {
             Connection con = (Connection) JDBCUtil.getConnection();
             String sql = "UPDATE  `MAKHUYENMAI` SET TT = 0 WHERE `MKM` = ?";
             PreparedStatement pst = (PreparedStatement) con.prepareStatement(sql);
-            pst.setString(1, t);
+            pst.setInt(1, t);
             result = pst.executeUpdate();
             JDBCUtil.closeConnection(con);
         } catch (SQLException ex) {
@@ -82,7 +81,7 @@ public class MaKhuyenMaiDAO implements DAOinterface<MaKhuyenMaiDTO> {
             PreparedStatement pst = (PreparedStatement) con.prepareStatement(sql);
             ResultSet rs = (ResultSet) pst.executeQuery();
             while(rs.next()){
-                String MKM = rs.getString("MKM");
+                int MKM = rs.getInt("MKM");
                 int MNV = rs.getInt("MNV");
                 Timestamp TGBD = rs.getTimestamp("TGBD");
                 Timestamp TGKT = rs.getTimestamp("TGKT");
@@ -97,7 +96,7 @@ public class MaKhuyenMaiDAO implements DAOinterface<MaKhuyenMaiDTO> {
         return result;
     }
 
-    @Override
+    
     public ArrayList<MaKhuyenMaiDTO> selectAll() {
         ArrayList<MaKhuyenMaiDTO> result = new ArrayList<MaKhuyenMaiDTO>();
         try {
@@ -106,7 +105,7 @@ public class MaKhuyenMaiDAO implements DAOinterface<MaKhuyenMaiDTO> {
             PreparedStatement pst = (PreparedStatement) con.prepareStatement(sql);
             ResultSet rs = (ResultSet) pst.executeQuery();
             while(rs.next()){
-                String MKM = rs.getString("MKM");
+                int MKM = rs.getInt("MKM");
                 int MNV = rs.getInt("MNV");
                 Timestamp TGBD = rs.getTimestamp("TGBD");
                 Timestamp TGKT = rs.getTimestamp("TGKT");
@@ -144,17 +143,17 @@ public class MaKhuyenMaiDAO implements DAOinterface<MaKhuyenMaiDTO> {
         return resultList.toArray(new String[0]);
     }
 
-    @Override
-    public MaKhuyenMaiDTO selectById(String t) {
+ 
+    public MaKhuyenMaiDTO selectById(int t) {
         MaKhuyenMaiDTO result = null;
         try {
             Connection con = (Connection) JDBCUtil.getConnection();
             String sql = "SELECT * FROM MAKHUYENMAI WHERE MKM=?";
             PreparedStatement pst = (PreparedStatement) con.prepareStatement(sql);
-            pst.setString(1, t);
+            pst.setInt(1, t);
             ResultSet rs = (ResultSet) pst.executeQuery();
             while(rs.next()){
-                String MKM = rs.getString("MKM");
+                int MKM = rs.getInt("MKM");
                 int MNV = rs.getInt("MNV");
                 Timestamp TGBD = rs.getTimestamp("TGBD");
                 Timestamp TGKT = rs.getTimestamp("TGKT");
@@ -168,7 +167,7 @@ public class MaKhuyenMaiDAO implements DAOinterface<MaKhuyenMaiDTO> {
         return result;
     }
 
-  public int cancelMKM(String mkm) {
+  public int cancelMKM(int mkm) {
     int result = 0;
     try {
         // Lấy kết nối đến cơ sở dữ liệu
@@ -177,7 +176,7 @@ public class MaKhuyenMaiDAO implements DAOinterface<MaKhuyenMaiDTO> {
         // Cập nhật trạng thái TT thành -1 cho mã khuyến mãi
         String sql = "UPDATE MAKHUYENMAI SET TT = -1 WHERE MKM = ?";
         PreparedStatement pst = con.prepareStatement(sql);
-        pst.setString(1, mkm);
+        pst.setInt(1, mkm);
 
         // Thực thi câu lệnh SQL
         result = pst.executeUpdate();
@@ -191,7 +190,7 @@ public class MaKhuyenMaiDAO implements DAOinterface<MaKhuyenMaiDTO> {
 }
 
 
-    @Override
+  
     public int getAutoIncrement() {
         int result = -1;
         try {
@@ -233,13 +232,13 @@ public class MaKhuyenMaiDAO implements DAOinterface<MaKhuyenMaiDTO> {
     return result;
 }
     
-    public static void updateTrangThaiMaKhuyenMai(String maKhuyenMai, int trangThai) {
+    public static void updateTrangThaiMaKhuyenMai(int maKhuyenMai, int trangThai) {
     try {
         Connection con = JDBCUtil.getConnection();
         String sql = "UPDATE MAKHUYENMAI SET TT = ? WHERE MKM = ?";
         PreparedStatement pst = con.prepareStatement(sql);
         pst.setInt(1, trangThai);  // Đặt trạng thái mới
-        pst.setString(2, maKhuyenMai);  // Đặt mã khuyến mãi cần cập nhật
+        pst.setInt(2, maKhuyenMai);  // Đặt mã khuyến mãi cần cập nhật
 
         pst.executeUpdate();
         pst.close();
@@ -248,13 +247,13 @@ public class MaKhuyenMaiDAO implements DAOinterface<MaKhuyenMaiDTO> {
         Logger.getLogger(MaKhuyenMaiDAO.class.getName()).log(Level.SEVERE, null, ex);
     }
 }
-public static boolean isMKMUsedInHoaDon(String mkm) {
+public static boolean isMKMUsedInHoaDon(int mkm) {
     boolean isUsed = false;
     try {
          Connection con = JDBCUtil.getConnection();
         String sql = "SELECT COUNT(*) FROM ctphieuxuat WHERE MKM = ?";
          PreparedStatement ps = con.prepareStatement(sql);
-        ps.setString(1, mkm);
+        ps.setInt(1, mkm);
         ResultSet rs = ps.executeQuery();
         if (rs.next()) {
             isUsed = rs.getInt(1) > 0; // Nếu số lượng > 0, MKM đã được sử dụng

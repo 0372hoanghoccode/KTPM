@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.sql.Timestamp;
+import javax.swing.JOptionPane;
 public class MaKhuyenMaiBUS {
 
     private final MaKhuyenMaiDAO mkmDAO = new MaKhuyenMaiDAO();
@@ -33,20 +34,24 @@ public class MaKhuyenMaiBUS {
         return this.listMKM.get(index);
     }
 
-    public int getIndexByMKM(String makhachhang) {
-        int i = 0;
-        int vitri = -1;
-        while (i < this.listMKM.size() && vitri == -1) {
+public int getIndexByMKM(int makhachhang) {
+    int vitri = -1;
+
+  
+        // Tìm kiếm trong danh sách
+        for (int i = 0; i < this.listMKM.size(); i++) {
             if (listMKM.get(i).getMKM() == makhachhang) {
                 vitri = i;
-            } else {
-                i++;
+                break;
             }
         }
-        return vitri;
-    }
+  
 
-    public ArrayList<ChiTietMaKhuyenMaiDTO> getChiTietMKM(String mkm) {
+    return vitri;
+}
+
+
+    public ArrayList<ChiTietMaKhuyenMaiDTO> getChiTietMKM(int mkm) {
         ArrayList<ChiTietMaKhuyenMaiDTO> arr = ctmkmDAO.selectAll(mkm);
         return arr;
     }
@@ -59,8 +64,8 @@ public class MaKhuyenMaiBUS {
         return check;
     }
 
-    public Boolean checkTT(String kh) {
-        for(MaKhuyenMaiDTO i : listMKM) if(i.getMKM().equals(kh)) return false;
+    public Boolean checkTT(int kh) {
+        for(MaKhuyenMaiDTO i : listMKM) if(i.getMKM()==(kh)) return false;
         return true;
     }
 
@@ -80,55 +85,72 @@ public class MaKhuyenMaiBUS {
         return check;
     }
 
-      public ArrayList<MaKhuyenMaiDTO> search(String text) {
-        ArrayList<MaKhuyenMaiDTO> result = new ArrayList<>();
-        text = text.toLowerCase();
+public ArrayList<MaKhuyenMaiDTO> search(String text) {
+    ArrayList<MaKhuyenMaiDTO> result = new ArrayList<>();
+
+    try {
+        // Chuyển `text` sang số nguyên
+        int searchValue = Integer.parseInt(text);
+
+        // Lọc các đối tượng có `MKM` trùng với `searchValue`
         for (MaKhuyenMaiDTO i : this.listMKM) {
-            if (i.getMKM().toLowerCase().contains(text)) {
+            if (i.getMKM() == searchValue) {
                 result.add(i);
-                        }
+            }
         }
-        return result;
+    } catch (NumberFormatException e) {
+        // Nếu `text` không phải số, hiển thị thông báo lỗi
+        JOptionPane.showMessageDialog(null, "Mã khuyến mãi phải là số nguyên!", "Lỗi nhập liệu", JOptionPane.ERROR_MESSAGE);
     }
+
+    return result;
+}
+
     
-   public ArrayList<MaKhuyenMaiDTO> search(String txt, String type) {
+  public ArrayList<MaKhuyenMaiDTO> search(String txt, String type) {
     ArrayList<MaKhuyenMaiDTO> result = new ArrayList<>();
     txt = txt.toLowerCase();
-    switch (type) {
-        case "Tất cả" -> {
-            for (MaKhuyenMaiDTO i : listMKM) {
-                if (i.getMKM().toLowerCase().contains(txt)) {
-                    result.add(i);
+
+       
+        int searchValue = Integer.parseInt(txt);
+
+        switch (type) {
+            case "Tất cả" -> {
+                for (MaKhuyenMaiDTO i : listMKM) {
+                    if (i.getMKM() == searchValue) {
+                        result.add(i);
+                    }
+                }
+            }
+            case "Còn hạn" -> {
+                for (MaKhuyenMaiDTO i : listMKM) {
+                    if (i.getMKM() == searchValue && i.getTT() == 1) {
+                        result.add(i);
+                    }
+                }
+            }
+            case "Hết hạn" -> {
+                for (MaKhuyenMaiDTO i : listMKM) {
+                    if (i.getMKM() == searchValue && i.getTT() == 0) {
+                        result.add(i);
+                    }
+                }
+            }
+            case "Đã xóa" -> {
+                for (MaKhuyenMaiDTO i : listMKM) {
+                    if (i.getMKM() == searchValue && i.getTT() == -1) {
+                        result.add(i);
+                    }
                 }
             }
         }
-        case "Còn hạn" -> {
-            for (MaKhuyenMaiDTO i : listMKM) {
-                if (i.getMKM().toLowerCase().contains(txt) && i.getTT()==1) {
-                    result.add(i);
-                }
-            }
-        }
-        case "Hết hạn" -> {
-            for (MaKhuyenMaiDTO i : listMKM) {
-                if (i.getMKM().toLowerCase().contains(txt) && i.getTT()==0) {
-                    result.add(i);
-                }
-            }
-        }
-          case "Đã xóa" -> {
-            for (MaKhuyenMaiDTO i : listMKM) {
-                if (i.getMKM().toLowerCase().contains(txt) && i.getTT()==-1) {
-                    result.add(i);
-                }
-            }
-        }
-    }
+  
     return result;
 }
 
 
-    public MaKhuyenMaiDTO selectMkm(String makh) {
+
+    public MaKhuyenMaiDTO selectMkm(int makh) {
         return mkmDAO.selectById(makh);
     }
 
@@ -232,10 +254,10 @@ public ArrayList<MaKhuyenMaiDTO> fillerPhieuNhap(Date time_s, Date time_e) {
         return check;
     }
 
-    public int cancelMKM(String makm) {
+    public int cancelMKM(int makm) {
         return mkmDAO.cancelMKM(makm);
     }
-    public boolean kiemTraMKMTrongHoaDon(String mkm) {
+    public boolean kiemTraMKMTrongHoaDon(int mkm) {
     // Gọi DAO để kiểm tra trong bảng hóa đơn
     return MaKhuyenMaiDAO.isMKMUsedInHoaDon(mkm); // Trả về true nếu đã được sử dụng
 }

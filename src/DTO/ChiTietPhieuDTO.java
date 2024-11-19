@@ -9,7 +9,7 @@ public class ChiTietPhieuDTO {
     private int TIEN;
     private int giaGiam ;
     private int giaThanhToan ; 
-    private String MKM ; 
+    private int MKM ; 
     public ChiTietPhieuDTO() {
     }
 
@@ -19,7 +19,7 @@ public class ChiTietPhieuDTO {
         this.SL = SL;
         this.TIEN = TIEN;
     }
-       public ChiTietPhieuDTO(int MP, int MSP, int SL, int TIEN , int giagiam , int giathanhtoan , String MKM) {
+       public ChiTietPhieuDTO(int MP, int MSP, int SL, int TIEN , int giagiam , int giathanhtoan , int MKM) {
         this.MP = MP;
         this.MSP = MSP;
         this.SL = SL;
@@ -29,12 +29,12 @@ public class ChiTietPhieuDTO {
         this.MKM = MKM ; 
     }
        
-          public String getMKM () {
+          public int getMKM () {
         return MKM ;
         
     }
 
-    public void setKMK(String MP) {
+    public void setKMK(int MP) {
         this.MKM = MP;
     }
        

@@ -464,7 +464,7 @@ public final class TaoMaKhuyenMai extends JPanel implements ItemListener, Action
     public ChiTietMaKhuyenMaiDTO getInfoChiTietPhieu() {
         int masp = Integer.parseInt(txtMaSp.getText());
         int PTG = Integer.parseInt(txtPTG.getText());
-        String mkm = txtMaKM.getText();
+        int mkm =Integer.parseInt( txtMaKM.getText());
         ChiTietMaKhuyenMaiDTO ctmkm = new ChiTietMaKhuyenMaiDTO(mkm, masp, PTG);
         return ctmkm;
     }
@@ -631,7 +631,7 @@ public boolean validateSelectDate() throws ParseException {
         } else if (Validation.isEmpty(txtMaKM.getText())) {
             JOptionPane.showMessageDialog(this, "Mã khuyến mãi không được để rỗng!", "Cảnh báo !", JOptionPane.ERROR_MESSAGE);
         }
-        else if(!MaKhuyenMaiBus.checkTT(txtMaKM.getText())) JOptionPane.showMessageDialog(this, "Mã khuyến mãi đã tồn tại!", "Cảnh báo !", JOptionPane.ERROR_MESSAGE);
+        else if(!MaKhuyenMaiBus.checkTT(Integer.parseInt(txtMaKM.getText()))) JOptionPane.showMessageDialog(this, "Mã khuyến mãi đã tồn tại!", "Cảnh báo !", JOptionPane.ERROR_MESSAGE);
         else {
             int input = JOptionPane.showConfirmDialog(null, "Bạn có chắc chắn muốn tạo mã khuyến mãi!", "Xác nhận tạo phiếu", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
             if (input == 0) if(validateSelectDate()) {
@@ -642,7 +642,7 @@ public boolean validateSelectDate() throws ParseException {
                 Date time_end_tmp = dateEnd.getDate() != null ? dateEnd.getDate() : calendar.getTime();
                 Timestamp time_start = new Timestamp(time_start_tmp.getTime());
                 Timestamp time_end = new Timestamp(time_end_tmp.getTime());
-                MaKhuyenMaiDTO MKM = new MaKhuyenMaiDTO(txtMaKM.getText(), nvDto.getMNV(), time_start, time_end, 1 );
+                MaKhuyenMaiDTO MKM = new MaKhuyenMaiDTO(Integer.parseInt(txtMaKM.getText()), nvDto.getMNV(), time_start, time_end, 1 );
                 boolean result = MaKhuyenMaiBus.add(MKM, chitietMKM);
                 if (result) {
                     JOptionPane.showMessageDialog(this, "Tạo mã thành công !");

@@ -58,7 +58,7 @@ public final class MaKhuyenMaiDialog extends JDialog implements ActionListener {
     }
 
     public void initPhieuNhap() {
-        txtMaPhieu.setText(this.makhuyenmai.getMKM());
+        txtMaPhieu.setText(this.makhuyenmai.getMKM()+"");
         txtNhanVien.setText(NhanVienDAO.getInstance().selectById(makhuyenmai.getMNV() + "").getHOTEN());
         txtThoiGianBD.setText(Formater.FormatTimeNgayThangNam(makhuyenmai.getTGBD()));
         txtThoiGianKT.setText(Formater.FormatTimeNgayThangNam(makhuyenmai.getTGKT()));

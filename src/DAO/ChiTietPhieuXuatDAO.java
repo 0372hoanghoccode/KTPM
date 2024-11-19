@@ -38,7 +38,7 @@ public static void insert(ChiTietPhieuDTO chiTietPhieu) throws SQLException {
         pstmt.setInt(4, chiTietPhieu.getTIEN());
         pstmt.setInt(5, chiTietPhieu.getGiaGiam()); // Giả sử có getter cho giagiam
         pstmt.setInt(6, chiTietPhieu.getGiaThanhToan()); // Giả sử có getter cho giaThanhToan
-        pstmt.setString(7, chiTietPhieu.getMKM()); // Giả sử có getter cho MKM
+        pstmt.setInt(7, chiTietPhieu.getMKM()); // Giả sử có getter cho MKM
         
         pstmt.executeUpdate();
     }
@@ -60,7 +60,7 @@ public static void insert(ChiTietPhieuDTO chiTietPhieu) throws SQLException {
             pst.setInt(4, chiTiet.getTIEN());
             pst.setInt(5, chiTiet.getGiaGiam()); // Đảm bảo getter có sẵn
             pst.setInt(6, chiTiet.getGiaThanhToan()); // Đảm bảo getter có sẵn
-            pst.setString(7, chiTiet.getMKM()); // Đảm bảo getter có sẵn
+            pst.setInt(7, chiTiet.getMKM()); // Đảm bảo getter có sẵn
             
             result += pst.executeUpdate();
         }
@@ -169,7 +169,7 @@ public ArrayList<ChiTietPhieuDTO> selectAll(String t) {
             int tienxuat = rs.getInt("TIENXUAT");
             int giagiam = rs.getInt("GIAGIAM"); // Lấy giá giảm
             int giathanhToan = rs.getInt("GIATHANHTOAN"); // Lấy giá thanh toán
-            String maKM = rs.getString("MKM"); // Lấy mã khuyến mãi
+            int maKM = rs.getInt("MKM"); // Lấy mã khuyến mãi
             
             ChiTietPhieuDTO ctphieu = new ChiTietPhieuDTO(maphieu, MSP, SL, tienxuat, giagiam, giathanhToan, maKM);
             result.add(ctphieu);
@@ -201,7 +201,7 @@ public static ArrayList<ChiTietPhieuXuatDTO> getChiTietByPhieuXuat(int maPhieuXu
                 rs.getInt("TIENXUAT"),
                 rs.getInt("GIAGIAM"), // Thêm giá giảm
                 rs.getInt("GIATHANHTOAN"), // Thêm giá thanh toán
-                rs.getString("MKM") // Thêm mã khuyến mãi
+                rs.getInt("MKM") // Thêm mã khuyến mãi
             );
             chiTietList.add(chiTiet);
         }
@@ -242,7 +242,7 @@ public static ArrayList<ChiTietPhieuXuatDTO> getChiTietByPhieuXuat(int maPhieuXu
             int tienxuat = rs.getInt("TIENXuat");
             int giaGiam = rs.getInt("GiaGiam");
             int giaThanhToan = rs.getInt("giaThanhToan");
-            String MKM = rs.getString("MKM");
+            int MKM = rs.getInt("MKM");
             ChiTietPhieuXuatDTO ctphieu = new ChiTietPhieuXuatDTO(maphieu, masp, soluong, tienxuat, giaGiam , giaThanhToan, MKM);
             result.add(ctphieu);
         }

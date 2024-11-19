@@ -526,9 +526,12 @@ public void mousePressed(MouseEvent e) {
         listctMKM = mkmBUS.Getctmkm(masp);
         int size = listctMKM.size();
         ArrayList<String> arr = new ArrayList<>();
-        for (int i = 0; i < size; i++) {
-            if(!validateSelectDate(listctMKM.get(i))) arr.add(listctMKM.get(i).getMKM());
+         for (ChiTietMaKhuyenMaiDTO item : listctMKM) {
+        // Kiểm tra và thêm mã giảm giá dạng chuỗi
+        if (!validateSelectDate(item)) {
+            arr.add(String.valueOf(item.getMKM())); // Chuyển mã giảm giá thành chuỗi
         }
+    }
         String[] tmp = new String[arr.size()];
         for (int i = 0; i < tmp.length; i++) tmp[i] = arr.get(i);
         tmp = Stream.concat(Stream.of("Chọn"), Arrays.stream(tmp)).toArray(String[]::new);
@@ -752,40 +755,45 @@ lbltongtien.setText(Formater.FormatVND(sum));
 }
 
 
-    public void addCtPhieu() { // them sp vao chitietphieu
-        int masp = Integer.parseInt(txtMaSp.getText());
-        int giaxuat;
-        int index = cbxMaKM.cbb.getSelectedIndex();
-           String selectedItem = (String) cbxMaKM.cbb.getItemAt(index);
-         
-       giaxuat = Integer.parseInt(txtGiaXuat.getText());
-       int giagiam ; 
-    int giaThanhToan ; 
+   public void addCtPhieu() { 
+    int masp = Integer.parseInt(txtMaSp.getText());
+    int giaxuat = Integer.parseInt(txtGiaXuat.getText());
+    int index = cbxMaKM.cbb.getSelectedIndex();
+    int selectedItem; // Lưu mã giảm giá dưới dạng int
+
+    int giagiam;
+    int giaThanhToan;
+
     if (index != 0) {
+        selectedItem = listctMKM.get(index - 1).getMKM(); // Lấy mã giảm giá
         double phantramgiam = (double) listctMKM.get(index - 1).getPTG();
-          giagiam = (int) (giaxuat * phantramgiam / 100);
+        giagiam = (int) (giaxuat * phantramgiam / 100);
         giaThanhToan = (int) (giaxuat - giagiam);
     } else {
+        selectedItem = 0; // Không có mã giảm giá
         giagiam = 0;
-        giaThanhToan = (int) giaxuat;
-        selectedItem = "Không có";
+        giaThanhToan = giaxuat;
     }
-             
-      
-        int soluong = Integer.parseInt(txtSoLuongSPxuat.getText());
-        ChiTietPhieuDTO ctphieu = new ChiTietPhieuDTO(maphieu, masp, soluong, giaxuat ,giagiam , giaThanhToan , selectedItem);
-        ChiTietPhieuDTO p = phieuXuatBUS.findCT(chitietphieu, ctphieu.getMSP());
-        if (p == null) {
-            chitietphieu.add(ctphieu);
-            loadDataTableChiTietPhieu(chitietphieu);
-            resetForm();
-        } else {
-            int input = JOptionPane.showConfirmDialog(this, "Sản phẩm đã tồn tại trong phiếu !\nBạn có muốn chỉnh sửa không ?", "Sản phẩm đã tồn tại !", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
-            if (input == 0) {
-                setFormChiTietPhieu(ctphieu);
-            }
+
+    int soluong = Integer.parseInt(txtSoLuongSPxuat.getText());
+
+    // Tạo đối tượng ChiTietPhieuDTO với selectedItem là int
+    ChiTietPhieuDTO ctphieu = new ChiTietPhieuDTO(maphieu, masp, soluong, giaxuat, giagiam, giaThanhToan, selectedItem);
+
+    // Kiểm tra nếu sản phẩm đã tồn tại
+    ChiTietPhieuDTO p = phieuXuatBUS.findCT(chitietphieu, ctphieu.getMSP());
+    if (p == null) {
+        chitietphieu.add(ctphieu);
+        loadDataTableChiTietPhieu(chitietphieu);
+        resetForm();
+    } else {
+        int input = JOptionPane.showConfirmDialog(this, "Sản phẩm đã tồn tại trong phiếu !\nBạn có muốn chỉnh sửa không?", "Sản phẩm đã tồn tại!", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
+        if (input == 0) {
+            setFormChiTietPhieu(ctphieu);
         }
     }
+}
+
 
 public void eventBtnNhapHang() throws SQLException {
     if (chitietphieu.isEmpty()) {

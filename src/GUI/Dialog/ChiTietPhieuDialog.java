@@ -155,13 +155,16 @@ int mlhInt;
     for (int i = 0; i < ctPhieu.size(); i++) {
         ChiTietPhieuDTO ct = ctPhieu.get(i);
         SanPhamDTO sp = spBus.getByMaSP(ct.getMSP());
-        
+        String MKMtr = "";
         // Lấy dữ liệu cho các cột mới
         int giaGiam = ct.getGiaGiam(); // Giả sử ChiTietPhieuDTO có phương thức getGiagiam()
         int giaThanhToan = ct.getGiaThanhToan(); // Giả sử ChiTietPhieuDTO có phương thức getGiaThanhToan()
-        String maKM = ct.getMKM(); // Giả sử ChiTietPhieuDTO có phương thức getMKM()
-
+        int maKM = ct.getMKM(); // Giả sử ChiTietPhieuDTO có phương thức getMKM()
+        if (maKM == 0 )
+               MKMtr = "Không có";
         // Thêm một hàng mới vào bảng
+        else
+               MKMtr = maKM+"";
         tblModel.addRow(new Object[]{
             i + 1, 
             sp.getMSP(), 
@@ -170,7 +173,7 @@ int mlhInt;
             ct.getSL(), 
             Formater.FormatVND(giaGiam), 
             Formater.FormatVND(giaThanhToan), 
-            maKM
+            MKMtr
         });
     }
 }

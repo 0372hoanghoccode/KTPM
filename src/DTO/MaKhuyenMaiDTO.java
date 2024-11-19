@@ -4,7 +4,7 @@ import java.sql.Timestamp;
 import java.util.Objects;
 
 public class MaKhuyenMaiDTO {
-    private String MKM;
+    private int MKM;
     private int MNV;
     private Timestamp TGBD;
     private Timestamp TGKT;
@@ -13,17 +13,17 @@ public class MaKhuyenMaiDTO {
 
     }
 
-    public MaKhuyenMaiDTO(String mKM, int mNV, Timestamp tGBD, Timestamp tGKT , int Trangthai ) {
+    public MaKhuyenMaiDTO(int mKM, int mNV, Timestamp tGBD, Timestamp tGKT , int Trangthai ) {
         MKM = mKM;
         MNV = mNV;
         TGBD = tGBD;
         TGKT = tGKT;
         TT = Trangthai ; 
     }
-    public String getMKM() {
+    public int getMKM() {
         return MKM;
     }
-    public void setMKM(String mKM) {
+    public void setMKM(int mKM) {
         MKM = mKM;
     }
     public int getMNV() {
