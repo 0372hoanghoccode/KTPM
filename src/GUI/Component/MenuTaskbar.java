@@ -135,7 +135,7 @@ public class MenuTaskbar extends JPanel {
         pnlTop.add(bar2, BorderLayout.SOUTH);
 
         pnlCenter = new JPanel();
-        pnlCenter.setPreferredSize(new Dimension(230, 720));
+        pnlCenter.setPreferredSize(new Dimension(230, 620));
         pnlCenter.setBackground(DefaultColor);
         // pnlCenter.setBorder(new EmptyBorder(0,15,0,35));
         pnlCenter.setLayout(new FlowLayout(0,0,0));
