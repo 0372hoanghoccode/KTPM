@@ -102,7 +102,7 @@ public class NhanVienDAO implements DAOinterface<NhanVienDTO>{
     }
     
     
-    public ArrayList<NhanVienDTO> selectAlll() {
+    public ArrayList<NhanVienDTO> selectAlltrangthaifull() {
         ArrayList<NhanVienDTO> result = new ArrayList<NhanVienDTO>();
         try {
             Connection con = (Connection) JDBCUtil.getConnection();
@@ -235,7 +235,7 @@ public class NhanVienDAO implements DAOinterface<NhanVienDTO>{
         int result = -1;
         try {
             Connection con = (Connection) JDBCUtil.getConnection();
-            String sql = "SELECT `AUTO_INCREMENT` FROM  INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'database-cuahangsach' AND   TABLE_NAME   = 'NHANVIEN'";
+            String sql = "SELECT `AUTO_INCREMENT` FROM  INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'testne' AND   TABLE_NAME   = 'NHANVIEN'";
             PreparedStatement pst = (PreparedStatement) con.prepareStatement(sql);
             ResultSet rs2 = pst.executeQuery(sql);
             if (!rs2.isBeforeFirst() ) {

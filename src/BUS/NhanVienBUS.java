@@ -40,7 +40,7 @@ public class NhanVienBUS implements ActionListener, DocumentListener {
 
     public GUI.Panel.NhanVien nv;
     private JTextField textField;
-    public ArrayList<NhanVienDTO> listNv = NhanVienDAO.getInstance().selectAll();
+    public ArrayList<NhanVienDTO> listNv = NhanVienDAO.getInstance().selectAlltrangthaifull();
     public NhanVienDAO nhanVienDAO = NhanVienDAO.getInstance();
 
     public NhanVienBUS() {
@@ -57,6 +57,9 @@ public class NhanVienBUS implements ActionListener, DocumentListener {
 
     public ArrayList<DTO.NhanVienDTO> getAll() {
         return this.listNv;
+    }
+    public ArrayList<DTO.NhanVienDTO> getAlltrangthaifull() {
+        return NhanVienDAO.getInstance().selectAlltrangthaifull();
     }
 
     public NhanVienDTO getByIndex(int index) {
@@ -107,13 +110,25 @@ public class NhanVienBUS implements ActionListener, DocumentListener {
                     new NhanVienDialog(this, nv.owner, true, "Sửa nhân viên", "update", nv.getNhanVien());
                 }
             }
-            case "XÓA" -> {
-                if (nv.getRow() < 0) {
-                    JOptionPane.showMessageDialog(null, "Vui lòng chọn nhân viên cần xóa");
-                } else {
-                    deleteNv(nv.getNhanVien());
-                }
-            }
+        case "XÓA" -> {
+    if (nv.getRow() < 0) {
+        JOptionPane.showMessageDialog(null, "Vui lòng chọn nhân viên cần xóa", "Cảnh báo", JOptionPane.WARNING_MESSAGE);
+    } else {
+        int confirm = JOptionPane.showConfirmDialog(
+                null,
+                "Bạn có chắc chắn muốn xóa nhân viên này không?",
+                "Xác nhận xóa",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.QUESTION_MESSAGE
+        );
+        if (confirm == JOptionPane.YES_OPTION) {
+            deleteNv(nv.getNhanVien());
+            JOptionPane.showMessageDialog(null, "Xóa nhân viên thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+          // nv.loadTable(); // Cập nhật lại bảng sau khi xóa
+        }
+    }
+}
+
             case "CHI TIẾT" -> {
                 if (nv.getRow() < 0) {
                     JOptionPane.showMessageDialog(null, "Vui lòng chọn nhân viên cần xóa");
@@ -251,6 +266,23 @@ public class NhanVienBUS implements ActionListener, DocumentListener {
                     }
                 }
             }
+//       case "Còn làm việc" -> {
+//    // Danh sách kết quả lưu trữ các nhân viên tìm được
+//        
+//    // Duyệt qua tất cả các nhân viên trong danh sách
+//    for (NhanVienDTO i : this.listNv) {
+//        // Kiểm tra nếu tên, email hoặc số điện thoại chứa từ khóa tìm kiếm và trạng thái là "Còn làm việc" (TT == 1)
+//        if ((i.getHOTEN().toLowerCase().contains(text.toLowerCase()) || 
+//             i.getEMAIL().toLowerCase().contains(text.toLowerCase()) || 
+//             i.getSDT().toLowerCase().contains(text.toLowerCase())) && i.getTT() == 1) {
+//            result.add(i);  // Thêm nhân viên vào danh sách kết quả
+//        }
+//    }
+//    
+//    // Lọc ra danh sách kết quả tìm kiếm nhân viên "Còn làm việc"
+//    return result;  // Trả về danh sách kết quả
+//}
+
             default ->
                 throw new AssertionError();
         }

@@ -134,43 +134,55 @@ public class NhanVienDialog extends JDialog {
         //     }
         // });
 
-        btnAdd.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    if (ValidationInput()) {
-                        // Kiểm tra email mới trước khi thêm
-                        if (checkEmail(email.getText(), null)) { // null vì không có email hiện tại
-                            if (checkSdt(sdt.getText(),null)) {
-                                try {
-                                    int txt_gender = -1;
-                                    if (male.isSelected()) {
-                                        txt_gender = 1;
-                                    } else if (female.isSelected()) {
-                                        txt_gender = 0;
-                                    }
-                                    int manv = NhanVienDAO.getInstance().getAutoIncrement();
-                                    String txtName = name.getText();
-                                    String txtSdt = sdt.getText();
-                                    String txtEmail = email.getText();
-                                    Date birthDay = jcBd.getDate();
-                                    java.sql.Date sqlDate = new java.sql.Date(birthDay.getTime());
-                                    NhanVienDTO nV = new NhanVienDTO(manv, txtName, txt_gender, sqlDate, txtSdt, 1, txtEmail);
-                                    NhanVienDAO.getInstance().insert(nV);
-                                    nv.insertNv(nV);
-                                    nv.loadTable();
-                                    dispose();
-                                } catch (ParseException ex) {
-                                    Logger.getLogger(NhanVienDialog.class.getName()).log(Level.SEVERE, null, ex);
-                                }
+     btnAdd.addActionListener(new ActionListener() {
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        try {
+            if (ValidationInput()) {
+                // Kiểm tra email mới trước khi thêm
+                if (checkEmail(email.getText(), null)) { // null vì không có email hiện tại
+                    if (checkSdt(sdt.getText(), null)) {
+                        try {
+                            int txt_gender = -1;
+                            if (male.isSelected()) {
+                                txt_gender = 1;
+                            } else if (female.isSelected()) {
+                                txt_gender = 0;
                             }
+                            int manv = NhanVienDAO.getInstance().getAutoIncrement();
+                            String txtName = name.getText();
+                            String txtSdt = sdt.getText();
+                            String txtEmail = email.getText();
+                            Date birthDay = jcBd.getDate();
+                            java.sql.Date sqlDate = new java.sql.Date(birthDay.getTime());
+                            NhanVienDTO nV = new NhanVienDTO(manv, txtName, txt_gender, sqlDate, txtSdt, 1, txtEmail);
+
+                            // Thêm nhân viên vào cơ sở dữ liệu
+                            NhanVienDAO.getInstance().insert(nV);
+
+                            // Thêm nhân viên vào giao diện
+                            nv.insertNv(nV);
+
+                            // Tải lại bảng
+                            nv.loadTable();
+
+                            // Hiển thị thông báo thành công
+                            JOptionPane.showMessageDialog(null, "Thêm nhân viên thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+
+                            // Đóng dialog
+                            dispose();
+                        } catch (ParseException ex) {
+                            Logger.getLogger(NhanVienDialog.class.getName()).log(Level.SEVERE, null, ex);
                         }
                     }
-                } catch (ParseException ex) {
-                    Logger.getLogger(NhanVienDialog.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
-        });
+        } catch (ParseException ex) {
+            Logger.getLogger(NhanVienDialog.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+});
+
         
 
         btnEdit.addActionListener(new ActionListener() {
@@ -197,6 +209,7 @@ public class NhanVienDialog extends JDialog {
                                     NhanVienDAO.getInstance().update(nV);
                                     nv.listNv.set(nv.getIndex(), nV);
                                     nv.loadTable();
+                                   JOptionPane.showMessageDialog(null, "Sửa nhân viên thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
                                     dispose();
                                 } catch (ParseException ex) {
                                     Logger.getLogger(NhanVienDialog.class.getName()).log(Level.SEVERE, null, ex);
@@ -241,33 +254,60 @@ public class NhanVienDialog extends JDialog {
     }
 
    boolean ValidationInput() throws ParseException {
-    // Kiểm tra tên nhân viên không được rỗng và có ít nhất 6 ký tự
-    if (Validation.isEmpty(name.getText())) {
-        JOptionPane.showMessageDialog(this, "Tên nhân viên không được rỗng", "Cảnh báo !", JOptionPane.WARNING_MESSAGE);
-        return false;
-    } else if (name.getText().length() < 6) {
-        JOptionPane.showMessageDialog(this, "Tên nhân viên ít nhất 6 kí tự", "Cảnh báo !", JOptionPane.WARNING_MESSAGE);
-        return false;
-    }
+  String employeeName = name.getText();
+
+if (Validation.isEmpty(employeeName)) {
+    JOptionPane.showMessageDialog(this, "Tên nhân viên không được rỗng", "Cảnh báo !", JOptionPane.WARNING_MESSAGE);
+    return false;
+} else if (employeeName.length() < 6) {
+    JOptionPane.showMessageDialog(this, "Tên nhân viên phải có ít nhất 6 ký tự", "Cảnh báo !", JOptionPane.WARNING_MESSAGE);
+    return false;
+} else if (employeeName.matches(".*\\d.*")) { // Kiểm tra nếu chứa ký tự số
+    JOptionPane.showMessageDialog(this, "Tên nhân viên không được chứa số", "Cảnh báo !", JOptionPane.WARNING_MESSAGE);
+    return false;
+} else if (!employeeName.matches("[a-zA-ZÀ-ỹ\\s]+")) { // Kiểm tra nếu chứa ký tự đặc biệt khác
+    JOptionPane.showMessageDialog(this, "Tên nhân viên không được chứa ký tự đặc biệt", "Cảnh báo !", JOptionPane.WARNING_MESSAGE);
+    return false;
+}
+
+String phoneNumber = sdt.getText();
+
+if (Validation.isEmpty(phoneNumber)) {
+    JOptionPane.showMessageDialog(this, "Số điện thoại không được để trống", "Cảnh báo !", JOptionPane.WARNING_MESSAGE);
+    return false;
+} else if (!Validation.isNumber(phoneNumber)) {
+    JOptionPane.showMessageDialog(this, "Số điện thoại phải chỉ chứa các chữ số", "Cảnh báo !", JOptionPane.WARNING_MESSAGE);
+    return false;
+} else if (phoneNumber.length() != 10) {
+    JOptionPane.showMessageDialog(this, "Số điện thoại phải có đúng 10 ký tự", "Cảnh báo !", JOptionPane.WARNING_MESSAGE);
+    return false;
+} else if (!phoneNumber.startsWith("0")) {
+    JOptionPane.showMessageDialog(this, "Số điện thoại phải bắt đầu bằng số 0", "Cảnh báo !", JOptionPane.WARNING_MESSAGE);
+    return false;
+}
 
     // Kiểm tra email không được rỗng và phải đúng cú pháp
-    if (Validation.isEmpty(email.getText()) || !Validation.isEmail(email.getText())) {
-        JOptionPane.showMessageDialog(this, "Email không được rỗng và phải đúng cú pháp", "Cảnh báo !", JOptionPane.WARNING_MESSAGE);
-        return false;
-    }
+   if (Validation.isEmpty(email.getText())) {
+    JOptionPane.showMessageDialog(this, "Email không được để trống", "Cảnh báo !", JOptionPane.WARNING_MESSAGE);
+    return false;
+} else if (!Validation.isEmail(email.getText())) {
+    JOptionPane.showMessageDialog(this, "Email phải đúng cú pháp", "Cảnh báo !", JOptionPane.WARNING_MESSAGE);
+    return false;
+}
 
-    // Kiểm tra số điện thoại không được rỗng, phải là 10 ký tự số và bắt đầu bằng số 0
-    String phoneNumber = sdt.getText();
-    if (Validation.isEmpty(phoneNumber) || !Validation.isNumber(phoneNumber) || phoneNumber.length() != 10 || !phoneNumber.startsWith("0")) {
-        JOptionPane.showMessageDialog(this, "Số điện thoại không được rỗng, phải là 10 ký tự số và bắt đầu bằng số 0", "Cảnh báo !", JOptionPane.WARNING_MESSAGE);
-        return false;
-    }
 
-    // Kiểm tra ngày sinh không được null
-    if (jcBd.getDate() == null) {
-        JOptionPane.showMessageDialog(this, "Vui lòng chọn ngày sinh!", "Cảnh báo !", JOptionPane.WARNING_MESSAGE);
-        return false;
-    }
+   
+
+Date birthDate = jcBd.getDate(); // Lấy ngày sinh từ component
+
+if (birthDate == null) {
+    JOptionPane.showMessageDialog(this, "Vui lòng chọn ngày sinh!", "Cảnh báo !", JOptionPane.WARNING_MESSAGE);
+    return false;
+} else if (birthDate.after(new Date())) { // Kiểm tra nếu ngày sinh vượt quá hôm nay
+    JOptionPane.showMessageDialog(this, "Ngày sinh không được vượt quá ngày hôm nay!", "Cảnh báo !", JOptionPane.WARNING_MESSAGE);
+    return false;
+}
+
 
     // Kiểm tra giới tính đã được chọn
     if (!male.isSelected() && !female.isSelected()) {

@@ -38,4 +38,8 @@ public final class MainFunction extends JToolBar {
             }
         }
     }
+
+    public boolean canDeleteSelectedRow(JTable tableNhanVien) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
 }
