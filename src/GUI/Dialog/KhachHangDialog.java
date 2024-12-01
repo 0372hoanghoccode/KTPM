@@ -150,10 +150,22 @@ public class KhachHangDialog extends JDialog implements MouseListener {
     }
 
     boolean Validation(){
-        if (Validation.isEmpty(tenKH.getText())) {
-            JOptionPane.showMessageDialog(this, "Tên khách hàng không được rỗng", "Cảnh báo !", JOptionPane.WARNING_MESSAGE);
-            return false;
-         }
+       if (Validation.isEmpty(tenKH.getText())) {
+    JOptionPane.showMessageDialog(this, "Tên khách hàng không được rỗng", "Cảnh báo!", JOptionPane.WARNING_MESSAGE);
+    return false;
+}
+
+// Kiểm tra ký tự đặc biệt (ngoại trừ dấu cách và dấu '-')
+if (tenKH.getText().matches(".*[^a-zA-ZÀ-ỹ\\s\\-].*")) {
+    JOptionPane.showMessageDialog(this, "Tên khách hàng không được chứa ký tự đặc biệt (ngoại trừ dấu cách và dấu -)", "Cảnh báo!", JOptionPane.WARNING_MESSAGE);
+    return false;
+}
+
+// Kiểm tra tên có chứa số
+if (tenKH.getText().matches(".*\\d.*")) {
+    JOptionPane.showMessageDialog(this, "Tên khách hàng không được chứa số", "Cảnh báo!", JOptionPane.WARNING_MESSAGE);
+    return false;
+}
          String sdt = sdtKH.getText();
 
 // Kiểm tra số điện thoại không được rỗng
@@ -180,10 +192,15 @@ if (!sdt.startsWith("0")) {
             JOptionPane.showMessageDialog(this, "Địa chỉ không được rỗng", "Cảnh báo !", JOptionPane.WARNING_MESSAGE);
             return false;
          }
-         else if(Validation.isEmpty(emailKH.getText()) || !Validation.isEmail(emailKH.getText())) {
-            JOptionPane.showMessageDialog(this, "Email không được rỗng và đúng định dạng", "Cảnh báo!", JOptionPane.WARNING_MESSAGE);
-            return false;
-         }
+        if (Validation.isEmpty(emailKH.getText())) {
+    JOptionPane.showMessageDialog(this, "Email không được rỗng", "Cảnh báo!", JOptionPane.WARNING_MESSAGE);
+    return false;
+}
+
+if (!Validation.isEmail(emailKH.getText())) {
+    JOptionPane.showMessageDialog(this, "Email phải đúng định dạng", "Cảnh báo!", JOptionPane.WARNING_MESSAGE);
+    return false;
+}
           return true;
     }
     @Override
